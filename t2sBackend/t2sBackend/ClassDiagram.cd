@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Not done since we haven't decided on how it works">
+    <Position X="9.917" Y="3.135" Height="0.75" Width="1.7" />
+  </Comment>
+  <Class Name="t2sBackend.PluginLibrary">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAACABAAAAABAAAAAAAAAAAAAIIAIAQAAAAAA=</HashCode>
+      <FileName>PluginLibrary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="t2sBackend.PluginError" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PluginError.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="t2sBackend.MessageParser">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAABAAAABAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>MessageParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="t2sBackend.GMailWatcherService">
+    <Position X="0.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAQAAAAAAIAAAAAAAACAQASAAAAAAA=</HashCode>
+      <FileName>GMailWatcherService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="t2sBackend.LuaScriptingEngine">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LuaScriptingEngine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="t2sBackend.SQLController">
+    <Position X="4" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SQLController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="t2sBackend.GroupDAO">
+    <Position X="9.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAICCBAAAgAIAAAAAAACQQAACAQAAAAAAAAAACAAA=</HashCode>
+      <FileName>GroupDAO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="t2sBackend.UserDAO">
+    <Position X="7.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQgAkAAAgAAABAAAABAQAgAAAAIAAAAAQAAAgAAAAg=</HashCode>
+      <FileName>UserDAO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="t2sBackend.Logger">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Logger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="t2sBackend.APlugin">
+    <Position X="10" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="t2sBackend.ParsedMessage">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAIAAMAAA=</HashCode>
+      <FileName>ParsedMessage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="t2sBackend.Message">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAIAAA=</HashCode>
+      <FileName>Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="t2sBackend.IWatcherService">
+    <Position X="2.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAACAAAAAAADAAAAAAAAAAAAAIIAAAQAAAAAA=</HashCode>
+      <FileName>IWatcherService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="t2sBackend.IPlugin">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAEAAAAAABAAAAAAAAAEAAAAAAAAAEAA=</HashCode>
+      <FileName>IPlugin.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="t2sBackend.IDBController">
+    <Position X="5.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAgEAAAAAAAAAQAAAAQAAAAAAAEAABQ=</HashCode>
+      <FileName>IDBController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="t2sBackend.PhoneCarrier" Collapsed="true">
+    <Position X="7.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAABAAEAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>PhoneCarrier.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="t2sBackend.UserType" Collapsed="true">
+    <Position X="7.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="t2sBackend.LoggerLevel" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAggAAAAAAAAAAAEAAAAAAAAAAAAAAABACAAAA=</HashCode>
+      <FileName>LoggerLevel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="t2sBackend.PluginAccess" Collapsed="true">
+    <Position X="7.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>PluginAccess.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
