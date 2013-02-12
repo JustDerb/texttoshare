@@ -5,18 +5,24 @@ using System.Text;
 
 namespace t2sBackend
 {
-    public class Logger
+    public class LUAPlugin
     {
         private LuaScriptingEngine Engine;
     
-        public Logger()
+        public LUAPlugin(string LUAEngine)
         {
             throw new System.NotImplementedException();
         }
     
-        public void LogMessage(string message, LoggerLevel level)
+        public System.IO.File File
         {
-            throw new System.NotImplementedException();
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
         }
     }
 }

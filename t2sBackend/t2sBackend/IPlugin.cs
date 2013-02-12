@@ -37,5 +37,7 @@ namespace t2sBackend
             get;
             set;
         }
+
+        void Run(ParsedMessage message);
     }
 }

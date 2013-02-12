@@ -48,12 +48,12 @@
     <Compile Include="IWatcherService.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggerLevel.cs" />
+    <Compile Include="LUAPlugin.cs" />
     <Compile Include="LuaScriptingEngine.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageParser.cs" />
     <Compile Include="ParsedMessage.cs" />
     <Compile Include="PhoneCarrier.cs" />
-    <Compile Include="Plugin.cs" />
     <Compile Include="PluginAccess.cs" />
     <Compile Include="PluginError.cs" />
     <Compile Include="PluginLibrary.cs" />
