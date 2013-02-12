@@ -51,6 +51,28 @@ namespace t2sBackend
             }
         }
 
+        public int Port
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public string IMAPServer
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
         public void Login()
         {
             throw new System.NotImplementedException();

@@ -28,7 +28,7 @@
   <Class Name="t2sBackend.GMailWatcherService">
     <Position X="0.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAAAAAQAAAAAAIAAAAAAAACAQASAAAAAAA=</HashCode>
+      <HashCode>CAEAAAAAAAAAAAAQAAAAAAIACAAAAAACAQASAAAAAAA=</HashCode>
       <FileName>GMailWatcherService.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
