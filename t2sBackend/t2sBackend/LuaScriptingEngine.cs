@@ -5,7 +5,11 @@ using System.Text;
 
 namespace t2sBackend
 {
-    public class LuaScriptingEngine
+    public static class LuaScriptingEngine
     {
+        public static void runPlugin(LUAPlugin plugin, ParsedMessage message, IWatcherService service)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

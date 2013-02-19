@@ -5,7 +5,7 @@ using System.Text;
 
 namespace t2sBackend
 {
-    public class SQLController : IDBController
+    public static class SQLController : IDBController
     {
     }
 }

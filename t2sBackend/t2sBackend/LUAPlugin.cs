@@ -5,24 +5,7 @@ using System.Text;
 
 namespace t2sBackend
 {
-    public class LUAPlugin
+    public class LUAPlugin : IPlugin
     {
-        private LuaScriptingEngine Engine;
-    
-        public LUAPlugin(string LUAEngine)
-        {
-            throw new System.NotImplementedException();
-        }
-    
-        public System.IO.File File
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
-        }
     }
 }

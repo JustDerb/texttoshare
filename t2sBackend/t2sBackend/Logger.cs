@@ -5,9 +5,8 @@ using System.Text;
 
 namespace t2sBackend
 {
-    public class Logger
+    public static class Logger
     {
-        private LuaScriptingEngine Engine;
     
         public Logger()
         {
