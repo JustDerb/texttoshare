@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBControllerSingleton.cs" />
     <Compile Include="GMailWatcherService.cs" />
     <Compile Include="GroupDAO.cs" />
     <Compile Include="IDBController.cs" />

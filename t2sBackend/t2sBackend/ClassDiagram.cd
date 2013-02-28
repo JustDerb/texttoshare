@@ -92,7 +92,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="t2sBackend.DBControllerSingleton">
-    <Position X="10.25" Y="3.75" Width="1.5" />
+    <Position X="11" Y="3.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>

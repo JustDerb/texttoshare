@@ -26,7 +26,7 @@ namespace t2sBackend
             }
         }
 
-        public static IDBController getInstance()
+        public static IDBController GetInstance()
         {
             return Controller;
         }
