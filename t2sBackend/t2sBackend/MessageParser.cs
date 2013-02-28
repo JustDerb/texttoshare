@@ -7,7 +7,7 @@ namespace t2sBackend
 {
     public class MessageParser
     {
-        private Queue<string> MessageQueue;
+        private Queue<ParsedMessage> MessageQueue;
         public event EventHandler parsedMessage;
 
         public MessageParser(IWatcherService watcherService)
@@ -15,14 +15,23 @@ namespace t2sBackend
             throw new System.NotImplementedException();
         }
 
-        public void addMessage(string message, string sender)
+        public void addMessage(Message message)
         {
-            throw new System.NotImplementedException();
+           // creating the parsed messge to be added
+            ParsedMessage parsed = new ParsedMessage();
+            parsed.Sender = DBControllerSingleton.GetInstance().RetrieveUser(message.Sender);
+            
+           // String groupTag = message.
+            String[] groupTag = message.FullMessage.Split('.');
+           
         }
 
-        public void getNextMessage()
+        public ParsedMessage getNextMessage()
         {
-            throw new System.NotImplementedException();
+            lock (MessageQueue)
+            {
+                return MessageQueue.Dequeue();
+            }
         }
     }
 }

@@ -5,61 +5,70 @@ using System.Text;
 
 namespace t2sBackend
 {
+
     public class ParsedMessage
     {
+        
+        /// <summary>
+        /// the UserDA) which sent the message
+        /// </summary>
         public UserDAO Sender
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+  
+            set;
+
+
+
         }
 
+
+        /// <summary>
+        /// contains the group the message is for
+        /// </summary>
         public GroupDAO Group
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            
+            set;
+            
         }
 
+
+        /// <summary>
+        /// contains arg for command, each arg is a entry in list. will be space delimited when arrives from a Message
+        /// </summary>
         public List<string> Message
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            /// <summary>
+            /// getter for the List of string called Message
+            /// </summary>
+            get;
+
+
+            set;
+           
         }
 
+        /// <summary>
+        /// entire message unchanged from user expect for group id having been removed
+        /// </summary>
         public string ContentMessage
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            
+            set;
+            
         }
 
+        /// <summary>
+        /// the command that is passed from a Message. Will be space delimited in Message
+        /// </summary>
         public string PluginMessage
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+
+            set;
         }
     }
 }
