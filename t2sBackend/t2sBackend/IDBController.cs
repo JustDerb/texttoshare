@@ -22,5 +22,7 @@ namespace t2sBackend
         GroupDAO RetrieveGroup(string groupTag);
 
         bool UpdateGroup(GroupDAO group);
+
+        bool LogMessage(string message, LoggerLevel level);
     }
 }
