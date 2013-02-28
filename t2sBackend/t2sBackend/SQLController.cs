@@ -8,47 +8,47 @@ namespace t2sBackend
 {
     public class SQLController : IDBController
     {
-        public static bool CreateUser(UserDAO user)
+        public bool CreateUser(UserDAO user)
         {
             throw new NotImplementedException();
         }
 
-        public static bool DeleteUser(UserDAO user)
+        public bool DeleteUser(UserDAO user)
         {
             throw new NotImplementedException();
         }
 
-        public static bool UpdateUser(UserDAO user)
+        public bool UpdateUser(UserDAO user)
         {
             throw new NotImplementedException();
         }
 
-        public static UserDAO RetrieveUser(string userPhoneEmail)
+        public UserDAO RetrieveUser(string userPhoneEmail)
         {
             throw new NotImplementedException();
         }
 
-        public static bool CreateGroup(GroupDAO group)
+        public bool CreateGroup(GroupDAO group)
         {
             throw new NotImplementedException();
         }
 
-        public static bool DeleteGroup(GroupDAO group)
+        public bool DeleteGroup(GroupDAO group)
         {
             throw new NotImplementedException();
         }
 
-        public static GroupDAO RetrieveGroup(string groupTag)
+        public GroupDAO RetrieveGroup(string groupTag)
         {
             throw new NotImplementedException();
         }
 
-        public static bool UpdateGroup(GroupDAO group)
+        public bool UpdateGroup(GroupDAO group)
         {
             throw new NotImplementedException();
         }
 
-        public static bool LogMessage(string message, LoggerLevel level)
+        public bool LogMessage(string message, LoggerLevel level)
         {
             using (SqlConnection conn = new SqlConnection())
             {

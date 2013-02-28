@@ -7,7 +7,6 @@ namespace t2sBackend
 {
     public static class DBControllerSingleton{
     
-
         private static IDBController _Controller;
 
         private static IDBController Controller
