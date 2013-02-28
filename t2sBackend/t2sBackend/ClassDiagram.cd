@@ -43,7 +43,7 @@
   <Class Name="t2sBackend.SQLController">
     <Position X="4" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAQAAAQAAAAgEAAAAAAAAAQAAAAQAAAAAAAEAABQ=</HashCode>
       <FileName>SQLController.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -91,6 +91,16 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
+  <Class Name="t2sBackend.DBControllerSingleton">
+    <Position X="10.25" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAEAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DBControllerSingleton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="t2sBackend.IWatcherService">
     <Position X="2.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
@@ -108,7 +118,7 @@
   <Interface Name="t2sBackend.IDBController">
     <Position X="5.75" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAgEAAAAAAAAAQAAAAQAAAAAAAEAABQ=</HashCode>
+      <HashCode>AAAAAQAAAQAAAAgEAAAAAAAAAQAAAAQAAAAAAAEAABQ=</HashCode>
       <FileName>IDBController.cs</FileName>
     </TypeIdentifier>
   </Interface>
