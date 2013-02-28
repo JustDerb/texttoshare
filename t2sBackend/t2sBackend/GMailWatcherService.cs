@@ -5,72 +5,81 @@ using System.Text;
 
 namespace t2sBackend
 {
-    public abstract class GMailWatcherService : IWatcherService
+    /// <summary>
+    /// IMAP/POP implmentation used from: https://github.com/andyedinborough/aenetmail
+    /// </summary>
+    public class GMailWatcherService : IWatcherService
     {
+        /// <summary>
+        /// User to use when logging into the GMail service
+        /// </summary>
         public string UserName
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
 
+        /// <summary>
+        /// Password to use when logging into the GMail service
+        /// </summary>
         public string Password
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
 
+        /// <summary>
+        /// Use SSL when logging into the GMail service
+        /// </summary>
         public bool UseSSL
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
 
+        /// <summary>
+        /// Use SSL when logging into the GMail service
+        /// </summary>
         public bool IsLoggedIn
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            private set;
         }
 
+        /// <summary>
+        /// Port to use when logging into the GMail service
+        /// </summary>
         public int Port
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
 
+        /// <summary>
+        /// Address to the IMAP server (Incoming)
+        /// </summary>
         public string IMAPServer
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Address to the SMTP server (Outgoing)
+        /// </summary>
+        public string SMTPServer
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Messages that have been recieved
+        /// </summary>
+        private List<Message> MessageQueue
+        {
+            get;
+            set;
         }
 
         public void Login()
@@ -83,6 +92,10 @@ namespace t2sBackend
             throw new System.NotImplementedException();
         }
 
-        private abstract void AddMessage(t2sBackend.Message message);
+        private void AddMessage(t2sBackend.Message message)
+        {
+            
+        }
+
     }
 }
