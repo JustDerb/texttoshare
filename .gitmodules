@@ -1,0 +1,3 @@
+[submodule "aenetmail"]
+	path = aenetmail
+	url = git@github.com:JustDerb/aenetmail.git
