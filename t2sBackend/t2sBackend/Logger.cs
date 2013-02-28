@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 
 namespace t2sBackend
 {
-    public static class Logger
+    public class Logger
     {
-    
-        public Logger()
+        public bool LogMessage(string message, LoggerLevel level)
         {
-            throw new System.NotImplementedException();
-        }
-    
-        public void LogMessage(string message, LoggerLevel level)
-        {
-            throw new System.NotImplementedException();
+            return SQLController.LogMessage(message, level);
         }
     }
 }

@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "t2sBackend", "t2sBackend\t2sBackend.csproj", "{352055AE-D9A0-486F-B21F-723478D09901}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "t2sBackendTest", "t2sBackendTest\t2sBackendTest.csproj", "{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{352055AE-D9A0-486F-B21F-723478D09901}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{352055AE-D9A0-486F-B21F-723478D09901}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{352055AE-D9A0-486F-B21F-723478D09901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
