@@ -10,7 +10,7 @@ namespace t2sBackend
     {
         public bool LogMessage(string message, LoggerLevel level)
         {
-            return SQLController.LogMessage(message, level);
+            return new SQLController().LogMessage(message, level);
         }
     }
 }

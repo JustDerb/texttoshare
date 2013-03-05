@@ -56,7 +56,7 @@ namespace t2sBackend
                 {
                     query.CommandText = "INSERT INTO eventlog (message, level, created_dt) VALUES (@message, @information, GETDATE())";
                     query.Parameters.Add("@message", message);
-                    query.Parameters.Add("@level", (int)level);
+                    query.Parameters.Add("@level", (int) level);
 
                     conn.Open();
                     int effectedRows = query.ExecuteNonQuery();

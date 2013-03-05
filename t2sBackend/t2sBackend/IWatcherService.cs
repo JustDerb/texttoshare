@@ -13,15 +13,6 @@ namespace t2sBackend
         event EventHandler RecievedMessage;
 
         /// <summary>
-        /// The current running state of the thread
-        /// </summary>
-        bool Running
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Start the watcher service
         /// </summary>
         void Start();
@@ -51,5 +42,11 @@ namespace t2sBackend
         /// <param name="message">Message to send</param>
         /// <returns>True is sending successful, false otherwise</returns>
         bool SendMessage(t2sBackend.Message message);
+
+        /// <summary>
+        /// The current running state of the thread
+        /// </summary>
+        /// <returns></returns>
+        bool IsRunning();
     }
 }
