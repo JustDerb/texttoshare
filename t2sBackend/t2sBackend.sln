@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "t2sBackend", "t2sBackend\t2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "t2sBackendTest", "t2sBackendTest\t2sBackendTest.csproj", "{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AE.Net.Mail", "..\aenetmail\AE.Net.Mail.csproj", "{68E9CF8C-AB54-4CC7-A34F-C7F469E4EFE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD85DBD1-EB99-49CC-8A8B-A68C9AA8C30E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68E9CF8C-AB54-4CC7-A34F-C7F469E4EFE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68E9CF8C-AB54-4CC7-A34F-C7F469E4EFE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68E9CF8C-AB54-4CC7-A34F-C7F469E4EFE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68E9CF8C-AB54-4CC7-A34F-C7F469E4EFE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
