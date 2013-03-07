@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AE.Net.Mail;
 
 namespace t2sBackend
 {
     /// <summary>
     /// IMAP/POP implmentation used from: https://github.com/andyedinborough/aenetmail
     /// </summary>
-    public class GMailWatcherService : IWatcherService
+    public class GMailWatcherService : AWatcherService
     {
         /// <summary>
         /// User to use when logging into the GMail service
@@ -49,7 +50,7 @@ namespace t2sBackend
         /// <summary>
         /// Port to use when logging into the GMail service
         /// </summary>
-        public int Port
+        public int IMAPPort
         {
             get;
             set;
@@ -74,28 +75,71 @@ namespace t2sBackend
         }
 
         /// <summary>
-        /// Messages that have been recieved
+        /// Port to use when sending mail to the GMail service
         /// </summary>
-        private List<Message> MessageQueue
+        public int SMTPPort
         {
             get;
             set;
         }
 
-        public void Login()
+        protected bool Running;
+
+        protected ImapClient ImapConnection;
+
+        /// <summary>
+        /// <see cref="IWatcherService.Start"/>
+        /// </summary>
+        /// <exception cref="Exception">Any errors when the IMAP service tries to connect</exception>
+        public override void Start()
         {
-            throw new System.NotImplementedException();
+            this.ImapConnection = new ImapClient(
+                this.IMAPServer, 
+                this.UserName, 
+                this.Password, 
+                ImapClient.AuthMethods.Login, 
+                this.IMAPPort, 
+                this.UseSSL);
+            //var msgs = ImapConnection.SearchMessages(SearchCondition.Undeleted());
+
+            ImapConnection.NewMessage += ImapConnection_NewMessage;
+
         }
 
-        public void Logout()
+        void ImapConnection_NewMessage(object sender, AE.Net.Mail.Imap.MessageEventArgs e)
         {
-            throw new System.NotImplementedException();
+            // Download the message
+            MailMessage msg = ImapConnection.GetMessage(e.MessageCount - 1, false, true);
+
+            Console.WriteLine(msg);
+
+            // Alert the watchers!
+            WatcherServiceEventArgs args = new WatcherServiceEventArgs();
+            args.MessageString = msg.Body;
+            this.OnRecievedMessage(args);
+
+            // Delete the message
+            ImapConnection.DeleteMessage(msg);
         }
 
-        private void AddMessage(t2sBackend.Message message)
+        public override void Stop()
         {
-            
+            throw new NotImplementedException();
         }
 
+        public override bool SendMessage(Message message, bool async)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool SendMessage(Message message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsRunning()
+        {
+            return Running;
+        }
     }
 }
