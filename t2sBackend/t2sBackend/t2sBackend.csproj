@@ -68,7 +68,7 @@
     <Compile Include="GroupDAO.cs" />
     <Compile Include="IDBController.cs" />
     <Compile Include="IPlugin.cs" />
-    <Compile Include="IWatcherService.cs" />
+    <Compile Include="AWatcherService.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggerLevel.cs" />
     <Compile Include="LUAPlugin.cs" />
@@ -121,6 +121,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\aenetmail\AE.Net.Mail.csproj">
+      <Project>{68e9cf8c-ab54-4cc7-a34f-c7f469e4efe0}</Project>
+      <Name>AE.Net.Mail</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

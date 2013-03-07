@@ -5,28 +5,37 @@ using System.Text;
 
 namespace t2sBackend
 {
-    public interface IWatcherService
+    public abstract class AWatcherService
     {
+        public class WatcherServiceEventArgs : EventArgs
+        {
+            public Message MessageObj { get; set; }
+            public String MessageString { get; set; }
+        }
+
         /// <summary>
         /// Event listener to be called when the service recieves a message
         /// </summary>
-        event EventHandler RecievedMessage;
+        public event EventHandler<WatcherServiceEventArgs> RecievedMessage;
+
+        protected virtual void OnRecievedMessage(WatcherServiceEventArgs e)
+        {
+            EventHandler<WatcherServiceEventArgs> handler = RecievedMessage;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
 
         /// <summary>
         /// Start the watcher service
         /// </summary>
-        void Start();
+        abstract public void Start();
 
         /// <summary>
         /// Stop the watcher service
         /// </summary>
-        void Stop();
-
-        /// <summary>
-        /// Gets the next message in the queue and removes it from the queue.
-        /// </summary>
-        /// <returns>Next meesage in the queue</returns>
-        Message GetNextMessage();
+        abstract public void Stop();
 
         /// <summary>
         /// Sends a message through this watcher service
@@ -34,19 +43,19 @@ namespace t2sBackend
         /// <param name="message">Message to send</param>
         /// <param name="async">Send message asynchronously</param>
         /// <returns>True is sending successful, false otherwise</returns>
-        bool SendMessage(t2sBackend.Message message, bool async);
+        abstract public bool SendMessage(Message message, bool async);
 
         /// <summary>
         /// Sends a message through this watcher service
         /// </summary>
         /// <param name="message">Message to send</param>
         /// <returns>True is sending successful, false otherwise</returns>
-        bool SendMessage(t2sBackend.Message message);
+        abstract public bool SendMessage(Message message);
 
         /// <summary>
         /// The current running state of the thread
         /// </summary>
         /// <returns></returns>
-        bool IsRunning();
+        abstract public bool IsRunning();
     }
 }

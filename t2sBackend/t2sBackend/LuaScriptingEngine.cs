@@ -7,7 +7,7 @@ namespace t2sBackend
 {
     public static class LuaScriptingEngine
     {
-        public static void runPlugin(LUAPlugin plugin, ParsedMessage message, IWatcherService service)
+        public static void runPlugin(LUAPlugin plugin, ParsedMessage message, AWatcherService service)
         {
             throw new System.NotImplementedException();
         }

@@ -22,7 +22,7 @@ namespace t2sBackend
         /// </summary>
         /// <param name="watcherService"></param>
         /// <param name="control"></param>
-        public MessageParser(IWatcherService watcherService, SQLController control)
+        public MessageParser(AWatcherService watcherService, SQLController control)
         {
             controller = control;
             parsed = new ParsedMessage();

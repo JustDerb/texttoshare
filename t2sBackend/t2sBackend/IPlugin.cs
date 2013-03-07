@@ -38,6 +38,6 @@ namespace t2sBackend
             set;
         }
 
-        void Run(ParsedMessage message, IWatcherService service);
+        void Run(ParsedMessage message, AWatcherService service);
     }
 }
