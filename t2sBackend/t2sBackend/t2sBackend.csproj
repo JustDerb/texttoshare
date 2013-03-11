@@ -80,6 +80,7 @@
     <Compile Include="PluginAccess.cs" />
     <Compile Include="PluginError.cs" />
     <Compile Include="PluginLibrary.cs" />
+    <Compile Include="nogit\PrivateInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLController.cs" />

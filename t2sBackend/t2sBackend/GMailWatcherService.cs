@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AE.Net.Mail;
+using System.Net.Mail;
 
 namespace t2sBackend
 {
@@ -36,15 +37,6 @@ namespace t2sBackend
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Use SSL when logging into the GMail service
-        /// </summary>
-        public bool IsLoggedIn
-        {
-            get;
-            private set;
         }
 
         /// <summary>
@@ -88,6 +80,30 @@ namespace t2sBackend
         protected ImapClient ImapConnection;
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <param name="Password"></param>
+        /// <param name="UseSSL"></param>
+        /// <param name="IMAPServer"></param>
+        /// <param name="IMAPPort"></param>
+        /// <param name="SMTPServer"></param>
+        /// <param name="SMTPPort"></param>
+        public GMailWatcherService(String Username, String Password, bool UseSSL, String IMAPServer, int IMAPPort, String SMTPServer, int SMTPPort)
+        {
+            this.UserName = Username;
+            this.Password = Password;
+
+            this.UseSSL = UseSSL;
+
+            this.IMAPServer = IMAPServer;
+            this.IMAPPort = IMAPPort;
+
+            this.SMTPServer = SMTPServer;
+            this.SMTPPort = SMTPPort;
+        }
+
+        /// <summary>
         /// <see cref="IWatcherService.Start"/>
         /// </summary>
         /// <exception cref="Exception">Any errors when the IMAP service tries to connect</exception>
@@ -100,16 +116,14 @@ namespace t2sBackend
                 ImapClient.AuthMethods.Login, 
                 this.IMAPPort, 
                 this.UseSSL);
-            //var msgs = ImapConnection.SearchMessages(SearchCondition.Undeleted());
 
-            ImapConnection.NewMessage += ImapConnection_NewMessage;
-
+            this.ImapConnection.NewMessage += ImapConnection_NewMessage;
         }
 
         void ImapConnection_NewMessage(object sender, AE.Net.Mail.Imap.MessageEventArgs e)
         {
             // Download the message
-            MailMessage msg = ImapConnection.GetMessage(e.MessageCount - 1, false, true);
+            AE.Net.Mail.MailMessage msg = ImapConnection.GetMessage(e.MessageCount - 1, false, true);
 
             Console.WriteLine(msg);
 
@@ -124,17 +138,32 @@ namespace t2sBackend
 
         public override void Stop()
         {
-            throw new NotImplementedException();
+            this.ImapConnection.NewMessage -= ImapConnection_NewMessage;
+
+            this.ImapConnection.Dispose();
+            this.ImapConnection = null;
         }
 
         public override bool SendMessage(Message message, bool async)
         {
-            throw new NotImplementedException();
+            System.Net.Mail.MailMessage messageToSend = new System.Net.Mail.MailMessage();
+            foreach (String to in message.Reciever)
+                messageToSend.To.Add(to);
+            messageToSend.Subject = "";
+            messageToSend.From = new System.Net.Mail.MailAddress(message.Sender);
+            messageToSend.Body = message.FullMessage;
+
+            SmtpClient smtp = new SmtpClient(this.SMTPServer,this.SMTPPort);
+            if (async)
+                smtp.SendAsync(messageToSend, null);
+            else
+                smtp.Send(messageToSend);
+            return false;
         }
 
         public override bool SendMessage(Message message)
         {
-            throw new NotImplementedException();
+            return SendMessage(message, false);
         }
 
         public override bool IsRunning()
