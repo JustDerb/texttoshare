@@ -25,6 +25,7 @@ namespace t2sBackend
 
         public UserDAO RetrieveUser(string userPhoneEmail)
         {
+            // return null if not a valid user
             throw new NotImplementedException();
         }
 
@@ -40,6 +41,9 @@ namespace t2sBackend
 
         public GroupDAO RetrieveGroup(string groupTag)
         {
+            // return null if not a valid user
+            // when retrieving enabled plugins for the group, return plugins that are selected by the group AND are not disabled
+            // when retrieving users in the group, only return users that are not suppressed or banned
             throw new NotImplementedException();
         }
 
