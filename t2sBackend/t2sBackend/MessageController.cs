@@ -17,7 +17,7 @@ namespace t2sBackend
             return this.queue.Dequeue();
         }
 
-        private void putNextMessage(ParsedMessage Message)
+        protected void putNextMessage(ParsedMessage Message)
         {
             this.queue.Enqueue(Message);
         }
@@ -27,7 +27,8 @@ namespace t2sBackend
             this.queue = new BlockingQueue<ParsedMessage>();
             this.watcher = Watcher;
             this.controller = Controller;
-            this.watcher.RecievedMessage += Watcher_RecievedMessage;
+            // DOESN'T WORK - Yet......
+            //this.watcher.RecievedMessage += Watcher_RecievedMessage;
         }
 
         void Watcher_RecievedMessage(object sender, AWatcherService.WatcherServiceEventArgs e)

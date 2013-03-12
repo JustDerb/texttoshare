@@ -6,7 +6,7 @@
   <Class Name="t2sBackend.PluginLibrary">
     <Position X="5.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAACABAAAAABAAAAAAAAAAAAAIIAIAQAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAACABAEEAAQAAAAAAAAAAAAAYIEIAQAAAAAA=</HashCode>
       <FileName>PluginLibrary.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -21,14 +21,14 @@
   <Class Name="t2sBackend.MessageParser">
     <Position X="0.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAABAAAABAAAABAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAgAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>MessageParser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.GMailWatcherService">
     <Position X="0.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAgAAAACAAAAAQACAAQAAAAACAAEEKIQACAgAAAAA=</HashCode>
+      <HashCode>CAAAgAAAACAAAAAQACAAQAAAAACAAEEKIQAAAgAAAAA=</HashCode>
       <FileName>GMailWatcherService.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -85,20 +85,10 @@
   <Class Name="t2sBackend.LUAPlugin">
     <Position X="10" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAgAAEAAAAAABAAAAAAAAAEAAAAAAAAAEAI=</HashCode>
       <FileName>LUAPlugin.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="t2sBackend.DBControllerSingleton">
-    <Position X="11" Y="3.5" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAQAAAAAAAAAAAEAABAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>DBControllerSingleton.cs</FileName>
-    </TypeIdentifier>
   </Class>
   <Interface Name="t2sBackend.IPlugin">
     <Position X="2.25" Y="0.5" Width="1.5" />

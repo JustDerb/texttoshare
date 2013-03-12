@@ -20,11 +20,18 @@ namespace t2sBackend
                 "smtp.gmail.com",
                 465);
 
-            MessageController controller = new MessageController(gmailServ, database);
+            MessageControllerOverride controller = new MessageControllerOverride(gmailServ, database);
             PluginLibrary pluginLib = new PluginLibrary(controller, gmailServ);
 
             pluginLib.Start();
             gmailServ.Start();
+
+            // Add fake emails (For testing)
+            List<Message> msgArray = new List<Message>();
+            //msgArray.add(...)
+
+            foreach (Message msg in msgArray)
+                controller.putNextMessage(MessageParser.Parse(msg,database));
 
             // BAD
             while (true) ;
