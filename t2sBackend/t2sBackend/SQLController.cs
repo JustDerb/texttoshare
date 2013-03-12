@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -8,6 +9,8 @@ namespace t2sBackend
 {
     public class SQLController : IDBController
     {
+        private const string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
+
         public bool CreateUser(UserDAO user)
         {
             throw new NotImplementedException();
@@ -54,20 +57,18 @@ namespace t2sBackend
 
         public bool LogMessage(string message, LoggerLevel level)
         {
-            using (SqlConnection conn = new SqlConnection())
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
             {
-                using (SqlCommand query = conn.CreateCommand())
-                {
-                    query.CommandText = "INSERT INTO eventlog (message, level, created_dt) VALUES (@message, @information, GETDATE())";
-                    query.Parameters.Add("@message", message);
-                    query.Parameters.Add("@level", (int) level);
+                query.CommandText = "INSERT INTO eventlog (message, level, created_dt) VALUES (@message, @level, GETDATE())";
+                query.Parameters.AddWithValue("@message", message);
+                query.Parameters.AddWithValue("@level", (int) level);
 
-                    conn.Open();
-                    int effectedRows = query.ExecuteNonQuery();
-                    conn.Close();
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+                conn.Close();
 
-                    return (1 == effectedRows) ? true : false;
-                }
+                return (1 == effectedRows) ? true : false;
             }
         }
     }
