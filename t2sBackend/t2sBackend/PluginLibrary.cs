@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -16,55 +17,9 @@ namespace t2sBackend
         private PluginError ErrorPlugin;
 
         /// <summary>
-        /// Parser to be used by the library to break down commands from the sender
-        /// </summary>
-        private MessageParser _Parser;
-
-        /// <summary>
-        /// Service to send/recieve messages to users
-        /// </summary>
-        private AWatcherService _Watcher;
-
-        /// <summary>
         /// List of plug-ins available
         /// </summary>
         private List<IPlugin> _PluginList;
-
-        /* Information to initialize message service*/
-        private string _User;
-        private string _Password;
-        private bool _UseSSL;
-        private string _IMAPServer;
-        private int _IMAPPort;
-        private string _SMTPServer;
-        private int _SMTPPort;
-
-        /// <summary>
-        /// Database controller to user to access plug-ins and group/user information
-        /// </summary>
-        private SQLController _SQLControl;
-
-
-        /// <summary>
-        /// Constructs a list of plug-ins and initializes the library
-        /// </summary>
-        public PluginLibrary()
-        {
-            _PluginList = new List<IPlugin>(/*default plugins*/);
-            _Watcher = new GMailWatcherService(_User, _Password, _UseSSL, _IMAPServer, _IMAPPort, _SMTPServer, _SMTPPort);
-            _SQLControl = new SQLController();
-            _Parser = new MessageParser(_Watcher, _SQLControl);
-        }
-
-        /// <summary>
-        /// Constructs a list of plug-ins and initializes the library with a message parser given by user
-        /// </summary>
-        /// <param name="parser"></param>
-        public PluginLibrary(MessageParser parser)
-        {
-            _PluginList = new List<IPlugin>(/*default plugins*/);
-        }
-
         /// <summary>
         /// Returns the list of plug-ins
         /// </summary>
@@ -74,19 +29,27 @@ namespace t2sBackend
             private set;
         }
 
+        private MessageController controller;
+        private AWatcherService service;
+
+        private BackgroundWorker libraryThread;
+
         /// <summary>
-        /// ????????
+        /// Constructs a list of plug-ins and initializes the library
         /// </summary>
-        public Queue<t2sBackend.ParsedMessage> MessageQueue
+        public PluginLibrary(MessageController Controller, AWatcherService Service)
         {
-            get;
-            set;
+            this.controller = Controller;
+            this.service = Service;
+            this._PluginList = new List<IPlugin>(/*default plugins*/);
+            ScanForPlugins();
         }
+
 
         /// <summary>
         /// Checks whether thread of plug-in library is running
         /// </summary>
-        private bool _Running;
+        private volatile bool _Running;
         public bool Running
         {
             get
@@ -104,16 +67,8 @@ namespace t2sBackend
         /// </summary>
         private void ScanForPlugins()
         {
-            throw new System.NotImplementedException();
-        }
-
-        /// <summary>
-        /// ????????????????
-        /// </summary>
-        /// <param name="message"></param>
-        public void AddMessage(ParsedMessage message)
-        {
-            throw new System.NotImplementedException();
+            // Don't do until LUA Plugins
+            return;
         }
 
         /// <summary>
@@ -122,7 +77,7 @@ namespace t2sBackend
         /// <returns></returns>
         public ParsedMessage GetNextMessage()
         {
-            throw new System.NotImplementedException();
+            return this.controller.getNextMessage();
         }
 
         /// <summary>
@@ -130,7 +85,43 @@ namespace t2sBackend
         /// </summary>
         public void Start()
         {
-            _Running = true;
+            if (!_Running)
+            {
+                _Running = true;
+                this.libraryThread = new BackgroundWorker();
+                this.libraryThread.DoWork += libraryThread_DoWork;
+                this.libraryThread.RunWorkerAsync();
+            }
+        }
+
+        private void libraryThread_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (_Running)
+            {
+                // Will block until a new message has arrived
+                ParsedMessage message = GetNextMessage();
+                // Logic here
+                //   Find plugin
+                //   Pass shit
+
+
+                // NOTE: Make sure thread is not disposed after running because it lost scope
+                BackgroundWorker pluginThread = new BackgroundWorker();
+                pluginThread.DoWork += pluginThread_DoWork;
+                Object[] parameters = new Object[] { /*PLUGIN GOES HERE*/ null, message};
+                pluginThread.RunWorkerAsync(parameters);
+            }
+        }
+
+        void pluginThread_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Object[] parameters = (Object[])e.Argument;
+            IPlugin plugin = (IPlugin)parameters[0];
+            ParsedMessage message = (ParsedMessage)parameters[1];
+
+            // Do plugin work
+            plugin.Run(message, this.service);
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -138,7 +129,10 @@ namespace t2sBackend
         /// </summary>
         public void Stop()
         {
-            _Running = false;
+            if (_Running)
+            {
+                _Running = false;
+            }
         }
     }
 }

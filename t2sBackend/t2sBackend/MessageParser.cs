@@ -9,35 +9,17 @@ namespace t2sBackend
     /// <summary>
     /// class which parses a message and creates a new Parsed message.
     /// </summary>
-    public class MessageParser
+    public static class MessageParser
     {
         private static readonly char delimiter='.';
-        private Queue<ParsedMessage> MessageQueue;
-        public event EventHandler parsedMessage;
-        private SQLController controller;
-        private ParsedMessage parsed;
-
-        /// <summary>
-        /// constructor for MessageParser Class
-        /// </summary>
-        /// <param name="watcherService"></param>
-        /// <param name="control"></param>
-        public MessageParser(AWatcherService watcherService, SQLController control)
-        {
-            controller = control;
-            parsed = new ParsedMessage();
-        }
 
         /// <summary>
         /// takes a Message and create a ParsedMessage from it and adds it to the queue
         /// </summary>
         /// <param name="message"></param>
-        public void addMessage(Message message)
+        public static ParsedMessage Parse(Message message, IDBController controller)
         {
-           
-              
              String expression = @"^([0-9a-zA-Z]{3,6})\"+delimiter+@"(\w+)\"+delimiter+@"(.*)$";
-
 
              Regex reg = new Regex(expression);
              MatchCollection m = reg.Matches(message.FullMessage);
@@ -51,6 +33,8 @@ namespace t2sBackend
             }
              String args = m[0].Groups[2].Value;
 
+             ParsedMessage parsed = new ParsedMessage();
+
             //set parsed message properties
              parsed.Group = controller.RetrieveGroup(grouptag);
              parsed.Sender = controller.RetrieveUser(message.Sender);
@@ -63,23 +47,8 @@ namespace t2sBackend
                  parsed.Message[i+1] = listContent[i];
              }
 
-            //add parsed message to queue
-            lock (MessageQueue){
-                MessageQueue.Enqueue(parsed);
-            }
+             return parsed;
             
-        }
-
-        /// <summary>
-        /// returns the next ParsedMessage from the MessageQueue
-        /// </summary>
-        /// <returns></returns>
-        public ParsedMessage getNextMessage()
-        {
-            lock (MessageQueue)
-            {
-                return MessageQueue.Dequeue();
-            }
         }
     }
 }

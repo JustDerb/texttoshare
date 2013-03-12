@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlockingQueue.cs" />
     <Compile Include="DBControllerSingleton.cs" />
     <Compile Include="GMailWatcherService.cs" />
     <Compile Include="GroupDAO.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="LUAPlugin.cs" />
     <Compile Include="LuaScriptingEngine.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="MessageController.cs" />
     <Compile Include="MessageParser.cs" />
     <Compile Include="ParsedMessage.cs" />
     <Compile Include="PhoneCarrier.cs" />
