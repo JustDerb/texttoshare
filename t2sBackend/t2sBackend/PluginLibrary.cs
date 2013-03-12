@@ -72,7 +72,7 @@ namespace t2sBackend
         }
 
         /// <summary>
-        /// ??????????????????????????
+        /// Grabs the next message from the controller
         /// </summary>
         /// <returns></returns>
         public ParsedMessage GetNextMessage()
@@ -94,15 +94,29 @@ namespace t2sBackend
             }
         }
 
+        /// <summary>
+        /// Handles the library and makes the appropriate plug-in with the passed information
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void libraryThread_DoWork(object sender, DoWorkEventArgs e)
         {
             while (_Running)
             {
                 // Will block until a new message has arrived
                 ParsedMessage message = GetNextMessage();
-                // Logic here
-                //   Find plugin
-                //   Pass shit
+                IPlugin plugin = null;
+                foreach (IPlugin i in message.Group.EnabledPlugins)
+                {
+                    if (i.Command.Equals(message.PluginMessage))
+                    {
+                        plugin = i;
+                    }
+                }
+                if (plugin.Equals(null))
+                {
+
+                }
 
 
                 // NOTE: Make sure thread is not disposed after running because it lost scope
