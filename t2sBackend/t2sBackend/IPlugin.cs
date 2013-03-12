@@ -46,10 +46,7 @@ namespace t2sBackend
             set;
         }
 
-        /// <summary>
-        /// Whether the plug-in will be displayed to the users
-        /// </summary>
-        bool IsHidden
+        bool AlwaysEnabled
         {
             get;
             set;
