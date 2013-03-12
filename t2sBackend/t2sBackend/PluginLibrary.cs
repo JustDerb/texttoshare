@@ -105,7 +105,19 @@ namespace t2sBackend
             {
                 // Will block until a new message has arrived
                 ParsedMessage message = GetNextMessage();
-                IPlugin plugin = null;
+
+                if(message.Group.Equals(null)){
+                    // Error plugin for invalid group
+                }
+
+                // sender is not a member of group
+                // user calling a plugin that he can't access (check moderator/user)
+                // user is banned // no reply
+                // user is suppressed // reply with a remind that they are suppressed. tell about unsuppress plugin
+                // invalid plugin
+
+
+                IPlugin plugin = new PluginError();
                 foreach (IPlugin i in message.Group.EnabledPlugins)
                 {
                     if (i.Command.Equals(message.PluginMessage))
@@ -113,10 +125,8 @@ namespace t2sBackend
                         plugin = i;
                     }
                 }
-                if (plugin.Equals(null))
-                {
 
-                }
+                plugin.Run(message, service);
 
 
                 // NOTE: Make sure thread is not disposed after running because it lost scope
