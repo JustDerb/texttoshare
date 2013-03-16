@@ -127,9 +127,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\aenetmail\AE.Net.Mail.csproj">
-      <Project>{68e9cf8c-ab54-4cc7-a34f-c7f469e4efe0}</Project>
-      <Name>AE.Net.Mail</Name>
+    <ProjectReference Include="..\..\S22Imap\S22.Imap.csproj">
+      <Project>{369c32a5-e099-4bd5-bbbf-51713947ca99}</Project>
+      <Name>S22.Imap</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

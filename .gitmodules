@@ -1,3 +1,4 @@
-[submodule "aenetmail"]
-	path = aenetmail
-	url = git@github.com:JustDerb/aenetmail.git
+[submodule "S22Imap"]
+	path = S22Imap
+
+	url = git@github.com:JustDerb/S22.Imap.git

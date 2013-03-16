@@ -28,7 +28,7 @@ namespace t2sBackend
             this.watcher = Watcher;
             this.controller = Controller;
             // DOESN'T WORK - Yet......
-            //this.watcher.RecievedMessage += Watcher_RecievedMessage;
+            this.watcher.RecievedMessage += Watcher_RecievedMessage;
         }
 
         void Watcher_RecievedMessage(object sender, AWatcherService.WatcherServiceEventArgs e)

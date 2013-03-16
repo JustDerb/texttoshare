@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AE.Net.Mail;
 using System.Net.Mail;
+using S22.Imap;
 
 namespace t2sBackend
 {
@@ -111,30 +111,51 @@ namespace t2sBackend
         {
             this.ImapConnection = new ImapClient(
                 this.IMAPServer, 
+                this.IMAPPort,
                 this.UserName, 
                 this.Password, 
-                ImapClient.AuthMethods.Login, 
-                this.IMAPPort, 
-                this.UseSSL);
+                AuthMethod.Auto, 
+                this.UseSSL,
+                null);
 
             this.ImapConnection.NewMessage += ImapConnection_NewMessage;
+
+            // Check for messages that are unread (IDLE only tells you for NEWLY recieve mail)
+            uint[] msgs = this.ImapConnection.Search(SearchCondition.Unseen());
+            foreach (uint msg in msgs) {
+                this.recievedMessage(msg);
+            }
         }
 
-        void ImapConnection_NewMessage(object sender, AE.Net.Mail.Imap.MessageEventArgs e)
+        void ImapConnection_NewMessage(object sender, IdleMessageEventArgs e)
         {
-            // Download the message
-            AE.Net.Mail.MailMessage msg = ImapConnection.GetMessage(e.MessageCount - 1, false, true);
+            this.recievedMessage(e.MessageUID);
+        }
 
-            Console.WriteLine(msg);
+        private void recievedMessage(uint MessageUID)
+        {
+            // Download the message (Set as seen)
+            MailMessage msg = this.ImapConnection.GetMessage(MessageUID, true);
+
+            Console.WriteLine(msg.Body);
 
             // Alert the watchers!
             WatcherServiceEventArgs args = new WatcherServiceEventArgs();
+            Message msgObj = new Message();
+
+            // TODO: Just return a System.Net.MailMessage (It has more info than we'll ever need)
+            msgObj.FullMessage = msg.Body;
+            msgObj.Sender = msg.From.Address;
+            msgObj.Reciever = null;
+
+            args.MessageObj = msgObj;
             args.MessageString = msg.Body;
             this.OnRecievedMessage(args);
 
             // Delete the message
-            ImapConnection.DeleteMessage(msg);
+            //this.ImapConnection.DeleteMessage(MessageUID);
         }
+
 
         public override void Stop()
         {

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using S22.Imap;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,7 +33,7 @@ namespace t2sBackend
             //msgArray.add(...)
 
             foreach (Message msg in msgArray)
-                controller.putNextMessage(MessageParser.Parse(msg,database));
+                controller.putNextMessage(MessageParser.Parse(msg, database));
 
             // BAD
             while (true) ;
