@@ -19,7 +19,7 @@ namespace t2sBackend
             {
                 return PluginAccess.MODERATOR;
             }
-            private set;
+            set { throw new InvalidOperationException("This variable cannot be set");  }
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace t2sBackend
             {
                 return "ERROR";
             }
-            private set;
+            set { throw new InvalidOperationException("This variable cannot be set"); }
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace t2sBackend
             {
                 return "Notifies User with a specified detail message";
             }
-            private set;
+            set { throw new InvalidOperationException("This variable cannot be set"); }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace t2sBackend
             {
                 return false;
             }
-            private set;
+            set { throw new InvalidOperationException("This variable cannot be set"); }
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace t2sBackend
             {
                 return false;
             }
-            private set;
+            set { throw new InvalidOperationException("This variable cannot be set"); }
         }
 
         /// <summary>
@@ -78,6 +78,19 @@ namespace t2sBackend
         public void Run(ParsedMessage message, AWatcherService service)
         {
             
+        }
+
+
+        public bool AlwaysEnabled
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

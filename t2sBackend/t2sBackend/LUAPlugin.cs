@@ -71,5 +71,18 @@ namespace t2sBackend
         {
             throw new NotImplementedException();
         }
+
+
+        public bool AlwaysEnabled
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

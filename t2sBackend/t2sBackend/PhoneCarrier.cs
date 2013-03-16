@@ -29,9 +29,9 @@ namespace t2sBackend
         [Description("pagemart.net")]
         WebLinkWireless,
         [Description("airmessage.net")]
-        WebLinkWireless,
-        [Description("voicestream.net")]
         VoiceStream,
+        [Description("voicestream.net")]
+        MyVerizonWireless,
         [Description("myvzw.com")]
         VerizonPCS,
         [Description("myairmail.com")]
@@ -155,7 +155,7 @@ namespace t2sBackend
         [Description("cellularonewest.com")]
         WesternWireless,
         [Description("sms.wcc.net")]
-        WestCentralWireless,
+        VMobile,
         [Description("vmobile.ca")]
         VirginMobileCanada,
         [Description("Virgin Mobile")]

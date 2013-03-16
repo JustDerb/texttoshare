@@ -12,35 +12,20 @@ namespace t2sBackend
     {
         public string FullMessage
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
 
         public string Sender
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
 
         public List<string> Reciever
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
+            get;
+            set;
         }
     }
 }
