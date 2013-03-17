@@ -44,7 +44,13 @@ namespace t2sBackend
             set;
         }
 
-        private UserDAO Owner
+        public PluginAccess Access
+        {
+            get;
+            set;
+        }
+
+        public string HelpText
         {
             get;
             set;

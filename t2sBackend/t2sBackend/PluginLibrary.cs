@@ -120,7 +120,7 @@ namespace t2sBackend
                 IPlugin plugin = new PluginError();
                 foreach (IPlugin i in message.Group.EnabledPlugins)
                 {
-                    if (i.Command.Equals(message.PluginMessage))
+                    if (i.PluginDAO.Name.Equals(message.PluginMessage))
                     {
                         plugin = i;
                     }

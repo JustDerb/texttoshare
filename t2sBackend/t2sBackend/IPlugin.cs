@@ -11,42 +11,9 @@ namespace t2sBackend
     public interface IPlugin
     {
         /// <summary>
-        /// Controls what the plug-in has access to in the system
+        /// Stores metadata related to this plugin
         /// </summary>
-        t2sBackend.PluginAccess Access
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Command that identifies plug-in
-        /// </summary>
-        string Command
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Description of plug-in
-        /// </summary>
-        string HelpText
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Whether the plug-in will be available to the users
-        /// </summary>
-        bool IsDisabled
-        {
-            get;
-            set;
-        }
-
-        bool AlwaysEnabled
+        PluginDAO PluginDAO
         {
             get;
             set;

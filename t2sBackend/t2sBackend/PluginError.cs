@@ -92,5 +92,17 @@ namespace t2sBackend
                 throw new NotImplementedException();
             }
         }
+
+        public PluginDAO PluginDAO
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
