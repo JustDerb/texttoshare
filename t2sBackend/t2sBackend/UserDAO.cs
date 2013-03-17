@@ -121,7 +121,7 @@ namespace t2sBackend
         /// <summary>
         /// Controls the access for the User to certain privileges
         /// </summary>
-        public UserType UserLevel
+        public UserLevel UserLevel
         {
             get;
             set;
