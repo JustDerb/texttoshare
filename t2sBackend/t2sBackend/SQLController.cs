@@ -100,7 +100,7 @@ namespace t2sBackend
                     userDAO.UserID = (int) reader["id"];
                     userDAO.FirstName = (string) reader["first_name"];
                     userDAO.LastName = (string) reader["last_name"];
-                    userDAO.PhoneNumber = (string) reader["phone"]; // This should be casting to (int) instead of (string)
+                    userDAO.PhoneNumber = (string) reader["phone"];
                     userDAO.PhoneEmail = (string) reader["email_phone"];
                     userDAO.Carrier = (PhoneCarrier) reader["carrier"];
                     userDAO.UserLevel = (UserType) reader["user_level"];

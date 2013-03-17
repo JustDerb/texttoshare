@@ -112,7 +112,7 @@ namespace t2sBackend
         /// <summary>
         /// Used to manage the User in the Database
         /// </summary>
-        public int UserID
+        public int? UserID
         {
             get;
             set;
