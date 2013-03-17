@@ -131,12 +131,7 @@ namespace t2sBackend
         /// <returns>True if User is removed successfully, false if otherwise</returns>
         public bool RemoveModerator(UserDAO user)
         {
-            if (!Moderators.Contains(user))
-            {
-                return false;
-            }
-            Moderators.Remove(user);
-            return true;
+            return Moderators.Remove(user);
         }
 
         /// <summary>
@@ -161,12 +156,7 @@ namespace t2sBackend
         /// <returns>True if the Plugin is removed successfully, false if otherwise</returns>
         public bool RemovePlugin(IPlugin plugin)
         {
-            if (!EnabledPlugins.Contains(plugin))
-            {
-                return false;
-            }
-            EnabledPlugins.Remove(plugin);
-            return true;
+            return EnabledPlugins.Remove(plugin);
         }
     }
 }

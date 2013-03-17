@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlockingQueue.cs" />
+    <Compile Include="GroupLevel.cs" />
     <Compile Include="GMailWatcherService.cs" />
     <Compile Include="GroupDAO.cs" />
     <Compile Include="IDBController.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="ParsedMessage.cs" />
     <Compile Include="PhoneCarrier.cs" />
     <Compile Include="PluginAccess.cs" />
+    <Compile Include="PluginDAO.cs" />
     <Compile Include="PluginError.cs" />
     <Compile Include="PluginLibrary.cs" />
     <Compile Include="nogit\PrivateInfo.cs" />

@@ -135,5 +135,14 @@ namespace t2sBackend
         {
             return SuppressedDate.Add(SuppressedLength);
         }
+
+        /// <summary>
+        /// Creates a new UserDAO object. By default the UserID is set to null because we do not know
+        /// if there is a reference to this UserDAO in the database.
+        /// </summary>
+        public UserDAO()
+        {
+            this.UserID = null;
+        }
     }
 }
