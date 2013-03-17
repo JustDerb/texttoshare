@@ -20,6 +20,13 @@ namespace t2sBackendTest
             Assert.IsTrue(Logger.LogMessage("TEST_LOG_MESSAGE", LoggerLevel.DEBUG), "The logger was unable to log the test message.");
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void TestNullMessageThrowsException()
+        {
+            Logger.LogMessage(null, LoggerLevel.DEBUG);
+        }
+
         [TestCleanup]
         public void Teardown()
         {
@@ -30,7 +37,7 @@ namespace t2sBackendTest
                 query.Parameters.AddWithValue("@level", LoggerLevel.DEBUG);
 
                 conn.Open();
-                int effectedRows = query.ExecuteNonQuery();
+                query.ExecuteNonQuery();
                 conn.Close();
             }
         }
