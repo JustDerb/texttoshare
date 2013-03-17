@@ -17,8 +17,7 @@ namespace t2sBackendTest
         [TestMethod]
         public void TestLogMessage()
         {
-            Logger logger = new Logger();
-            Assert.IsTrue(logger.LogMessage("TEST_LOG_MESSAGE", 0));
+            Assert.IsTrue(Logger.LogMessage("TEST_LOG_MESSAGE", LoggerLevel.DEBUG), "The logger was unable to log the test message.");
         }
 
         [TestCleanup]
@@ -27,9 +26,8 @@ namespace t2sBackendTest
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand query = conn.CreateCommand())
             {
-                query.CommandText = "DELETE FROM eventlog WHERE message = @message AND level = @level";
-                query.Parameters.AddWithValue("@message", "TEST_LOG_MESSAGE");
-                query.Parameters.AddWithValue("@level", 0);
+                query.CommandText = "DELETE FROM eventlog WHERE message = 'TEST_LOG_MESSAGE' AND level = @level";
+                query.Parameters.AddWithValue("@level", LoggerLevel.DEBUG);
 
                 conn.Open();
                 int effectedRows = query.ExecuteNonQuery();

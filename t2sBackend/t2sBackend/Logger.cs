@@ -15,7 +15,7 @@ namespace t2sBackend
         /// <summary>
         /// private static IDBController variable
         /// </summary>
-        private static IDBController controller = new SQLController();
+        private static IDBController controller = new SqlController();
         /// <summary>
         /// takes the IDBController instance and logs a message with the LoggerLevel
         /// </summary>
