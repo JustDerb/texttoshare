@@ -8,7 +8,7 @@ namespace t2sBackend
 {
 
     /// <summary>
-    /// static class which logs messages to the database
+    /// Static class which logs messages to the database
     /// </summary>
     public static class Logger
     {
@@ -16,12 +16,14 @@ namespace t2sBackend
         /// private static IDBController variable
         /// </summary>
         private static IDBController controller = new SqlController();
+
         /// <summary>
-        /// takes the IDBController instance and logs a message with the LoggerLevel
+        /// Inserts a message into the database with the given message and level of importance.
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="level"></param>
-        /// <returns></returns>
+        /// <param name="message">The message for the log.</param>
+        /// <param name="level">The level of the given.</param>
+        /// <returns>true if the message was successfully logged.</returns>
+        /// <seealso cref="LoggerLevel"/>
         public static bool LogMessage(string message, LoggerLevel level)
         {
             return controller.LogMessage(message, level);
