@@ -12,7 +12,7 @@ namespace t2sBackend
     {
         static void Main(string[] args)
         {
-            IDBController database = new SQLController();
+            IDBController database = new SqlController();
             AWatcherService gmailServ = new GMailWatcherService(
                 PrivateInfo.Email.UserName,
                 PrivateInfo.Email.Password,
