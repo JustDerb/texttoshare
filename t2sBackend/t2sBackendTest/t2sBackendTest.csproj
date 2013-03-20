@@ -56,7 +56,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LoggerTest.cs" />
-    <Compile Include="SqlControllerTest.cs" />
+    <Compile Include="SqlControllerUserTest.cs" />
+    <Compile Include="SqlControllerGroupTest.cs" />
+    <Compile Include="SqlControllerPluginTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\t2sBackend\t2sBackend.csproj">
