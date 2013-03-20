@@ -21,7 +21,7 @@ namespace t2sBackendTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void TestNullMessageThrowsException()
         {
             Logger.LogMessage(null, LoggerLevel.DEBUG);
