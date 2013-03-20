@@ -8,7 +8,7 @@ namespace t2sBackend
 {
     public class PluginDAO
     {
-        public int PluginID
+        public int? PluginID
         {
             get;
             set;
@@ -26,7 +26,7 @@ namespace t2sBackend
             set;
         }
 
-        public bool isDisabled
+        public bool IsDisabled
         {
             get;
             set;
