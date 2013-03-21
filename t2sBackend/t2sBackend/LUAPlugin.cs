@@ -164,7 +164,7 @@ namespace t2sBackend
         public PluginDAO PluginDAO
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace t2sBackend
                 return LUAPlugin.LuaScriptLocation + "\\" + name;
         }
 
-        public ~LUAPlugin()
+        ~LUAPlugin()
         {
             if (this.LuaEngine != null)
             {
