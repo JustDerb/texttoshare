@@ -9,7 +9,8 @@ namespace t2sBackend
     {
         public static void runPlugin(LUAPlugin plugin, ParsedMessage message, AWatcherService service)
         {
-            throw new System.NotImplementedException();
+            // LUAPlugin is self-contained, so just run it.
+            plugin.Run(message, service);
         }
     }
 }
