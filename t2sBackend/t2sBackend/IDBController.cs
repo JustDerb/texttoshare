@@ -11,9 +11,10 @@ namespace t2sBackend
         /// Creates a new user entry in the database with the given UserDAO.
         /// </summary>
         /// <param name="user">The UserDAO to insert into the database.</param>
+        /// <param name="password">The password for the user.</param>
         /// <returns>true if the user was successfully added.</returns>
         /// <exception cref="ArgumentNullException">If the given UserDAO is null.</exception>
-        bool CreateUser(UserDAO user);
+        bool CreateUser(UserDAO user, string password);
 
         /// <summary>
         /// Deletes an existing user that matches the given UserDAO.
