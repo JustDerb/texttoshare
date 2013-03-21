@@ -110,6 +110,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>MainDatabase.mdf</DependentUpon>
     </Content>
+    <Content Include="StoredProcedures\sp_deleteGroup.sql" />
     <Content Include="StoredProcedures\sp_deletePlugin.sql" />
     <Content Include="StoredProcedures\sp_deleteUser.sql" />
   </ItemGroup>
