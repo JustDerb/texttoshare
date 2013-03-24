@@ -7,6 +7,13 @@ namespace t2sBackend
 {
     public class GroupDAO
     {
+        public GroupDAO(UserDAO Owner)
+        {
+            this.Owner = Owner;
+        }
+
+        public GroupDAO() { }
+
         /// <summary>
         /// The List of Users in the Group. Managed by the Group Moderators
         /// </summary>
@@ -64,7 +71,7 @@ namespace t2sBackend
         /// <summary>
         /// The List of Plugins that the Group's Moderators have chosen to enable for the Group
         /// </summary>
-        public List<IPlugin> EnabledPlugins
+        public List<PluginDAO> EnabledPlugins
         {
             get;
             set;
@@ -139,7 +146,7 @@ namespace t2sBackend
         /// </summary>
         /// <param name="plugin">Plugin to be added</param>
         /// <returns>True if the Plugin is added successfully, false if otherwise</returns>
-        public bool AddPlugin(IPlugin plugin)
+        public bool AddPlugin(PluginDAO plugin)
         {
             if (EnabledPlugins.Contains(plugin))
             {
@@ -154,7 +161,7 @@ namespace t2sBackend
         /// </summary>
         /// <param name="plugin">Plugin to be removed</param>
         /// <returns>True if the Plugin is removed successfully, false if otherwise</returns>
-        public bool RemovePlugin(IPlugin plugin)
+        public bool RemovePlugin(PluginDAO plugin)
         {
             return EnabledPlugins.Remove(plugin);
         }
