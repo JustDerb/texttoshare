@@ -290,7 +290,7 @@ namespace t2sBackend
         /// <param name="groupID">The associated group for a list of users.</param>
         /// <param name="users">The list of users in the group.</param>
         /// <param name="groupLevel">The group level of the users.</param>
-        private bool InsertGroupMembers(int groupID, List<UserDAO> users, GroupLevel groupLevel)
+        private bool InsertGroupMembers(int? groupID, List<UserDAO> users, GroupLevel groupLevel)
         {
             foreach(UserDAO user in users)
             {
@@ -307,7 +307,7 @@ namespace t2sBackend
         /// <param name="groupID">The associated group for a user.</param>
         /// <param name="userID">The userID for a specific user.</param>
         /// <param name="groupLevel">The group level of the user.</param>
-        private bool InsertGroupMember(int groupID, int? userID, GroupLevel groupLevel)
+        private bool InsertGroupMember(int? groupID, int? userID, GroupLevel groupLevel)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand query = conn.CreateCommand())
@@ -329,7 +329,7 @@ namespace t2sBackend
             }
         }
 
-        private bool InsertGroupPlugins(int groupID, List<IPlugin> plugins)
+        private bool InsertGroupPlugins(int? groupID, List<IPlugin> plugins)
         {
             foreach (IPlugin plugin in plugins)
             {
@@ -340,7 +340,7 @@ namespace t2sBackend
             return true;
         }
 
-        private bool InsertGroupPlugin(int groupID, IPlugin plugin)
+        private bool InsertGroupPlugin(int? groupID, IPlugin plugin)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand query = conn.CreateCommand())

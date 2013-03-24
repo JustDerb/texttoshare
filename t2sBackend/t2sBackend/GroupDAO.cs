@@ -19,7 +19,7 @@ namespace t2sBackend
         /// <summary>
         /// Used to manage the Group in the Database
         /// </summary>
-        public int GroupID
+        public int? GroupID
         {
             get;
             set;
