@@ -121,7 +121,7 @@ namespace t2sBackendTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void RetrieveNullUserShouldThrowException()
         {
-            _controller.RetrieveUser(null);
+            _controller.RetrieveUser("");
         }
 
         [TestCategory("SqlController.User")]
