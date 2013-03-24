@@ -103,6 +103,11 @@ namespace t2sBackend
             this.SMTPPort = SMTPPort;
         }
 
+        ~GMailWatcherService()
+        {
+            this.Stop();
+        }
+
         /// <summary>
         /// <see cref="IWatcherService.Start"/>
         /// </summary>
