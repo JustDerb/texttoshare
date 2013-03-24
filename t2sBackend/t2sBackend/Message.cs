@@ -38,5 +38,12 @@ namespace t2sBackend
             this.Reciever = new List<string>(Reciever);
             this.FullMessage = Message;
         }
+
+        public Message(string Sender, string[] Reciever, string Message)
+        {
+            this.Sender = Sender;
+            this.Reciever = new List<string>(Reciever);
+            this.FullMessage = Message;
+        }
     }
 }
