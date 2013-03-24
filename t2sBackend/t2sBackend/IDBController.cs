@@ -103,6 +103,15 @@ namespace t2sBackend
         /// <param name="password">The password to check.</param>
         /// <returns>true if the user exists.</returns>
         bool CheckLogin(string username, string password);
+
+        /// <summary>
+        /// Registers a new user in the database.
+        /// </summary>
+        /// <param name="user">The user to be added to the database.</param>
+        /// <param name="password">The login password of the user.</param>
+        /// <returns>true if the user was successfully added.</returns>
+        /// <seealso cref="SqlController#CreateUser"/>
+        bool RegisterUser(UserDAO user, string password);
     }
 
     /// <summary>

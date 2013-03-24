@@ -10,11 +10,10 @@ namespace t2sBackend
 {
     public class SqlController : IDBController
     {
-        /*
-         * The connection string used for connecting to the database. 
-         * 
-         * Do NOT modify these values unless the directory of the database changes.
-         */
+        /// <summary>
+        /// The connection string used for connecting to the database. 
+        /// Do NOT modify these values unless the directory of the database changes.
+        /// </summary>
         private const string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
 
         #region UserDAO "CRUD" actions
@@ -98,23 +97,60 @@ namespace t2sBackend
                 // If there are no records returned from the select statement, the DataReader will be empty
                 while (reader.Read())
                 {
-                    userDAO = new UserDAO();
-                    userDAO.UserID = (int) reader["id"];
-                    userDAO.UserName = (string) reader["username"];
-                    userDAO.FirstName = (string) reader["first_name"];
-                    userDAO.LastName = (string) reader["last_name"];
-                    userDAO.PhoneNumber = (string) reader["phone"];
-                    userDAO.PhoneEmail = (string) reader["email_phone"];
-                    userDAO.Carrier = (PhoneCarrier) reader["carrier"];
-                    userDAO.UserLevel = (UserLevel) reader["user_level"];
-                    userDAO.IsBanned = (bool) reader["banned"];
-                    userDAO.IsSuppressed = (bool) reader["suppressed"];
+                    BuildUserDAO(reader, userDAO);
                 }
 
                 if (null == userDAO) throw new CouldNotFindException("Could not find user with userPhoneEmail: " + userPhoneEmail);
 
                 return userDAO;
             }
+        }
+
+        public UserDAO RetrieveUser(int? userID)
+        {
+            if (null == userID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT id, username, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed ");
+                queryBuilder.Append("FROM users ");
+                queryBuilder.Append("WHERE id = @id");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@phoneEmail", userID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                UserDAO userDAO = null;
+
+                // If there are no records returned from the select statement, the DataReader will be empty
+                while (reader.Read())
+                {
+                    BuildUserDAO(reader, userDAO);
+                }
+
+                if (null == userDAO) throw new CouldNotFindException("Could not find user with userID: " + userID);
+
+                return userDAO;
+            }
+        }
+
+        private void BuildUserDAO(SqlDataReader reader, UserDAO userDAO)
+        {
+            userDAO = new UserDAO();
+            userDAO.UserID = (int)reader["id"];
+            userDAO.UserName = (string)reader["username"];
+            userDAO.FirstName = (string)reader["first_name"];
+            userDAO.LastName = (string)reader["last_name"];
+            userDAO.PhoneNumber = (string)reader["phone"];
+            userDAO.PhoneEmail = (string)reader["email_phone"];
+            userDAO.Carrier = (PhoneCarrier)reader["carrier"];
+            userDAO.UserLevel = (UserLevel)reader["user_level"];
+            userDAO.IsBanned = (bool)reader["banned"];
+            userDAO.IsSuppressed = (bool)reader["suppressed"];
         }
 
         /// <summary>
@@ -294,7 +330,7 @@ namespace t2sBackend
         {
             foreach(UserDAO user in users)
             {
-                if (!UserExists(user.UserName, user.PhoneEmail)) throw new CouldNotFindException("User with username: " + user.UserName + " needs to be created before being added to the group");
+                if (!UserExists(user.UserName, user.PhoneEmail)) throw new CouldNotFindException("User with username: " + user.UserName + " needs to be created before being added to the group.");
                 if (!InsertGroupMember(groupID, user.UserID, groupLevel)) return false;
             }
 
@@ -320,7 +356,7 @@ namespace t2sBackend
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@group_id", groupID);
                 query.Parameters.AddWithValue("@user_id", userID);
-                query.Parameters.AddWithValue("@group_level", (int) groupLevel);
+                query.Parameters.AddWithValue("@group_level", (int)groupLevel);
 
                 conn.Open();
                 int effectedRows = query.ExecuteNonQuery();
@@ -329,30 +365,31 @@ namespace t2sBackend
             }
         }
 
-        private bool InsertGroupPlugins(int? groupID, List<IPlugin> plugins)
+        private bool InsertGroupPlugins(int? groupID, List<PluginDAO> plugins)
         {
-            foreach (IPlugin plugin in plugins)
+            foreach (PluginDAO plugin in plugins)
             {
-                if (!PluginExists(plugin.PluginDAO.Name)) CreatePlugin(plugin.PluginDAO);
-                if (!InsertGroupPlugin(groupID, plugin)) return false;
+                if (!PluginExists(plugin.Name)) CreatePlugin(plugin);
+                if (!InsertGroupPlugin(groupID, plugin.PluginID, plugin.IsDisabled)) return false;
             }
 
             return true;
         }
 
-        private bool InsertGroupPlugin(int? groupID, IPlugin plugin)
+        private bool InsertGroupPlugin(int? groupID, int? pluginID, bool isDisabled)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("INSERT INTO groupplugins (group_id, user_id, group_level, added_dt) ");
+                queryBuilder.Append("INSERT INTO groupplugins (group_id, plugin_id, disabled, created_dt) ");
                 queryBuilder.Append("VALUES ");
-                queryBuilder.Append("(@group_id, @user_id, GETDATE())");
+                queryBuilder.Append("(@group_id, @plugin_id, @disabled, GETDATE())");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@group_id", groupID);
-                query.Parameters.AddWithValue("@plugin_id", plugin.PluginDAO.PluginID);
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+                query.Parameters.AddWithValue("@disabled", isDisabled);
 
                 conn.Open();
                 int effectedRows = query.ExecuteNonQuery();
@@ -402,11 +439,15 @@ namespace t2sBackend
                 // If there are no records returned from the select statement, the DataReader will be empty
                 while (reader.Read())
                 {
-                    group = new GroupDAO();
-                    group.GroupID = (int)reader["id"];
-                    group.Name = (string)reader["name"];
-                    group.Description = (string)reader["description"];
-                    group.Owner.UserID = (int)reader["owner_id"];
+                    int groupID = (int)reader["id"];
+                    string name = (string)reader["name"];
+                    string description = (string)reader["description"];
+                    int ownerID = (int)reader["owner_id"];
+
+                    group = new GroupDAO(RetrieveUser(ownerID));
+                    group.GroupID = groupID;
+                    group.Name = name;
+                    group.Description = description;
                 }
 
                 if (null == group) throw new CouldNotFindException("Could not find user with groupTag: " + groupTag);
@@ -455,9 +496,9 @@ namespace t2sBackend
                             group.AddModerator(userDAO);
                             break;
                         // Owner
-                        case 2:
+                        //case 2:
                             //group.Owner = userDAO; // This needs to be addressed, since the GroupDAO.Owner setter is private
-                            break;
+                            //break;
                         // User
                         default:
                             group.AddUserToGroup(userDAO);
@@ -490,26 +531,116 @@ namespace t2sBackend
                 while (reader.Read())
                 {
                     //This needs to be addressed, as there is no current way of adding PluginDAOs to a GroupDAO
-                    //group.AddPlugin(new IPlugin() {
-                    //    new PluginDAO() {
-                    //        PluginID = (int)reader["id"],
-                    //        Name = (string)reader["name"],
-                    //        Description = (string)reader["description"],
-                    //        IsDisabled = (bool)reader["disabled"],
-                    //        VersionNum = (string)reader["version_num"],
-                    //        OwnerID = (int)reader["owner_id"],
-                    //        Access = (PluginAccess)reader["plugin_access"],
-                    //        HelpText = (string)reader["help_text"]
-                    //    }
-                    //});
+                    group.AddPlugin(new PluginDAO() {
+                        PluginID = (int)reader["id"],
+                        Name = (string)reader["name"],
+                        Description = (string)reader["description"],
+                        IsDisabled = (bool)reader["disabled"],
+                        VersionNum = (string)reader["version_num"],
+                        OwnerID = (int)reader["owner_id"],
+                        Access = (PluginAccess)reader["plugin_access"],
+                        HelpText = (string)reader["help_text"]
+                    });
                 }
             }
 
         }
 
+        /// <summary>
+        /// Updates the metadata, the list of users for the group, and all enabled plugin relationships for the given group.
+        /// </summary>
+        /// <param name="group">The GroupDAO to update in the database.</param>
+        /// <returns>true if successful.</returns>
         public bool UpdateGroup(GroupDAO group)
         {
-            throw new NotImplementedException();
+            if (null == group || null == group.GroupID) throw new ArgumentNullException();
+
+            return (UpdateGroupMetadata(group) &&
+                UpdateGroupMembers(group) &&
+                UpdateGroupPlugins(group));
+        }
+
+        private bool UpdateGroupMetadata(GroupDAO group)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("UPDATE groups SET ");
+                queryBuilder.Append("name = @name, ");
+                queryBuilder.Append("description = @description, ");
+                queryBuilder.Append("owner_id = @owner_id, ");
+                queryBuilder.Append("grouptag = @grouptag ");
+                queryBuilder.Append("WHERE id = @group_id");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@name", group.Name);
+                query.Parameters.AddWithValue("@description", group.Description);
+                query.Parameters.AddWithValue("@owner_id", group.Owner.UserID);
+                query.Parameters.AddWithValue("@grouptag", group.GroupTag);
+                query.Parameters.AddWithValue("@group_id", group.GroupID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                // Only one record should have been updated
+                return 1 == effectedRows;
+            }
+        }
+
+        private bool UpdateGroupMembers(GroupDAO group)
+        {
+            CheckForUserListModifications(group.GroupID, group.Users, GroupLevel.User);
+            CheckForUserListModifications(group.GroupID, group.Moderators, GroupLevel.Moderator);
+
+            return true;
+        }
+
+        private void CheckForUserListModifications(int? groupID, List<UserDAO> userList, GroupLevel groupLevel)
+        {
+            // Get the current list of all users for a specific group level
+            List<int?> userIDList = GetAllGroupMemberIDs(groupID, true, groupLevel);
+
+            // For each user in the current group object
+            foreach (UserDAO user in userList)
+                // If the user is not already a member in the database, add them
+                if (!IsUserMemberOfGroup(groupID, user.UserID)) AddMemberToGroup(groupID, user.UserID, groupLevel);
+                // Otherwise, remove their ID from the list
+                else userIDList.Remove(user.UserID);
+
+            // At this point, userIDList contains user IDs of members who are no longer in the group
+            if (userIDList.Count > 0)
+                // For each user no longer in the group
+                foreach (int? id in userIDList)
+                    // Remove them from the group in the database
+                    RemoveMemberFromGroup(groupID, id);
+        }
+
+        private bool UpdateGroupPlugins(GroupDAO group)
+        {
+            CheckForPluginListModifications(group.GroupID, group.EnabledPlugins);
+
+            return true;
+        }
+
+        private void CheckForPluginListModifications(int? groupID, List<PluginDAO> pluginList)
+        {
+            // Get the current list of all plugins for a group
+            List<int?> pluginIDList = GetAllEnabledGroupPluginIDs(groupID);
+
+            // For each plugin in the current group object
+            foreach (PluginDAO plugin in pluginList)
+                // If the plugin is not already a part of the group in the database, add it
+                if (!IsPluginInGroup(groupID, plugin.PluginID)) AddPluginToGroup(groupID, plugin.PluginID, false);
+                // Otherwise, remove the plugin ID from the list
+                else pluginIDList.Remove(plugin.PluginID);
+
+            // At this point, pluginIDList contains plugin IDs of plugins no longer associated with the group
+            if (pluginIDList.Count > 0)
+                // For each plugin no longer in the group
+                foreach (int? id in pluginIDList)
+                    // Remove them from the group in the database
+                    RemovePluginFromGroup(groupID, id);
         }
 
         /// <summary>
@@ -543,7 +674,7 @@ namespace t2sBackend
         /// <summary>
         /// Checks to see if a group with the given name exists in the database.
         /// </summary>
-        /// <param name="name">THe name of the group to check in the database.</param>
+        /// <param name="name">The name of the group to check in the database.</param>
         /// <returns>true if the group already exists.</returns>
         /// <exception cref="ArgumentNullException">If the given name is null.</exception>
         public virtual bool GroupExists(string name)
@@ -561,6 +692,289 @@ namespace t2sBackend
 
                 // Returns true if there is something to read
                 return reader.Read();
+            }
+        }
+
+        /// <summary>
+        /// Adds a user with a specified administrative level to a group.
+        /// </summary>
+        /// <param name="groupID">The GroupID of the group to add the user to.</param>
+        /// <param name="userID">The UserID of the user to add.</param>
+        /// <param name="groupLevel">The level of the user's permissions in the group.</param>
+        /// <returns>true if the user was added successfully.</returns>
+        /// <exception cref="ArgumentNullException">If the given groupID or userID are null.</exception>
+        /// <seealso cref="GroupLevel"/>
+        public bool AddMemberToGroup(int? groupID, int? userID, GroupLevel groupLevel)
+        {
+            if (null == groupID || null == userID) throw new ArgumentNullException("Cannot add null userID, or add user to null groupID.");
+
+            return InsertGroupMember(groupID, userID, groupLevel);
+        }
+
+        /// <summary>
+        /// Checks to see if the given user is already a member of the given group.
+        /// </summary>
+        /// <param name="groupID">The GroupID of the group to check.</param>
+        /// <param name="userID">The UserID of the user.</param>
+        /// <returns>true if the user is already a member of the group.</returns>
+        public bool IsUserMemberOfGroup(int? groupID, int? userID)
+        {
+            if (null == groupID || null == userID) return false;
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT * FROM groupmembers ");
+                queryBuilder.Append("WHERE group_id = @group_id ");
+                queryBuilder.Append("AND user_id = @user_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@group_id", groupID);
+                query.Parameters.AddWithValue("@user_id", userID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                return reader.Read();
+            }
+        }
+
+        /// <summary>
+        /// Removes an individual user from a group. If the user was not already in the group, this method returns false.
+        /// </summary>
+        /// <param name="groupID">The GroupID of the group to remove the user from.</param>
+        /// <param name="userID">The UserID of the user to remove.</param>
+        /// <returns>true if the user was successfully removed</returns>
+        public bool RemoveMemberFromGroup(int? groupID, int? userID)
+        {
+            if (null == groupID || null == userID) throw new ArgumentNullException("Cannot remove null userID, or remove user from null groupID.");
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("DELETE FROM groupmembers ");
+                queryBuilder.Append("WHERE group_id = @group_id ");
+                queryBuilder.Append("AND user_id = @user_id");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@group_id", groupID);
+                query.Parameters.AddWithValue("@user_id", userID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all members (regardless of group level) for the given groupID.
+        /// </summary>
+        /// <param name="groupID"></param>
+        /// <returns>A list of UserDAOs that is representative of all users for a group.</returns>
+        public List<UserDAO> GetAllGroupMembers(int? groupID)
+        {
+            return GetAllGroupMembers(groupID, false, 0);
+        }
+
+        private List<UserDAO> GetAllGroupMembers(int? groupID, bool byGroupLevel, GroupLevel groupLevel)
+        {
+            List<int?> userIDList = GetAllGroupMemberIDs(groupID, byGroupLevel, groupLevel);
+            List<UserDAO> userList = new List<UserDAO>();
+            foreach (int? id in userIDList) userList.Add(RetrieveUser(id));
+
+            return userList;
+        }
+
+        private List<int?> GetAllGroupMemberIDs(int? groupID, bool byGroupLevel, GroupLevel groupLevel)
+        {
+            if (null == groupID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT user_id FROM groupmembers ");
+                queryBuilder.Append("WHERE group_id = @group_id ");
+                if (byGroupLevel)
+                    queryBuilder.Append("AND group_level = @group_level");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@group_id", groupID);
+                if (byGroupLevel)
+                    query.Parameters.AddWithValue("@group_level", (int)groupLevel);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<int?> userList = new List<int?>();
+                while (reader.Read())
+                {
+                    userList.Add((int?)reader["user_id"]);
+                }
+
+                return userList;
+            }
+        }
+
+        /// <summary>
+        /// Adds a plugin as an enabled plugin for a group in the database.
+        /// </summary>
+        /// <param name="groupID">The ID of the group to add the plugin relationship to.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <param name="isDisabled">Initially set whether or not the plugin can be used by the group.</param>
+        /// <returns>true if successful.</returns>
+        public bool AddPluginToGroup(int? groupID, int? pluginID, bool isDisabled)
+        {
+            if (null == groupID || null == pluginID) throw new ArgumentNullException("Cannot add null pluginID, or add plugin to null groupID.");
+
+            return InsertGroupPlugin(groupID, pluginID, isDisabled);
+        }
+
+        /// <summary>
+        /// Checks to see if the group already has the plugin associated with the group.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if there is an associated plugin for the group already.</returns>
+        public bool IsPluginInGroup(int? groupID, int? pluginID)
+        {
+            if (null == groupID || null == pluginID) throw new ArgumentNullException("Cannot check null pluginID, or check plugin with null groupID.");
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT * FROM groupplugins ");
+                queryBuilder.Append("WHERE group_id = @group_id AND plugin_id = @plugin_id");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@group_id", groupID);
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                return reader.Read();
+            }
+        }
+
+        /// <summary>
+        /// Removes a plugin from the group entirely. This does not remove the plugin itself, only the relationship between the group and the plugin.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        public bool RemovePluginFromGroup(int? groupID, int? pluginID)
+        {
+            if (null == groupID || null == pluginID) throw new ArgumentNullException("Cannot remove null pluginID, or remove plugin from null groupID.");
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("DELETE FROM groupplugins ");
+                queryBuilder.Append("WHERE group_id = @group_id AND plugin_id = @plugin_id");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@group_id", groupID);
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Enables a plugin for a group if it is not already.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        public bool EnablePluginForGroup(int? groupID, int? pluginID)
+        {
+            return ToggleGroupPluginDisableStatus(groupID, pluginID, false);
+        }
+
+        /// <summary>
+        /// Disables a plugin for a group if it is not already.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        public bool DisablePluginForGroup(int? groupID, int? pluginID)
+        {
+            return ToggleGroupPluginDisableStatus(groupID, pluginID, true);
+        }
+
+        private bool ToggleGroupPluginDisableStatus(int? groupID, int? pluginID, bool isDisabled)
+        {
+            if (null == groupID || null == pluginID) throw new ArgumentNullException("Cannot update status for null plugin or group.");
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("UPDATE groupmembers ");
+                queryBuilder.Append("SET disabled = @disabled ");
+                queryBuilder.Append("WHERE group_id = @group_id ");
+                queryBuilder.Append("AND plugin_id = @plugin_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@disabled", isDisabled);
+                query.Parameters.AddWithValue("@group_id", groupID);
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all enabled plugins for a group.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <returns>A list of PluginDAOs.</returns>
+        public List<PluginDAO> GetAllEnabledGroupPlugins(int? groupID)
+        {
+            List<int?> pluginIDList = GetAllEnabledGroupPluginIDs(groupID);
+            List<PluginDAO> pluginList = new List<PluginDAO>();
+            foreach (int? id in pluginIDList) pluginList.Add(RetrievePlugin(id));
+
+            return pluginList;
+        }
+
+        private List<int?> GetAllEnabledGroupPluginIDs(int? groupID)
+        {
+            if (null == groupID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT plugin_id FROM groupplugins ");
+                queryBuilder.Append("WHERE group_id = @group_id ");
+                queryBuilder.Append("AND disabled = 0 ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@group_id", groupID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<int?> pluginList = new List<int?>();
+                while (reader.Read())
+                {
+                    pluginList.Add((int?)reader["plugin_id"]);
+                }
+
+                return pluginList;
             }
         }
 
@@ -641,21 +1055,66 @@ namespace t2sBackend
                 // If there are no records returned from the select statement, the DataReader will be empty
                 while (reader.Read())
                 {
-                    pluginDAO = new PluginDAO();
-                    pluginDAO.PluginID = (int)reader["id"];
-                    pluginDAO.Name = (string)reader["name"];
-                    pluginDAO.Description = (string)reader["description"];
-                    pluginDAO.IsDisabled = (bool)reader["disabled"];
-                    pluginDAO.VersionNum = (string)reader["version_num"];
-                    pluginDAO.OwnerID = (int)reader["owner_id"];
-                    pluginDAO.Access = (PluginAccess)reader["plugin_access"];
-                    pluginDAO.HelpText = (string)reader["help_text"];
+                    pluginDAO = BuildPluginDAO(reader);
                 }
 
                 if (null == pluginDAO) throw new CouldNotFindException("Could not find plugin with command: " + commandText);
 
                 return pluginDAO;
             }
+        }
+
+        /// <summary>
+        /// Grabs an individual plugin from the database that matches the given command.
+        /// </summary>
+        /// <param name="pluginID">The PluginID of the plugin to search for.</param>
+        /// <returns>A new PluginDAO object with data related to the given command text.</returns>
+        /// <exception cref="ArgumentNullException">If the given commandText is null.</exception>
+        /// <exception cref="CouldNotFindException">If the plugin for the given commandText could not be found.</exception>
+        public PluginDAO RetrievePlugin(int? pluginID)
+        {
+            if (null == pluginID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT id, name, description, disabled, version_num, owner_id, plugin_access, help_text ");
+                queryBuilder.Append("FROM plugins ");
+                queryBuilder.Append("WHERE id = @plugin_id");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                PluginDAO pluginDAO = null;
+
+                // If there are no records returned from the select statement, the DataReader will be empty
+                while (reader.Read())
+                {
+                    pluginDAO = BuildPluginDAO(reader);
+                }
+
+                if (null == pluginDAO) throw new CouldNotFindException("Could not find plugin with id: " + pluginID);
+
+                return pluginDAO;
+            }
+        }
+
+        private PluginDAO BuildPluginDAO(SqlDataReader reader)
+        {
+            PluginDAO pluginDAO = new PluginDAO();
+            pluginDAO.PluginID = (int)reader["id"];
+            pluginDAO.Name = (string)reader["name"];
+            pluginDAO.Description = (string)reader["description"];
+            pluginDAO.IsDisabled = (bool)reader["disabled"];
+            pluginDAO.VersionNum = (string)reader["version_num"];
+            pluginDAO.OwnerID = (int)reader["owner_id"];
+            pluginDAO.Access = (PluginAccess)reader["plugin_access"];
+            pluginDAO.HelpText = (string)reader["help_text"];
+            return pluginDAO;
         }
 
         /// <summary>
@@ -752,6 +1211,39 @@ namespace t2sBackend
             }
         }
 
+        public bool EnableGlobalPlugin(int? pluginID)
+        {
+            return ToggleGlobalPluginDisableStatus(pluginID, false);
+        }
+
+        public bool DisableGlobalPlugin(int? pluginID)
+        {
+            return ToggleGlobalPluginDisableStatus(pluginID, true);
+        }
+
+        private bool ToggleGlobalPluginDisableStatus(int? pluginID, bool isDisabled)
+        {
+            if (null == pluginID) throw new ArgumentNullException("Cannot update status for null plugin.");
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("UPDATE plugins ");
+                queryBuilder.Append("SET disabled = @disabled ");
+                queryBuilder.Append("AND plugin_id = @plugin_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@disabled", isDisabled);
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
         #endregion
 
         #region Other Miscellaneous database interactions
@@ -796,7 +1288,7 @@ namespace t2sBackend
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlCommand query = conn.CreateCommand())
             {
-                query.CommandText = "SELECT * FROM users WHERE username = @username AND password = UNHEX(SHA1(@password))";
+                query.CommandText = "SELECT * FROM users WHERE username = @username AND password = CONVERT(VARBINARY, HASHBYTES('SHA1', @password))";
                 query.Parameters.AddWithValue("@username", username);
                 query.Parameters.AddWithValue("@password", password);
 
@@ -809,6 +1301,18 @@ namespace t2sBackend
                 // Only one record should have been returned
                 return 1 == count;
             }
+        }
+
+        /// <summary>
+        /// Registers a new user in the database.
+        /// </summary>
+        /// <param name="user">The user to be added to the database.</param>
+        /// <param name="password">The login password of the user.</param>
+        /// <returns>true if the user was successfully added.</returns>
+        /// <seealso cref="SqlController#CreateUser"/>
+        public bool RegisterUser(UserDAO user, string password)
+        {
+            return CreateUser(user, password);
         }
 
         #endregion
