@@ -77,7 +77,10 @@ namespace t2sBackend
         /// <param name="service">Service to send/recieve messages through</param>
         public void Run(ParsedMessage message, AWatcherService service)
         {
-            
+            Message msg = new Message();
+            msg.FullMessage = message.ContentMessage;
+            msg.Reciever.Add(message.Sender.PhoneEmail);
+            service.SendMessage(msg);
         }
 
 
