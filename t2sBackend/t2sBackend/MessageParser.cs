@@ -19,20 +19,39 @@ namespace t2sBackend
         /// <param name="message"></param>
         public static ParsedMessage Parse(Message message, IDBController controller)
         {
+            //variable to create a parsedMessage
+            String grouptag;
+            String command;
+            String args;
+
+
              String expression = @"^([0-9a-zA-Z]{3,6})\"+delimiter+@"(\w+)\"+delimiter+@"(.*)$";
 
              Regex reg = new Regex(expression);
              MatchCollection m = reg.Matches(message.FullMessage);
+            //check for array size of m being 0, ( message doesn't match the regix)
+             if (m.Count == 0)
+             {
+                 String noGroupTagExpress = @"(\w+)\" + delimiter + @"(.*)$";
+                 Regex noGroupReg = new Regex(noGroupTagExpress);
+                 MatchCollection c = noGroupReg.Matches(message.FullMessage);
+                
+                 grouptag = "";
+                 command = c[0].Groups[0].Value;
+                 args = c[0].Groups[1].Value;
 
-             String grouptag = m[0].Groups[0].Value;
-            
-             String command = m[0].Groups[1].Value;
-            //check grouptag for being stop
-            if(String.Equals("stop", grouptag, StringComparison.CurrentCultureIgnoreCase)){
-                command = "stop";
-            }
-             String args = m[0].Groups[2].Value;
-
+             }
+             else
+             {
+                 grouptag = m[0].Groups[0].Value;
+                 command = m[0].Groups[1].Value;
+                 //check grouptag for being stop
+                 if (String.Equals("stop", grouptag, StringComparison.CurrentCultureIgnoreCase))
+                 {
+                     command = "stop";
+                 }
+                 args = m[0].Groups[2].Value;
+             }
              ParsedMessage parsed = new ParsedMessage();
 
             //set parsed message properties
