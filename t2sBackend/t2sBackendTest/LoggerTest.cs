@@ -14,12 +14,14 @@ namespace t2sBackendTest
     {
         private const string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
 
+        [TestCategory("Logger")]
         [TestMethod]
         public void TestLogMessage()
         {
             Assert.IsTrue(Logger.LogMessage("TEST_LOG_MESSAGE", LoggerLevel.DEBUG), "The logger was unable to log the test message.");
         }
 
+        [TestCategory("Logger")]
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestNullMessageThrowsException()
