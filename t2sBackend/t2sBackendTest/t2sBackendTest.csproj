@@ -60,6 +60,7 @@
     <Compile Include="SqlControllerGroupTest.cs" />
     <Compile Include="SqlControllerPluginTest.cs" />
     <Compile Include="LoginRegisterTest.cs" />
+    <Compile Include="PairEntriesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\t2sBackend\t2sBackend.csproj">
