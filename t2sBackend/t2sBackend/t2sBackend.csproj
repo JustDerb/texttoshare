@@ -82,6 +82,7 @@
     <Compile Include="MessageController.cs" />
     <Compile Include="MessageControllerOverride.cs" />
     <Compile Include="MessageParser.cs" />
+    <Compile Include="PairEntries.cs" />
     <Compile Include="ParsedMessage.cs" />
     <Compile Include="PhoneCarrier.cs" />
     <Compile Include="PluginAccess.cs" />
@@ -110,6 +111,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>MainDatabase.mdf</DependentUpon>
     </Content>
+    <Content Include="StoredProcedures\sp_upsertPairEntry.sql" />
     <Content Include="StoredProcedures\sp_deleteGroup.sql" />
     <Content Include="StoredProcedures\sp_deletePlugin.sql" />
     <Content Include="StoredProcedures\sp_deleteUser.sql" />

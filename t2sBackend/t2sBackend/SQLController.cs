@@ -14,7 +14,7 @@ namespace t2sBackend
         /// The connection string used for connecting to the database. 
         /// Do NOT modify these values unless the directory of the database changes.
         /// </summary>
-        private const string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
+        private static readonly string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
 
         #region UserDAO "CRUD" actions
 
@@ -92,17 +92,9 @@ namespace t2sBackend
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
-                UserDAO userDAO = null;
-
                 // If there are no records returned from the select statement, the DataReader will be empty
-                while (reader.Read())
-                {
-                    BuildUserDAO(reader, userDAO);
-                }
-
-                if (null == userDAO) throw new CouldNotFindException("Could not find user with userPhoneEmail: " + userPhoneEmail);
-
-                return userDAO;
+                if (reader.Read()) return BuildUserDAO(reader);
+                else throw new CouldNotFindException("Could not find user with userPhoneEmail: " + userPhoneEmail);
             }
         }
 
@@ -124,23 +116,15 @@ namespace t2sBackend
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
-                UserDAO userDAO = null;
-
                 // If there are no records returned from the select statement, the DataReader will be empty
-                while (reader.Read())
-                {
-                    BuildUserDAO(reader, userDAO);
-                }
-
-                if (null == userDAO) throw new CouldNotFindException("Could not find user with userID: " + userID);
-
-                return userDAO;
+                if (reader.Read()) return BuildUserDAO(reader);
+                else throw new CouldNotFindException("Could not find user with userID: " + userID);
             }
         }
 
-        private void BuildUserDAO(SqlDataReader reader, UserDAO userDAO)
+        private UserDAO BuildUserDAO(SqlDataReader reader)
         {
-            userDAO = new UserDAO();
+            UserDAO userDAO = new UserDAO();
             userDAO.UserID = (int)reader["id"];
             userDAO.UserName = (string)reader["username"];
             userDAO.FirstName = (string)reader["first_name"];
@@ -151,6 +135,7 @@ namespace t2sBackend
             userDAO.UserLevel = (UserLevel)reader["user_level"];
             userDAO.IsBanned = (bool)reader["banned"];
             userDAO.IsSuppressed = (bool)reader["suppressed"];
+            return userDAO;
         }
 
         /// <summary>
@@ -1050,17 +1035,9 @@ namespace t2sBackend
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
-                PluginDAO pluginDAO = null;
-
                 // If there are no records returned from the select statement, the DataReader will be empty
-                while (reader.Read())
-                {
-                    pluginDAO = BuildPluginDAO(reader);
-                }
-
-                if (null == pluginDAO) throw new CouldNotFindException("Could not find plugin with command: " + commandText);
-
-                return pluginDAO;
+                if (reader.Read()) return BuildPluginDAO(reader);
+                else throw new CouldNotFindException("Could not find plugin with command: " + commandText);
             }
         }
 
@@ -1089,17 +1066,9 @@ namespace t2sBackend
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
-                PluginDAO pluginDAO = null;
-
                 // If there are no records returned from the select statement, the DataReader will be empty
-                while (reader.Read())
-                {
-                    pluginDAO = BuildPluginDAO(reader);
-                }
-
-                if (null == pluginDAO) throw new CouldNotFindException("Could not find plugin with id: " + pluginID);
-
-                return pluginDAO;
+                if (reader.Read()) return BuildPluginDAO(reader);
+                else throw new CouldNotFindException("Could not find plugin with id: " + pluginID);
             }
         }
 
@@ -1231,7 +1200,7 @@ namespace t2sBackend
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("UPDATE plugins ");
                 queryBuilder.Append("SET disabled = @disabled ");
-                queryBuilder.Append("AND plugin_id = @plugin_id ");
+                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@disabled", isDisabled);
@@ -1240,6 +1209,132 @@ namespace t2sBackend
                 conn.Open();
                 int effectedRows = query.ExecuteNonQuery();
 
+                return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Increments the failed attempt count of the given pluginID by 1.
+        /// </summary>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        public bool IncrementPluginFailedAttemptCount(int? pluginID)
+        {
+            if (null == pluginID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("UPDATE plugins ");
+                queryBuilder.Append("SET attempts_failed = atttempts_failed + 1 ");
+                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current count of failed attempts for the given pluginID.
+        /// </summary>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>The failed attempt count of the given pluginID.</returns>
+        public int GetPluginFailedAttemptCount(int? pluginID)
+        {
+            if (null == pluginID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT attempts_failed FROM plugins ");
+                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                if (reader.Read()) return (int)reader["value_entry"];
+                else throw new CouldNotFindException("Could not find plugin with id: " + pluginID);
+            }
+        }
+
+        /// <summary>
+        /// Resets the failed attempt count of the plugin to 0.
+        /// </summary>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        public bool ResetPluginFailedAttemptCount(int? pluginID)
+        {
+            if (null == pluginID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("UPDATE plugins ");
+                queryBuilder.Append("SET attempts_failed = 0 ");
+                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@plugin_id", pluginID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
+        #endregion
+
+        #region PairEntries Getter/Setter actions
+
+        public static string GetPairEntryValue(string keyEntry)
+        {
+            if (string.IsNullOrEmpty(keyEntry)) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                query.CommandText = "SELECT value_entry FROM pairentries WHERE key_entry = @key_entry";
+                query.Parameters.AddWithValue("@key_entry", keyEntry);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                // Only one record should have been inserted
+                if (reader.Read()) return (string)reader["value_entry"];
+                else throw new CouldNotFindException("Could not find a value that matched the given key: " + keyEntry);
+            }
+        }
+
+        public static bool SetPairEntryValue(string keyEntry, string valueEntry)
+        {
+            if (string.IsNullOrEmpty(keyEntry) || string.IsNullOrEmpty(valueEntry)) throw new ArgumentNullException();
+            
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                query.CommandText = "sp_upsertPairEntry";
+                query.CommandType = CommandType.StoredProcedure;
+                query.Parameters.AddWithValue("@key_entry", keyEntry);
+                query.Parameters.AddWithValue("@value_entry", valueEntry);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                /* A key-value entry should have either been inserted or updated.
+                 * Either way, only one row should have been effected.
+                 */
                 return 1 == effectedRows;
             }
         }
