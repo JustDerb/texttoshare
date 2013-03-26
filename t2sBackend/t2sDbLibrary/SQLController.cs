@@ -971,14 +971,14 @@ namespace t2sDbLibrary
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("INSERT INTO plugin (name, description, disabled, version_num, owner_id, created_dt, plugin_access, help_text) ");
+                queryBuilder.Append("INSERT INTO plugins (name, description, disabled, version_num, owner_id, created_dt, plugin_access, help_text) ");
                 queryBuilder.Append("VALUES ");
                 queryBuilder.Append("(@name, @description, @disabled, @version_num, @owner_id, GETDATE(), @plugin_access, @help_text) ");
                 queryBuilder.Append("; SELECT SCOPE_IDENTITY()");
 
                 query.CommandText = queryBuilder.ToString();
-                query.Parameters.AddWithValue("@name", plugin.PluginID);
-                query.Parameters.AddWithValue("@description", plugin.PluginID);
+                query.Parameters.AddWithValue("@name", plugin.Name);
+                query.Parameters.AddWithValue("@description", plugin.Description);
                 query.Parameters.AddWithValue("@disabled", plugin.IsDisabled ? 1 : 0);
                 query.Parameters.AddWithValue("@version_num", plugin.VersionNum);
                 query.Parameters.AddWithValue("@owner_id", plugin.OwnerID);
