@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Mail;
 using S22.Imap;
+using t2sDbLibrary;
 
 namespace t2sBackend
 {

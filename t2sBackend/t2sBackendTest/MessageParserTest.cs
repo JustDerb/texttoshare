@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using t2sBackend;
 using Rhino.Mocks;
+using t2sDbLibrary;
 
 namespace t2sBackendTest
 {

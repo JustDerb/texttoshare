@@ -68,33 +68,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlockingQueue.cs" />
-    <Compile Include="GroupLevel.cs" />
     <Compile Include="GMailWatcherService.cs" />
-    <Compile Include="GroupDAO.cs" />
-    <Compile Include="IDBController.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="AWatcherService.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="LoggerLevel.cs" />
     <Compile Include="LUAPlugin.cs" />
     <Compile Include="LuaScriptingEngine.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageController.cs" />
     <Compile Include="MessageControllerOverride.cs" />
     <Compile Include="MessageParser.cs" />
-    <Compile Include="PairEntries.cs" />
     <Compile Include="ParsedMessage.cs" />
-    <Compile Include="PhoneCarrier.cs" />
-    <Compile Include="PluginAccess.cs" />
-    <Compile Include="PluginDAO.cs" />
     <Compile Include="PluginError.cs" />
     <Compile Include="PluginLibrary.cs" />
     <Compile Include="nogit\PrivateInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLController.cs" />
-    <Compile Include="UserDAO.cs" />
-    <Compile Include="UserLevel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -140,6 +129,10 @@
     <ProjectReference Include="..\..\S22Imap\S22.Imap.csproj">
       <Project>{369c32a5-e099-4bd5-bbbf-51713947ca99}</Project>
       <Name>S22.Imap</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\t2sDbLibrary\t2sDbLibrary.csproj">
+      <Project>{c3a85cef-08b5-4fe9-8bf7-cbe675010fc2}</Project>
+      <Name>t2sDbLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

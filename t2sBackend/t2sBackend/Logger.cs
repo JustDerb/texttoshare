@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using t2sDbLibrary;
 
 namespace t2sBackend
 {
@@ -15,7 +16,7 @@ namespace t2sBackend
         /// <summary>
         /// private static IDBController variable
         /// </summary>
-        private static IDBController controller = new SqlController();
+        private static SqlController controller = new SqlController();
 
         /// <summary>
         /// Inserts a message into the database with the given message and level of importance.

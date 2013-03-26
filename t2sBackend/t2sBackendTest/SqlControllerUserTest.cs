@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using t2sBackend;
 using Rhino.Mocks;
 using System.Data.SqlClient;
+using t2sDbLibrary;
 
 namespace t2sBackendTest
 {

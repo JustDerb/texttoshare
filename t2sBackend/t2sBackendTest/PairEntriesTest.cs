@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
 using System.Data.SqlClient;
 using t2sBackend;
+using t2sDbLibrary;
 
 namespace t2sBackendTest
 {

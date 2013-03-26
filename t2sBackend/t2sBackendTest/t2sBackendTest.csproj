@@ -68,6 +68,10 @@
       <Project>{352055ae-d9a0-486f-b21f-723478d09901}</Project>
       <Name>t2sBackend</Name>
     </ProjectReference>
+    <ProjectReference Include="..\t2sDbLibrary\t2sDbLibrary.csproj">
+      <Project>{c3a85cef-08b5-4fe9-8bf7-cbe675010fc2}</Project>
+      <Name>t2sDbLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
