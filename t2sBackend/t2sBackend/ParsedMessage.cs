@@ -33,7 +33,7 @@ namespace t2sBackend
         /// <summary>
         /// Contains arg for command, each arg is a entry in list. will be space delimited when arrives from a Message
         /// </summary>
-        public List<string> Message
+        public List<string> Arguments
         {
             get;
             set;
@@ -51,7 +51,7 @@ namespace t2sBackend
         /// <summary>
         /// The command that is passed from a Message. Will be space delimited in Message
         /// </summary>
-        public string PluginMessage
+        public string Command
         {
             get;
             set;
@@ -59,7 +59,7 @@ namespace t2sBackend
 
         public ParsedMessage()
         {
-            this.Message = new List<string>();
+            this.Arguments = new List<string>();
         }
     }
 }

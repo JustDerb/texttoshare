@@ -58,14 +58,10 @@ namespace t2sBackend
             //set parsed message properties
              parsed.Group = controller.RetrieveGroup(grouptag);
              parsed.Sender = controller.RetrieveUser(message.Sender);
-             parsed.PluginMessage = command;
-             parsed.Message[0] = command;
+             parsed.Command = command;
              parsed.ContentMessage = command+" "+args;
              // get and add args to message
-             String[]  listContent = args.Split(' ');
-             for(int i=0; i<listContent.Length; i++){
-                 parsed.Message[i+1] = listContent[i];
-             }
+             parsed.Arguments.AddRange(args.Split(' '));
 
              return parsed;
             
