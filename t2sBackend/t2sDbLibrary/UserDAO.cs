@@ -145,7 +145,6 @@ namespace t2sDbLibrary
             this.UserID = null;
         }
 
-        // override object.Equals
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -170,8 +169,6 @@ namespace t2sDbLibrary
                 this.SuppressedLength.Equals(u.SuppressedLength) &&
                 this.UserLevel.Equals(u.UserLevel)
             );
-
-            // phonenumber, phoneemail, isbanned, issuppressed, suppresseddate, suppressedlength, userlevel
         }
 
         public override int GetHashCode()

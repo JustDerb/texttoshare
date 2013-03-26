@@ -165,5 +165,45 @@ namespace t2sDbLibrary
         {
             return EnabledPlugins.Remove(plugin);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            GroupDAO g = obj as GroupDAO;
+
+            return (
+                this.GroupID == g.GroupID &&
+                this.Name.Equals(g.Name) &&
+                this.Description.Equals(g.Description) &&
+                this.Users.Equals(g.Users) &&
+                this.Moderators.Equals(g.Moderators) &&
+                this.Owner.Equals(g.Owner) &&
+                this.EnabledPlugins.Equals(g.EnabledPlugins) &&
+                this.GroupTag.Equals(g.GroupTag)
+            );
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                // Suitable nullity checks etc, of course :)
+                hash = hash * 23 + (null == GroupID ? 0 : GroupID.GetHashCode());
+                hash = hash * 23 + (null == Name ? 0 : Name.GetHashCode());
+                hash = hash * 23 + (null == Description ? 0 : Description.GetHashCode());
+                hash = hash * 23 + (null == Users ? 0 : Users.GetHashCode());
+                hash = hash * 23 + (null == Moderators ? 0 : Moderators.GetHashCode());
+                hash = hash * 23 + (null == Owner ? 0 : Owner.GetHashCode());
+                hash = hash * 23 + (null == EnabledPlugins ? 0 : EnabledPlugins.GetHashCode());
+                hash = hash * 23 + (null == GroupTag ? 0 : GroupTag.GetHashCode());
+
+                return hash;
+            }
+        }
     }
 }
