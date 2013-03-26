@@ -14,7 +14,7 @@ namespace t2sBackend
         /// The connection string used for connecting to the database. 
         /// Do NOT modify these values unless the directory of the database changes.
         /// </summary>
-        private static readonly string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
+        public static readonly string CONNECTION_STRING = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
 
         #region UserDAO "CRUD" actions
 
@@ -33,7 +33,7 @@ namespace t2sBackend
 
             if (UserExists(user.UserName, user.PhoneEmail)) throw new EntryAlreadyExistsException("User with username: " + user.UserName + " or phone email: " + user.PhoneEmail + " already exists.");
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -78,7 +78,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(userPhoneEmail)) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -102,7 +102,7 @@ namespace t2sBackend
         {
             if (null == userID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -149,7 +149,7 @@ namespace t2sBackend
         {
             if (null == user || null == user.UserID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -197,7 +197,7 @@ namespace t2sBackend
         {
             if (null == user || null == user.UserID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "sp_deleteUser";
@@ -223,7 +223,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(phoneEmail)) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "SELECT * FROM users WHERE username = @username OR email_phone = @email_phone";
@@ -267,7 +267,7 @@ namespace t2sBackend
             if (GroupExists(group.Name))
                 throw new EntryAlreadyExistsException("Group with name: " + group.Name + " already exists.");
 
-            return (InsertGroup(group) &&
+            return (InsertGroupMetadata(group) &&
                 InsertGroupMember(group.GroupID, group.Owner.UserID, GroupLevel.Owner) &&
                 InsertGroupMembers(group.GroupID, group.Moderators, GroupLevel.Moderator) &&
                 InsertGroupMembers(group.GroupID, group.Users, GroupLevel.User) &&
@@ -278,9 +278,9 @@ namespace t2sBackend
         /// Inserts the group metadata into the "groups" table.
         /// </summary>
         /// <param name="group">The GroupDAO to insert into the database.</param>
-        private bool InsertGroup(GroupDAO group)
+        private bool InsertGroupMetadata(GroupDAO group)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -330,7 +330,7 @@ namespace t2sBackend
         /// <param name="groupLevel">The group level of the user.</param>
         private bool InsertGroupMember(int? groupID, int? userID, GroupLevel groupLevel)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -363,7 +363,7 @@ namespace t2sBackend
 
         private bool InsertGroupPlugin(int? groupID, int? pluginID, bool isDisabled)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -403,9 +403,16 @@ namespace t2sBackend
             return groupDAO;
         }
 
-        private GroupDAO RetrieveGroupMetadata(string groupTag)
+        /// <summary>
+        /// Retrieves basic information for a group in a GroupDAO. Does not include users or plugins for a group.
+        /// </summary>
+        /// <param name="groupTag">The group tag of the group to retrieve.</param>
+        /// <returns>A new GroupDAO object with basic group data.</returns>
+        public GroupDAO RetrieveGroupMetadata(string groupTag)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            if (string.IsNullOrEmpty(groupTag)) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -422,7 +429,7 @@ namespace t2sBackend
                 GroupDAO group = null;
 
                 // If there are no records returned from the select statement, the DataReader will be empty
-                while (reader.Read())
+                if (reader.Read())
                 {
                     int groupID = (int)reader["id"];
                     string name = (string)reader["name"];
@@ -433,17 +440,16 @@ namespace t2sBackend
                     group.GroupID = groupID;
                     group.Name = name;
                     group.Description = description;
+
+                    return group;
                 }
-
-                if (null == group) throw new CouldNotFindException("Could not find user with groupTag: " + groupTag);
-
-                return group;
+                else throw new CouldNotFindException("Could not find user with groupTag: " + groupTag);
             }
         }
 
         private void RetrieveGroupUsers(GroupDAO group)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -462,17 +468,7 @@ namespace t2sBackend
                 // If there are no records returned from the select statement, the DataReader will be empty
                 while (reader.Read())
                 {
-                    UserDAO userDAO = new UserDAO();
-                    userDAO.UserID = (int)reader["id"];
-                    userDAO.UserName = (string)reader["username"];
-                    userDAO.FirstName = (string)reader["first_name"];
-                    userDAO.LastName = (string)reader["last_name"];
-                    userDAO.PhoneNumber = (string)reader["phone"];
-                    userDAO.PhoneEmail = (string)reader["email_phone"];
-                    userDAO.Carrier = (PhoneCarrier)reader["carrier"];
-                    userDAO.UserLevel = (UserLevel)reader["user_level"];
-                    userDAO.IsBanned = (bool)reader["banned"];
-                    userDAO.IsSuppressed = (bool)reader["suppressed"];
+                    UserDAO userDAO = BuildUserDAO(reader);
 
                     switch ((int)reader["group_level"])
                     {
@@ -495,7 +491,7 @@ namespace t2sBackend
 
         private void RetrieveGroupPlugins(GroupDAO group)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -515,17 +511,7 @@ namespace t2sBackend
                 // If there are no records returned from the select statement, the DataReader will be empty
                 while (reader.Read())
                 {
-                    //This needs to be addressed, as there is no current way of adding PluginDAOs to a GroupDAO
-                    group.AddPlugin(new PluginDAO() {
-                        PluginID = (int)reader["id"],
-                        Name = (string)reader["name"],
-                        Description = (string)reader["description"],
-                        IsDisabled = (bool)reader["disabled"],
-                        VersionNum = (string)reader["version_num"],
-                        OwnerID = (int)reader["owner_id"],
-                        Access = (PluginAccess)reader["plugin_access"],
-                        HelpText = (string)reader["help_text"]
-                    });
+                    group.AddPlugin(BuildPluginDAO(reader));
                 }
             }
 
@@ -547,7 +533,7 @@ namespace t2sBackend
 
         private bool UpdateGroupMetadata(GroupDAO group)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -589,7 +575,7 @@ namespace t2sBackend
             // For each user in the current group object
             foreach (UserDAO user in userList)
                 // If the user is not already a member in the database, add them
-                if (!IsUserMemberOfGroup(groupID, user.UserID)) AddMemberToGroup(groupID, user.UserID, groupLevel);
+                if (!userIDList.Contains(user.UserID)) AddMemberToGroup(groupID, user.UserID, groupLevel);
                 // Otherwise, remove their ID from the list
                 else userIDList.Remove(user.UserID);
 
@@ -616,7 +602,7 @@ namespace t2sBackend
             // For each plugin in the current group object
             foreach (PluginDAO plugin in pluginList)
                 // If the plugin is not already a part of the group in the database, add it
-                if (!IsPluginInGroup(groupID, plugin.PluginID)) AddPluginToGroup(groupID, plugin.PluginID, false);
+                if (!pluginIDList.Contains(plugin.PluginID)) AddPluginToGroup(groupID, plugin.PluginID, false);
                 // Otherwise, remove the plugin ID from the list
                 else pluginIDList.Remove(plugin.PluginID);
 
@@ -639,7 +625,7 @@ namespace t2sBackend
         {
             if (null == group || null == group.GroupID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "sp_deleteGroup";
@@ -666,7 +652,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "SELECT * FROM groups WHERE name = @name";
@@ -706,7 +692,7 @@ namespace t2sBackend
         {
             if (null == groupID || null == userID) return false;
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -735,7 +721,7 @@ namespace t2sBackend
         {
             if (null == groupID || null == userID) throw new ArgumentNullException("Cannot remove null userID, or remove user from null groupID.");
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -777,7 +763,7 @@ namespace t2sBackend
         {
             if (null == groupID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -828,7 +814,7 @@ namespace t2sBackend
         {
             if (null == groupID || null == pluginID) throw new ArgumentNullException("Cannot check null pluginID, or check plugin with null groupID.");
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -856,7 +842,7 @@ namespace t2sBackend
         {
             if (null == groupID || null == pluginID) throw new ArgumentNullException("Cannot remove null pluginID, or remove plugin from null groupID.");
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -900,7 +886,7 @@ namespace t2sBackend
         {
             if (null == groupID || null == pluginID) throw new ArgumentNullException("Cannot update status for null plugin or group.");
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -939,7 +925,7 @@ namespace t2sBackend
         {
             if (null == groupID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -981,7 +967,7 @@ namespace t2sBackend
 
             if (PluginExists(plugin.Name)) throw new EntryAlreadyExistsException("Plugin with command: " + plugin.Name + " already exists.");
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1021,7 +1007,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(commandText)) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1052,7 +1038,7 @@ namespace t2sBackend
         {
             if (null == pluginID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1097,7 +1083,7 @@ namespace t2sBackend
         {
             if (null == plugin || null == plugin.PluginID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1139,7 +1125,7 @@ namespace t2sBackend
         {
             if (null == plugin || null == plugin.PluginID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "sp_deletePlugin";
@@ -1166,7 +1152,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(commandText)) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "SELECT * FROM plugins WHERE name = @commandText";
@@ -1194,7 +1180,7 @@ namespace t2sBackend
         {
             if (null == pluginID) throw new ArgumentNullException("Cannot update status for null plugin.");
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1222,7 +1208,7 @@ namespace t2sBackend
         {
             if (null == pluginID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1249,7 +1235,7 @@ namespace t2sBackend
         {
             if (null == pluginID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1276,7 +1262,7 @@ namespace t2sBackend
         {
             if (null == pluginID) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
@@ -1302,7 +1288,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(keyEntry)) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "SELECT value_entry FROM pairentries WHERE key_entry = @key_entry";
@@ -1321,7 +1307,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(keyEntry) || string.IsNullOrEmpty(valueEntry)) throw new ArgumentNullException();
             
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "sp_upsertPairEntry";
@@ -1355,7 +1341,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(message)) throw new ArgumentNullException();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "INSERT INTO eventlog (message, level, created_dt) VALUES (@message, @level, GETDATE())";
@@ -1380,7 +1366,7 @@ namespace t2sBackend
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password)) return false;
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "SELECT * FROM users WHERE username = @username AND password = CONVERT(VARBINARY, HASHBYTES('SHA1', @password))";
@@ -1390,11 +1376,8 @@ namespace t2sBackend
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
-                int count = 0;
-                while (reader.Read()) ++count;
-
-                // Only one record should have been returned
-                return 1 == count;
+                if (reader.Read()) return true;
+                else return false;
             }
         }
 
