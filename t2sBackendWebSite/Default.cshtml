@@ -18,8 +18,8 @@
         // When the button is clicked,
         // write the new user to the database
          Button clickedButton = (Button)sender;
+        @using t2sDbLibrary;
         @{
-           @using t2sDbLibrary;
             SqlController controller = new SqlController();
             UserDAO user = new UserDAO();
             //user.FirstName=
