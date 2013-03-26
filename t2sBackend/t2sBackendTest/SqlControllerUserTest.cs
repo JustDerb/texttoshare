@@ -10,8 +10,6 @@ namespace t2sBackendTest
     [TestClass]
     public class SqlControllerUserTest
     {
-        private const string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
-
         private SqlController _controller;
         private UserDAO _userDAO1;
         private UserDAO _userDAO2;
@@ -67,15 +65,15 @@ namespace t2sBackendTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void CreateUserNullThrowsException()
         {
-            _controller.CreateUser(null, null);
+            _controller.CreateUser(null, "password");
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CreateUserWithNullValuesThrowsException()
+        public void CreateNullPasswordThrowsException()
         {
-            _controller.CreateUser(_nullUserDAO, "");
+            _controller.CreateUser(_nullUserDAO, null);
         }
 
         [TestCategory("SqlController.User")]
@@ -233,7 +231,7 @@ namespace t2sBackendTest
         [TestCleanup]
         public void TearDown()
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(SqlController.CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "DELETE FROM users WHERE email_phone LIKE @email_phone";
