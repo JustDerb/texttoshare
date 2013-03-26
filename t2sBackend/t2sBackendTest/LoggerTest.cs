@@ -12,8 +12,6 @@ namespace t2sBackendTest
     [TestClass]
     public class LoggerTest
     {
-        private const string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
-
         [TestCategory("Logger")]
         [TestMethod]
         public void TestLogMessage()
@@ -32,7 +30,7 @@ namespace t2sBackendTest
         [TestCleanup]
         public void Teardown()
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(SqlController.CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "DELETE FROM eventlog WHERE message = 'TEST_LOG_MESSAGE' AND level = @level";

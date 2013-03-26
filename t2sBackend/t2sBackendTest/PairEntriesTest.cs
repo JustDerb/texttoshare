@@ -9,8 +9,6 @@ namespace t2sBackendTest
     [TestClass]
     public class PairEntriesTest
     {
-        private readonly string _connectionString = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
-
         private readonly string _testKeyEntry = "TESTKEY";
         private readonly string _testValueEntry1 = "TESTVALUE1";
         private readonly string _testValueEntry2 = "TESTVALUE2";
@@ -70,7 +68,7 @@ namespace t2sBackendTest
         [TestCleanup]
         public void TearDown()
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlConnection conn = new SqlConnection(SqlController.CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 query.CommandText = "DELETE FROM pairentries WHERE key_entry = @key_entry";
