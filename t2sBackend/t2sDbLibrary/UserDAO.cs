@@ -144,5 +144,58 @@ namespace t2sDbLibrary
         {
             this.UserID = null;
         }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            UserDAO u = obj as UserDAO;
+
+            return (
+                this.UserID == u.UserID &&
+                this.FirstName.Equals(u.FirstName) &&
+                this.LastName.Equals(u.LastName) &&
+                this.UserName.Equals(u.UserName) &&
+                this.PhoneNumber.Equals(u.PhoneNumber) &&
+                this.PhoneEmail.Equals(u.PhoneEmail) &&
+                this.Carrier.Equals(u.Carrier) &&
+                this.IsBanned == u.IsBanned &&
+                this.DateBanned.Equals(u.DateBanned) &&
+                this.IsSuppressed == u.IsSuppressed &&
+                this.SuppressedDate.Equals(u.SuppressedDate) &&
+                this.SuppressedLength.Equals(u.SuppressedLength) &&
+                this.UserLevel.Equals(u.UserLevel)
+            );
+
+            // phonenumber, phoneemail, isbanned, issuppressed, suppresseddate, suppressedlength, userlevel
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                // Suitable nullity checks etc, of course :)
+                hash = hash * 23 + (null == UserID ? 0 : UserID.GetHashCode());
+                hash = hash * 23 + (null == FirstName ? 0 : FirstName.GetHashCode());
+                hash = hash * 23 + (null == LastName ? 0 : LastName.GetHashCode());
+                hash = hash * 23 + (null == UserName ? 0 : UserName.GetHashCode());
+                hash = hash * 23 + (null == PhoneNumber ? 0 : PhoneNumber.GetHashCode());
+                hash = hash * 23 + (null == PhoneEmail ? 0 : PhoneEmail.GetHashCode());
+                hash = hash * 23 + Carrier.GetHashCode();
+                hash = hash * 23 + IsBanned.GetHashCode();
+                hash = hash * 23 + (null == DateBanned ? 0 : DateBanned.GetHashCode());
+                hash = hash * 23 + IsSuppressed.GetHashCode();
+                hash = hash * 23 + (null == SuppressedDate ? 0 : SuppressedDate.GetHashCode());
+                hash = hash * 23 + (null == SuppressedLength ? 0 : SuppressedLength.GetHashCode());
+                hash = hash * 23 + UserLevel.GetHashCode();
+
+                return hash;
+            }
+        }
     }
 }
