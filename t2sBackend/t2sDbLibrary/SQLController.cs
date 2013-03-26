@@ -74,7 +74,7 @@ namespace t2sDbLibrary
         /// <returns>A new UserDAO object with data related to the given phone email.</returns>
         /// <exception cref="ArgumentNullException">If the given string is null.</exception>
         /// <exception cref="CouldNotFindException">If the user for the given phone email could not be found.</exception>
-        public UserDAO RetrieveUser(string userPhoneEmail)
+        public virtual UserDAO RetrieveUser(string userPhoneEmail)
         {
             if (string.IsNullOrEmpty(userPhoneEmail)) throw new ArgumentNullException();
 
@@ -390,7 +390,7 @@ namespace t2sDbLibrary
         /// <returns>A new GroupDAO object, complete with lists of users, moderators, and plugins associated with the group.</returns>
         /// <exception cref="ArgumentNullException">If the given group tag is null.</exception>
         /// <exception cref="CouldNotFindException">If a group with the given group tag could not be found.</exception>
-        public GroupDAO RetrieveGroup(string groupTag)
+        public virtual GroupDAO RetrieveGroup(string groupTag)
         {
             if (string.IsNullOrEmpty(groupTag)) throw new ArgumentNullException();
 
