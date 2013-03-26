@@ -12,7 +12,7 @@ namespace t2sBackend
     /// </summary>
     public static class MessageParser
     {
-        private static readonly char delimiter='.';
+        public static readonly char delimiter='.';
 
         /// <summary>
         /// takes a Message and create a ParsedMessage from it and adds it to the queue
