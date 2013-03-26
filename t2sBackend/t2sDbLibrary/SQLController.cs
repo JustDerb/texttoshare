@@ -25,11 +25,11 @@ namespace t2sDbLibrary
         /// <param name="user">The UserDAO to insert into the database.</param>
         /// <param name="password">The password for the user.</param>
         /// <returns>true if the user was successfully added and the UserID was set</returns>
-        /// <exception cref="ArgumentNullException">If the given UserDAO is null.</exception>
+        /// <exception cref="ArgumentNullException">If the given UserDAO or password is null.</exception>
         /// <exception cref="SqlException">If there is an error querying the database.</exception>
         public bool CreateUser(UserDAO user, string password)
         {
-            if (null == user) throw new ArgumentNullException();
+            if (null == user || string.IsNullOrEmpty(password)) throw new ArgumentNullException();
 
             if (UserExists(user.UserName, user.PhoneEmail)) throw new EntryAlreadyExistsException("User with username: " + user.UserName + " or phone email: " + user.PhoneEmail + " already exists.");
 
