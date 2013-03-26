@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using t2sBackend;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rhino.Mocks;
+using System;
 using System.Data.SqlClient;
 using t2sDbLibrary;
 
@@ -11,14 +10,14 @@ namespace t2sBackendTest
     public class SqlControllerUserTest
     {
         private SqlController _controller;
-        private UserDAO _userDAO1;
-        private UserDAO _userDAO2;
-        private UserDAO _nullUserDAO;
+        private UserDAO _user1;
+        private UserDAO _user2;
+        private UserDAO _nullUser;
 
         [TestInitialize]
         public void Setup()
         {
-            _userDAO1 = new UserDAO()
+            _user1 = new UserDAO()
             {
                 UserName = "TESTUSER1",
                 FirstName = "TEST",
@@ -31,7 +30,7 @@ namespace t2sBackendTest
                 IsSuppressed = false
             };
 
-            _userDAO2 = new UserDAO()
+            _user2 = new UserDAO()
             {
                 UserName = "TESTUSER2",
                 FirstName = "TEST",
@@ -44,7 +43,7 @@ namespace t2sBackendTest
                 IsSuppressed = false
             };
 
-            _nullUserDAO = new UserDAO()
+            _nullUser = new UserDAO()
             {
                 UserName = null,
                 FirstName = null,
@@ -73,14 +72,22 @@ namespace t2sBackendTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void CreateNullPasswordThrowsException()
         {
-            _controller.CreateUser(_nullUserDAO, null);
+            _controller.CreateUser(_user1, null);
+        }
+
+        [TestCategory("SqlController.User")]
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CreateUserNullPropertiesThrowsException()
+        {
+            _controller.CreateUser(_nullUser, "password");
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
         public void CreateUserSuccessfully()
         {
-            Assert.IsTrue(_controller.CreateUser(_userDAO1, "password"), "User was not inserted into the database.");
+            Assert.IsTrue(_controller.CreateUser(_user1, "password"), "User was not inserted into the database.");
         }
 
         [TestCategory("SqlController.User")]
@@ -88,8 +95,8 @@ namespace t2sBackendTest
         [ExpectedException(typeof(EntryAlreadyExistsException))]
         public void CallingCreateUserOnSameUserTwiceThrowsException()
         {
-            _controller.CreateUser(_userDAO1, "password");
-            _controller.CreateUser(_userDAO1, "password");
+            _controller.CreateUser(_user1, "password");
+            _controller.CreateUser(_user1, "password");
         }
 
         [TestCategory("SqlController.User")]
@@ -97,9 +104,9 @@ namespace t2sBackendTest
         [ExpectedException(typeof(EntryAlreadyExistsException))]
         public void CreatingDuplicateUsersThrowsException()
         {
-            _controller.CreateUser(_userDAO1, "password");
-            _userDAO1.UserID = null;
-            _controller.CreateUser(_userDAO1, "password");
+            _controller.CreateUser(_user1, "password");
+            _user1.UserID = null;
+            _controller.CreateUser(_user1, "password");
         }
 
         [TestCategory("SqlController.User")]
@@ -109,10 +116,10 @@ namespace t2sBackendTest
         {
             SqlController stubbedController = MockRepository.GenerateStub<SqlController>();
 
-            stubbedController.Stub(x => x.UserExists(_userDAO1.UserName, _userDAO1.PhoneEmail)).Return(false);
+            stubbedController.Stub(x => x.UserExists(_user1.UserName, _user1.PhoneEmail)).Return(false);
 
-            stubbedController.CreateUser(_userDAO1, "password");
-            stubbedController.CreateUser(_userDAO1, "password");
+            stubbedController.CreateUser(_user1, "password");
+            stubbedController.CreateUser(_user1, "password");
         }
 
         [TestCategory("SqlController.User")]
@@ -128,30 +135,30 @@ namespace t2sBackendTest
         [ExpectedException(typeof(CouldNotFindException))]
         public void RetreiveNonExistingUserShouldThrowException()
         {
-            _controller.RetrieveUser(_userDAO1.PhoneEmail);
+            _controller.RetrieveUser(_user1.PhoneEmail);
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
         public void CreateAndRetrieveShouldReturnSameUser()
         {
-            _controller.CreateUser(_userDAO1, "password");
-            UserDAO retUserDAO = _controller.RetrieveUser(_userDAO1.PhoneEmail);
+            _controller.CreateUser(_user1, "password");
+            UserDAO retUserDAO = _controller.RetrieveUser(_user1.PhoneEmail);
 
-            Assert.AreEqual(_userDAO1.UserID, retUserDAO.UserID, "UserIDs do not match.");
+            Assert.AreEqual(_user1.UserID, retUserDAO.UserID, "UserIDs do not match.");
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
         public void CreateAndRetrieveMultipleUsersShouldReturnDifferentUsers()
         {
-            _controller.CreateUser(_userDAO1, "password");
-            _controller.CreateUser(_userDAO2, "password");
-            UserDAO u1 = _controller.RetrieveUser(_userDAO1.PhoneEmail);
-            UserDAO u2 = _controller.RetrieveUser(_userDAO2.PhoneEmail);
+            _controller.CreateUser(_user1, "password");
+            _controller.CreateUser(_user2, "password");
+            UserDAO u1 = _controller.RetrieveUser(_user1.PhoneEmail);
+            UserDAO u2 = _controller.RetrieveUser(_user2.PhoneEmail);
 
-            Assert.AreEqual(_userDAO1.UserID, u1.UserID);
-            Assert.AreEqual(_userDAO2.UserID, u2.UserID);
+            Assert.AreEqual(_user1.UserID, u1.UserID);
+            Assert.AreEqual(_user2.UserID, u2.UserID);
             Assert.AreNotEqual(u1.UserID, u2.UserID);
         }
 
@@ -167,24 +174,24 @@ namespace t2sBackendTest
         [TestMethod]
         public void UpdateNonExistingUserShouldNotChangeDatabase()
         {
-            _userDAO1.UserID = -1;
-            Assert.IsFalse(_controller.UpdateUser(_userDAO1));
+            _user1.UserID = -1;
+            Assert.IsFalse(_controller.UpdateUser(_user1));
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
         public void UpdateUserWithSameInfoShouldReturnSameUser()
         {
-            _controller.CreateUser(_userDAO1, "password");
-            _controller.UpdateUser(_userDAO1);
-            _userDAO2 = _controller.RetrieveUser(_userDAO1.PhoneEmail);
+            _controller.CreateUser(_user1, "password");
+            _controller.UpdateUser(_user1);
+            _user2 = _controller.RetrieveUser(_user1.PhoneEmail);
 
-            Assert.AreEqual(_userDAO1.UserName, _userDAO2.UserName, "UserNames do not match");
-            Assert.AreEqual(_userDAO1.FirstName, _userDAO2.FirstName, "FirstNames do not match.");
-            Assert.AreEqual(_userDAO1.LastName, _userDAO2.LastName, "LastNames do not match.");
-            Assert.AreEqual(_userDAO1.PhoneNumber, _userDAO2.PhoneNumber, "PhoneNumbers do not match.");
-            Assert.AreEqual(_userDAO1.PhoneEmail, _userDAO2.PhoneEmail, "PhoneEmails do not match.");
-            Assert.AreEqual(_userDAO1.UserLevel, _userDAO2.UserLevel, "UserLevels do not match.");
+            Assert.AreEqual(_user1.UserName, _user2.UserName, "UserNames do not match");
+            Assert.AreEqual(_user1.FirstName, _user2.FirstName, "FirstNames do not match.");
+            Assert.AreEqual(_user1.LastName, _user2.LastName, "LastNames do not match.");
+            Assert.AreEqual(_user1.PhoneNumber, _user2.PhoneNumber, "PhoneNumbers do not match.");
+            Assert.AreEqual(_user1.PhoneEmail, _user2.PhoneEmail, "PhoneEmails do not match.");
+            Assert.AreEqual(_user1.UserLevel, _user2.UserLevel, "UserLevels do not match.");
         }
 
         [TestCategory("SqlController.User")]
@@ -199,31 +206,31 @@ namespace t2sBackendTest
         [TestMethod]
         public void DeleteNonExistingUserShouldNotChangeDatabase()
         {
-            _userDAO1.UserID = -1;
-            Assert.IsFalse(_controller.DeleteUser(_userDAO1), "There was a user with an invalid ID already in the database.");
+            _user1.UserID = -1;
+            Assert.IsFalse(_controller.DeleteUser(_user1), "There was a user with an invalid ID already in the database.");
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
         public void DeleteUserShouldUpdateDatabase()
         {
-            _controller.CreateUser(_userDAO1, "password");
-            Assert.IsTrue(_controller.DeleteUser(_userDAO1), "Test user was not deleted from the database.");
+            _controller.CreateUser(_user1, "password");
+            Assert.IsTrue(_controller.DeleteUser(_user1), "Test user was not deleted from the database.");
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
         public void DeleteMultipleUsersShouldUpdateDatabase()
         {
-            _controller.CreateUser(_userDAO1, "password");
-            _controller.CreateUser(_userDAO2, "password");
+            _controller.CreateUser(_user1, "password");
+            _controller.CreateUser(_user2, "password");
 
             int count = 2;
-            _controller.DeleteUser(_userDAO1);
-            if (!_controller.UserExists(_userDAO1.UserName, _userDAO1.PhoneEmail)) --count;
+            _controller.DeleteUser(_user1);
+            if (!_controller.UserExists(_user1.UserName, _user1.PhoneEmail)) --count;
             
-            _controller.DeleteUser(_userDAO1);
-            if (!_controller.UserExists(_userDAO1.UserName, _userDAO1.PhoneEmail)) --count;
+            _controller.DeleteUser(_user1);
+            if (!_controller.UserExists(_user1.UserName, _user1.PhoneEmail)) --count;
 
             Assert.AreEqual(0, count, "Not all test users were deleted from the database.");
         }

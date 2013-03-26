@@ -28,6 +28,14 @@ namespace t2sBackendTest
             Logger.LogMessage(null, LoggerLevel.DEBUG);
         }
 
+        [TestCategory("Logger")]
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void TestEmptyMessageThrowsException()
+        {
+            Logger.LogMessage("", LoggerLevel.DEBUG);
+        }
+
         [TestCleanup]
         public void Teardown()
         {
