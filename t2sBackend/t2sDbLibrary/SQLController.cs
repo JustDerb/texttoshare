@@ -1186,7 +1186,7 @@ namespace t2sDbLibrary
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("UPDATE plugins ");
                 queryBuilder.Append("SET disabled = @disabled ");
-                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
+                queryBuilder.Append("WHERE id = @plugin_id ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@disabled", isDisabled);
@@ -1213,8 +1213,8 @@ namespace t2sDbLibrary
             {
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("UPDATE plugins ");
-                queryBuilder.Append("SET attempts_failed = atttempts_failed + 1 ");
-                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
+                queryBuilder.Append("SET attempts_failed = attempts_failed + 1 ");
+                queryBuilder.Append("WHERE id = @plugin_id ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@plugin_id", pluginID);
@@ -1240,7 +1240,7 @@ namespace t2sDbLibrary
             {
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT attempts_failed FROM plugins ");
-                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
+                queryBuilder.Append("WHERE id = @plugin_id ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@plugin_id", pluginID);
@@ -1248,7 +1248,7 @@ namespace t2sDbLibrary
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
-                if (reader.Read()) return (int)reader["value_entry"];
+                if (reader.Read()) return (int)reader["attempts_failed"];
                 else throw new CouldNotFindException("Could not find plugin with id: " + pluginID);
             }
         }
@@ -1268,7 +1268,7 @@ namespace t2sDbLibrary
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("UPDATE plugins ");
                 queryBuilder.Append("SET attempts_failed = 0 ");
-                queryBuilder.Append("WHERE plugin_id = @plugin_id ");
+                queryBuilder.Append("WHERE id = @plugin_id ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@plugin_id", pluginID);

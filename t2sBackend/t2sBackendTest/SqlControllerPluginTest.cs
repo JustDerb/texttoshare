@@ -88,6 +88,15 @@ namespace t2sBackendTest
 
         [TestCategory("SqlController.Plugin")]
         [TestMethod]
+        [ExpectedException(typeof(SqlException))]
+        public void CreatingPluginWithNonExistantOwnerViolatesConstraintsAndThrowsException()
+        {
+            _controller.DeleteUser(_owner);
+            _controller.CreatePlugin(_plugin1);
+        }
+
+        [TestCategory("SqlController.Plugin")]
+        [TestMethod]
         public void CreatesPluginSuccessfully()
         {
             _controller.CreatePlugin(_plugin1);
@@ -231,6 +240,50 @@ namespace t2sBackendTest
             if (!_controller.PluginExists(_plugin2.Name)) --count;
 
             Assert.AreEqual(0, count, "Not all test plugins were deleted from the database.");
+        }
+
+        [TestCategory("SqlController.Plugin")]
+        [TestMethod]
+        public void GetInitialFailedAttemptCountIsZero()
+        {
+            _controller.CreatePlugin(_plugin1);
+            Assert.AreEqual(0, _controller.GetPluginFailedAttemptCount(_plugin1.PluginID));
+        }
+
+        [TestCategory("SqlController.Plugin")]
+        [TestMethod]
+        public void IncrementingNewPluginFailedAttemptCountSetsToOne()
+        {
+            _controller.CreatePlugin(_plugin1);
+            _controller.IncrementPluginFailedAttemptCount(_plugin1.PluginID);
+            Assert.AreEqual(1, _controller.GetPluginFailedAttemptCount(_plugin1.PluginID));
+        }
+
+        [TestCategory("SqlController.Plugin")]
+        [TestMethod]
+        public void MultiplePluginFailedAttemptIncrementsSuccessfullyAddOne()
+        {
+            _controller.CreatePlugin(_plugin1);
+            _controller.IncrementPluginFailedAttemptCount(_plugin1.PluginID);
+            Assert.AreEqual(1, _controller.GetPluginFailedAttemptCount(_plugin1.PluginID));
+
+            _controller.IncrementPluginFailedAttemptCount(_plugin1.PluginID);
+            Assert.AreEqual(2, _controller.GetPluginFailedAttemptCount(_plugin1.PluginID));
+
+            _controller.IncrementPluginFailedAttemptCount(_plugin1.PluginID);
+            Assert.AreEqual(3, _controller.GetPluginFailedAttemptCount(_plugin1.PluginID));
+        }
+
+        [TestCategory("SqlController.Plugin")]
+        [TestMethod]
+        public void ResettingPluginFailedAttemptAfterIncrementingResetsToZero()
+        {
+            _controller.CreatePlugin(_plugin1);
+            _controller.IncrementPluginFailedAttemptCount(_plugin1.PluginID);
+            Assert.AreEqual(1, _controller.GetPluginFailedAttemptCount(_plugin1.PluginID));
+
+            _controller.ResetPluginFailedAttemptCount(_plugin1.PluginID);
+            Assert.AreEqual(0, _controller.GetPluginFailedAttemptCount(_plugin1.PluginID));
         }
 
         [TestCleanup]
