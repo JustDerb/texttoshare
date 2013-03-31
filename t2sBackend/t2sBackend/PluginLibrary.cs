@@ -12,23 +12,6 @@ namespace t2sBackend
     /// </summary>
     public class PluginLibrary
     {
-        /// <summary>
-        /// Plug-in to use when other Plug-ins throw errors
-        /// </summary>
-        private PluginError ErrorPlugin;
-
-        /// <summary>
-        /// List of plug-ins available
-        /// </summary>
-        private List<IPlugin> _PluginList;
-        /// <summary>
-        /// Returns the list of plug-ins
-        /// </summary>
-        public List<IPlugin> PluginList
-        {
-            get;
-            private set;
-        }
 
         private MessageController controller;
         private AWatcherService service;
@@ -42,7 +25,6 @@ namespace t2sBackend
         {
             this.controller = Controller;
             this.service = Service;
-            this._PluginList = new List<IPlugin>(/*default plugins*/);
             ScanForPlugins();
         }
 
@@ -64,11 +46,10 @@ namespace t2sBackend
         }
 
         /// <summary>
-        /// ???????????????????????
+        /// Don't do until LUA Plugins
         /// </summary>
         private void ScanForPlugins()
         {
-            // Don't do until LUA Plugins
             return;
         }
 
@@ -107,33 +88,60 @@ namespace t2sBackend
                 // Will block until a new message has arrived
                 ParsedMessage message = GetNextMessage();
 
-                if(message.Group.Equals(null)){
-                    // Error plugin for invalid group
+                IPlugin plugin = new ErrorPlugin();
+
+                // Not a valid group ID
+                if (message.Group.Equals(null))
+                {
+                    message.ContentMessage = INVALID_GROUP_MESSAGE;
+                }
+                // Not a user within the given group
+                else if (!message.Group.Users.Contains(message.Sender))
+                {
+                    message.ContentMessage = INVALID_USER_MESSAGE;
+                }
+                // User is banned
+                else if (message.Sender.IsBanned)
+                {
+                    message.ContentMessage = BANNED_USER_MESSAGE;
+                }
+                // User is suppressed 
+                else if (message.Sender.IsSuppressed)
+                {
+                    message.ContentMessage = SUPPRESSED_USER_MESSAGE;
                 }
 
-                // sender is not a member of group
-                // user calling a plugin that he can't access (check moderator/user)
-                // user is banned // no reply
-                // user is suppressed // reply with a remind that they are suppressed. tell about unsuppress plugin
-                // invalid plugin
-
-
-                IPlugin plugin = new PluginError();
+                Boolean foundPlugin = false;
                 foreach (IPlugin i in message.Group.EnabledPlugins)
                 {
-                    if (i.PluginDAO.Name.Equals(message.Command))
+                    if (i.PluginDAO.PluginID.Equals(message.Command))
                     {
-                        plugin = i;
+                        // If the plugin can only be accessed by moderators and the calling user is not a moderator/owner
+                        if (i.PluginDAO.Access == PluginAccess.MODERATOR && (message.Group.Moderators.Contains(message.Sender) || message.Sender.Equals(message.Group.Owner)))
+                        {
+                            message.ContentMessage = RESTRICTED_ACCESS_MESSAGE;
+                        }
+                        else
+                        {
+                            foundPlugin = true;
+                            plugin = i;
+                        }
                     }
                 }
 
-                plugin.Run(message, service);
+                // No valid plugin was found for the given command
+                if (!foundPlugin)
+                {
+                    message.ContentMessage = INVALID_PLUGIN_MESSAGE;
+                }
 
+                // Let's run this beeyotch
+                plugin.Run(message, service);
 
                 // NOTE: Make sure thread is not disposed after running because it lost scope
                 BackgroundWorker pluginThread = new BackgroundWorker();
                 pluginThread.DoWork += pluginThread_DoWork;
-                Object[] parameters = new Object[] { /*PLUGIN GOES HERE*/ null, message};
+                Object[] parameters = new Object[] { plugin, message };
                 pluginThread.RunWorkerAsync(parameters);
             }
         }
@@ -159,5 +167,14 @@ namespace t2sBackend
                 _Running = false;
             }
         }
+
+        
+        // Messages to be sent back to sender when system throws an error or the commands are invalid.
+        private static string INVALID_GROUP_MESSAGE = "Invalid group. Please check your message and try again.";
+        private static string INVALID_USER_MESSAGE = "You are not a valid member of this group. Please check your message and try again.";
+        private static string BANNED_USER_MESSAGE = "";
+        private static string SUPPRESSED_USER_MESSAGE = "You have currently suppressed recieving messages. To disable, please reply, \"SUPPRESS OFF\"";
+        private static string INVALID_PLUGIN_MESSAGE = "Invalid command. Please check your message and try again.";
+        private static string RESTRICTED_ACCESS_MESSAGE = "You are not authorized to use this command. Please check with your group's owner and try again.";
     }
 }
