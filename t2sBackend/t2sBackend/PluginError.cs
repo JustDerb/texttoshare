@@ -9,7 +9,7 @@ namespace t2sBackend
     /// <summary>
     /// Class which handles errors with plug-ins
     /// </summary>
-    public class PluginError : IPlugin
+    public class ErrorPlugin : IPlugin
     {
         /// <summary>
         /// Controls access to the system
