@@ -1,6 +1,6 @@
 ﻿@{
     Layout = "~/_SiteLayout.cshtml";
-    Page.Title = "Home Page";
+    Page.Title = "Register Page";
 }
 
 <script runat="server">
@@ -12,6 +12,7 @@
         Button1.Click += new EventHandler(this.register);
     }
 
+    [AcceptVerbs(HttpVerbs.Post)]
     void register(Object sender,
                            EventArgs e)
     {
@@ -22,7 +23,9 @@
         @{
             SqlController controller = new SqlController();
             UserDAO user = new UserDAO();
-            //user.FirstName=
+          //  String fNamee = ;
+           // htmltextbox.Value = "Value from database";
+          //  user.FirstName= @
            // controller.CreateUser();
             
                 
