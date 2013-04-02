@@ -116,7 +116,7 @@ namespace t2sBackend
                 }
 
                 Boolean foundPlugin = false;
-                if (message.ContentMessage.Equals("") && doMessage)
+                if (doMessage)
                 {
                     foreach (PluginDAO d in message.Group.EnabledPlugins)
                     {
