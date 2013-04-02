@@ -25,6 +25,6 @@ namespace t2sBackend
         /// </summary>
         /// <param name="message"></param>
         /// <param name="service"></param>
-        void Run(ParsedMessage message, AWatcherService service);
+        void Run(ParsedMessage message, AWatcherService service, IDBController controller);
     }
 }

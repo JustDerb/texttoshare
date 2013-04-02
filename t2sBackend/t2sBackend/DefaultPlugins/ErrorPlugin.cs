@@ -16,7 +16,7 @@ namespace t2sBackend
         /// </summary>
         /// <param name="message">Message in error to be handled</param>
         /// <param name="service">Service to send/recieve messages through</param>
-        public void Run(ParsedMessage message, AWatcherService service)
+        public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
             Message msg = new Message();
             msg.FullMessage = message.ContentMessage;
@@ -24,6 +24,9 @@ namespace t2sBackend
             service.SendMessage(msg);
         }
 
+        /// <summary>
+        /// Stores metadata related to this plugin
+        /// </summary>
         public PluginDAO PluginDAO
         {
             get;
