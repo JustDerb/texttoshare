@@ -23,11 +23,9 @@ namespace t2sBackend
         /// <param name="message"></param>
         public static ParsedMessage Parse(Message message, IDBController controller)
         {
-
-            SqlController control = new SqlController();
-            String[] cmdArray = message.FullMessage.Split('@');
-            String command = cmdArray[0]; 
-            String[] idArray = cmdArray[1].Split(' ');
+            String[] cmdArray = message.FullMessage.Split(delimiter);
+            String command = cmdArray[0];
+            String[] idArray = cmdArray[1].Split(secondDelimiter);
             String groupId = idArray[0];
             String args = "";
 
@@ -42,8 +40,22 @@ namespace t2sBackend
             }
             parsed.Command = command;
             parsed.ContentMessage = args;
-            parsed.Group = control.RetrieveGroup(groupId);
-            parsed.Sender =control.RetrieveUser(message.Sender);
+            try
+            {
+                parsed.Group = controller.RetrieveGroup(groupId);
+            }
+            catch (Exception)
+            {
+                parsed.Group = null;
+            }
+            try
+            {
+                parsed.Sender = controller.RetrieveUser(message.Sender);
+            }
+            catch (Exception)
+            {
+                parsed.Sender = null;
+            }
              return parsed;
             
         }
