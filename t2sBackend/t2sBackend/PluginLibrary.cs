@@ -141,12 +141,15 @@ namespace t2sBackend
                                     {
                                         plugin = new LUAPlugin(d);
                                     }
-                                    catch (Exception)
+                                    catch (Exception ex)
                                     {
-                                        break;
+                                        // Fails if the file cannot be found
+                                        Logger.LogMessage("LUA Plugin (" + d.Name + ") failed.  Cannot load plugin: " + ex.Message, LoggerLevel.SEVERE);
                                     }
                                 }
                             }
+                            // Set the DAO for the plugin
+                            plugin.PluginDAO = d;
                             break;
                         }
                     }
@@ -176,7 +179,15 @@ namespace t2sBackend
             ParsedMessage message = (ParsedMessage)parameters[1];
 
             // Do plugin work
-            plugin.Run(message, this.service);
+            try
+            {
+                plugin.Run(message, this.service);
+            }
+            catch (Exception ex)
+            {
+                // Add logic to increment LUA Plugin Error count
+                // And disable, if necessary
+            }
         }
 
         /// <summary>
