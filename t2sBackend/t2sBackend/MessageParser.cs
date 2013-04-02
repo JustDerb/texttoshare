@@ -50,7 +50,7 @@ namespace t2sBackend
             }
             try
             {
-                parsed.Sender = controller.RetrieveUser(message.Sender);
+                parsed.Sender = controller.RetrieveUserByPhoneEmail(message.Sender);
             }
             catch (Exception)
             {

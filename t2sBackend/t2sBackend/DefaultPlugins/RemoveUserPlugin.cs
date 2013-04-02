@@ -22,7 +22,7 @@ namespace t2sBackend
             Message msgRemovedUser = new Message();
             try
             {
-                UserDAO userToBeRemoved = controller.RetrieveUser(message.ContentMessage);
+                UserDAO userToBeRemoved = controller.RetrieveUserByUserName(message.ContentMessage);
                 controller.RemoveMemberFromGroup(message.Group.GroupID, userToBeRemoved.UserID);
                 msgSender.FullMessage = "Successfully removed " + message.ContentMessage + " from the group " + message.Group.GroupID + ".";
                 msgRemovedUser.FullMessage = "You have been removed from group " + message.Group.GroupID + ".";
