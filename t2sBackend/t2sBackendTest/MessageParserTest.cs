@@ -121,8 +121,12 @@ namespace t2sBackendTest
             msg.FullMessage = sbuilder.ToString();
             ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
 
-            Assert.AreEqual(command, pmsg.Command, true);
-            Assert.AreEqual(args, pmsg.Arguments);
+           // Assert.AreEqual(command, pmsg.Command, true);
+            String outputContentMsg = sbuilderMessage.ToString();
+            int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
+            outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
+            Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
+            CollectionAssert.AreEquivalent(args, pmsg.Arguments);
             Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
             // TODO: Check for correct UserDAO and GroupDAO
         }
@@ -160,8 +164,12 @@ namespace t2sBackendTest
             msg.FullMessage = sbuilder.ToString();
             ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
 
-            Assert.AreEqual(command, pmsg.Command, true);
-            Assert.AreEqual(args, pmsg.Arguments);
+           // Assert.AreEqual(command, pmsg.Command, true);
+            String outputContentMsg = sbuilderMessage.ToString();
+            int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
+            outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
+            Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
+            CollectionAssert.AreEquivalent(args, pmsg.Arguments);
             Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
             // TODO: Check for correct UserDAO and GroupDAO
         }
@@ -180,7 +188,8 @@ namespace t2sBackendTest
 
             // Main message
             sbuilderMessage.Append(command);
-            sbuilderMessage.Append(" ");
+            sbuilder.Append(MessageParser.delimiter);
+          //  sbuilderMessage.Append(" ");
             foreach (string arg in args)
             {
                 sbuilderMessage.Append(arg);
@@ -193,8 +202,12 @@ namespace t2sBackendTest
             msg.FullMessage = sbuilder.ToString();
             ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
 
-            Assert.AreEqual(command, pmsg.Command, true);
-            Assert.AreEqual(args, pmsg.Arguments);
+           // Assert.AreEqual(command, pmsg.Command, true);
+            String outputContentMsg = sbuilderMessage.ToString();
+            int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
+            outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
+            Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
+            CollectionAssert.AreEquivalent(args, pmsg.Arguments);
             Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
             // TODO: Check for correct UserDAO and GroupDAO
         }
@@ -217,7 +230,8 @@ namespace t2sBackendTest
 
             // Main message
             sbuilderMessage.Append(command);
-            sbuilderMessage.Append(" ");
+            //changed this from " " to "." to account for second delimiter we are requirign
+            sbuilder.Append(MessageParser.delimiter);
             foreach (string arg in args)
             {
                 sbuilderMessage.Append(arg);
@@ -230,8 +244,12 @@ namespace t2sBackendTest
             msg.FullMessage = sbuilder.ToString();
             ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
 
-            Assert.AreEqual(command, pmsg.Command, true);
-            Assert.AreEqual(args, pmsg.Arguments);
+           // Assert.AreEqual(command, pmsg.Command, true);
+            String outputContentMsg = sbuilderMessage.ToString();
+            int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
+            outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
+            Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
+            CollectionAssert.AreEquivalent(args, pmsg.Arguments);
             Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
             // TODO: Check for correct UserDAO and GroupDAO
         }
@@ -241,7 +259,8 @@ namespace t2sBackendTest
         public void IncorrectGroupTagNoCommandOrArguments()
         {
             string fakeGroupTag = "HAHA";
-
+            
+            
             this.stubbedController.Stub(x => x.RetrieveGroup(fakeGroupTag)).Throw(new CouldNotFindException("Could not find group"));
 
             msg.Sender = this._user1.PhoneEmail;
@@ -256,7 +275,8 @@ namespace t2sBackendTest
 
             // Main message
             sbuilderMessage.Append(command);
-            sbuilderMessage.Append(" ");
+            sbuilderMessage.Append(MessageParser.delimiter);
+           // sbuilderMessage.Append(" ");
             foreach (string arg in args)
             {
                 sbuilderMessage.Append(arg);
@@ -269,8 +289,12 @@ namespace t2sBackendTest
             msg.FullMessage = sbuilder.ToString();
             ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
 
-            Assert.AreEqual(command, pmsg.Command, true);
-            Assert.AreEqual(args, pmsg.Arguments);
+           // Assert.AreEqual(command, pmsg.Command, true);
+            String outputContentMsg = sbuilderMessage.ToString();
+            int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
+            outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
+            Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
+            CollectionAssert.AreEquivalent(args, pmsg.Arguments);
             Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
             // TODO: Check for correct UserDAO and GroupDAO
             Assert.AreEqual(null, pmsg.Group);
@@ -296,7 +320,8 @@ namespace t2sBackendTest
 
             // Main message
             sbuilderMessage.Append(command);
-            sbuilderMessage.Append(" ");
+            //changed this from " " to "." to account for second delimiter we are requirign
+            sbuilderMessage.Append(MessageParser.delimiter);
             foreach (string arg in args)
             {
                 sbuilderMessage.Append(arg);
@@ -309,9 +334,12 @@ namespace t2sBackendTest
             msg.FullMessage = sbuilder.ToString();
             ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
 
-            Assert.AreEqual(command, pmsg.Command, true);
-            Assert.AreEqual(args, pmsg.Arguments);
-            Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
+           // Assert.AreEqual(command, pmsg.Command, true);
+            CollectionAssert.AreEquivalent(args, pmsg.Arguments);
+            String outputContentMsg = sbuilderMessage.ToString();
+            int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
+            outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
+            Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
             // TODO: Check for correct UserDAO and GroupDAO
             Assert.AreEqual(null, pmsg.Group);
         }
@@ -340,7 +368,8 @@ namespace t2sBackendTest
 
             // Main message
             sbuilderMessage.Append(command);
-            sbuilderMessage.Append(" ");
+            //changed this from " " to "." to account for second delimiter we are requirign
+            sbuilder.Append(MessageParser.delimiter);
             foreach (string arg in args)
             {
                 sbuilderMessage.Append(arg);
@@ -353,8 +382,12 @@ namespace t2sBackendTest
             msg.FullMessage = sbuilder.ToString();
             ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
 
-            Assert.AreEqual(command, pmsg.Command, true);
-            Assert.AreEqual(args, pmsg.Arguments);
+           // Assert.AreEqual(command, pmsg.Command, true);
+            String outputContentMsg = sbuilderMessage.ToString();
+            int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
+            outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
+            Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
+            CollectionAssert.AreEquivalent(args, pmsg.Arguments);
             Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
             // TODO: Check for correct UserDAO and GroupDAO
             Assert.AreEqual(null, pmsg.Group);
