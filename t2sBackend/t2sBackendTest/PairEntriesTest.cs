@@ -14,12 +14,20 @@ namespace t2sBackendTest
         private readonly string _testValueEntry1 = "TESTVALUE1";
         private readonly string _testValueEntry2 = "TESTVALUE2";
 
+        private SqlController _controller;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _controller = new SqlController();
+        }
+
         [TestCategory("PairEntries")]
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void SettingNullKeyThrowsException()
         {
-            SqlController.SetPairEntryValue(null, _testValueEntry1);
+            _controller.SetPairEntryValue(null, _testValueEntry1);
         }
 
         [TestCategory("PairEntries")]
@@ -27,7 +35,7 @@ namespace t2sBackendTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void SettingNullValueThrowsException()
         {
-            SqlController.SetPairEntryValue(_testKeyEntry, null);
+            _controller.SetPairEntryValue(_testKeyEntry, null);
         }
 
         [TestCategory("PairEntries")]
@@ -35,33 +43,33 @@ namespace t2sBackendTest
         [ExpectedException(typeof(CouldNotFindException))]
         public void GettingNonExistantKeyThrowsException()
         {
-            SqlController.GetPairEntryValue(_testKeyEntry);
+            _controller.GetPairEntryValue(_testKeyEntry);
         }
 
         [TestCategory("PairEntries")]
         [TestMethod]
         public void SettingNewPairReturnsTrue()
         {
-            Assert.IsTrue(SqlController.SetPairEntryValue(_testKeyEntry, _testValueEntry1));
+            Assert.IsTrue(_controller.SetPairEntryValue(_testKeyEntry, _testValueEntry1));
         }
 
         [TestCategory("PairEntries")]
         [TestMethod]
         public void GettingPairAfterSettingReturnsSameValue()
         {
-            SqlController.SetPairEntryValue(_testKeyEntry, _testValueEntry1);
-            Assert.AreEqual(_testValueEntry1, SqlController.GetPairEntryValue(_testKeyEntry));
+            _controller.SetPairEntryValue(_testKeyEntry, _testValueEntry1);
+            Assert.AreEqual(_testValueEntry1, _controller.GetPairEntryValue(_testKeyEntry));
         }
 
         [TestCategory("PairEntries")]
         [TestMethod]
         public void SettingKeyEntryWithNewValueUpdatesValue()
         {
-            SqlController.SetPairEntryValue(_testKeyEntry, _testValueEntry1);
-            string initialValue = SqlController.GetPairEntryValue(_testKeyEntry);
+            _controller.SetPairEntryValue(_testKeyEntry, _testValueEntry1);
+            string initialValue = _controller.GetPairEntryValue(_testKeyEntry);
 
-            SqlController.SetPairEntryValue(_testKeyEntry, _testValueEntry2);
-            string updatedValue = SqlController.GetPairEntryValue(_testKeyEntry);
+            _controller.SetPairEntryValue(_testKeyEntry, _testValueEntry2);
+            string updatedValue = _controller.GetPairEntryValue(_testKeyEntry);
 
             Assert.AreNotEqual(initialValue, updatedValue, "Test value did not updated as expected.");
         }

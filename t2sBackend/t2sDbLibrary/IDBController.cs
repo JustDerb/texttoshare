@@ -17,22 +17,6 @@ namespace t2sDbLibrary
         bool CreateUser(UserDAO user, string password);
 
         /// <summary>
-        /// Deletes an existing user that matches the given UserDAO.
-        /// </summary>
-        /// <param name="user">The UserDAO to delete from the database.</param>
-        /// <returns>true if the user was successfully deleted.</returns>
-        /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
-        bool DeleteUser(UserDAO user);
-
-        /// <summary>
-        /// Updates user information in the database.
-        /// </summary>
-        /// <param name="user">The UserDAO to update in the database</param>
-        /// <returns>true if the user was successfully updated.</returns>
-        /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
-        bool UpdateUser(UserDAO user);
-
-        /// <summary>
         /// Grabs an individual user based on the given phone email string. The string should be in a format similar to
         /// <code>String userPhoneEmail = "1234567890@carrier.com"</code>
         /// in order to grab the correct information.
@@ -43,13 +27,170 @@ namespace t2sDbLibrary
         /// <exception cref="CouldNotFindException">If the user for the given phone email could not be found.</exception>
         UserDAO RetrieveUser(string userPhoneEmail);
 
+        /// <summary>
+        /// Grabs an individual user based on the given user id.
+        /// </summary>
+        /// <param name="userID">The user id to query for.</param>
+        /// <returns>A new UserDAO object with data related to the given user id.</returns>
+        /// <exception cref="ArgumentNullException">If the given id is null.</exception>
+        /// <exception cref="CouldNotFindException">If the user for the given id could not be found.</exception>
+        UserDAO RetrieveUser(int? userID);
+
+        /// <summary>
+        /// Updates user information in the database.
+        /// </summary>
+        /// <param name="user">The UserDAO to update in the database</param>
+        /// <returns>true if the user was successfully updated.</returns>
+        /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
+        bool UpdateUser(UserDAO user);
+
+        /// <summary>
+        /// Deletes an existing user that matches the given UserDAO.
+        /// </summary>
+        /// <param name="user">The UserDAO to delete from the database.</param>
+        /// <returns>true if the user was successfully deleted.</returns>
+        /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
+        bool DeleteUser(UserDAO user);
+
+        /// <summary>
+        /// Checks if the given username or phoneEmail exists in the database. Since usernames and phone emails are unique,
+        /// this method is useful to see if a user already exists with the name or phone email.
+        /// </summary>
+        /// <param name="username">The username of the user to check.</param>
+        /// <param name="phoneEmail">The phone email of the user to check.</param>
+        /// <returns>true if a user exists.</returns>
+        bool UserExists(string username, string phoneEmail);
+
+        /// <summary>
+        /// Inserts the given GroupDAO object into the database, along with the different relations
+        /// between users, permissions, and plugins.
+        /// </summary>
+        /// <param name="group">The GroupDAO to insert into the database</param>
+        /// <returns>true if the group was successfully added.</returns>
+        /// <exception cref="ArgumentNullException">If the given group is null.</exception>
         bool CreateGroup(GroupDAO group);
 
+        /// <summary>
+        /// Retrieves a GroupDAO object representing information about a specific group, including users, moderators, and plugins.
+        /// </summary>
+        /// <param name="groupTag">The group tag of the group to retrieve.</param>
+        /// <returns>A new GroupDAO object, complete with lists of users, moderators, and plugins associated with the group.</returns>
+        /// <exception cref="ArgumentNullException">If the given group tag is null.</exception>
+        /// <exception cref="CouldNotFindException">If a group with the given group tag could not be found.</exception>
         GroupDAO RetrieveGroup(string groupTag);
 
+        /// <summary>
+        /// Retrieves basic information for a group in a GroupDAO. Does not include users or plugins for a group.
+        /// </summary>
+        /// <param name="groupTag">The group tag of the group to retrieve.</param>
+        /// <returns>A new GroupDAO object with basic group data.</returns>
+        GroupDAO RetrieveGroupMetadata(string groupTag);
+
+        /// <summary>
+        /// Updates the metadata, the list of users for the group, and all enabled plugin relationships for the given group.
+        /// </summary>
+        /// <param name="group">The GroupDAO to update in the database.</param>
+        /// <returns>true if successful.</returns>
         bool UpdateGroup(GroupDAO group);
 
+        /// <summary>
+        /// Deletes an existing group that matches the given GroupDAO. All users and plugin assocations with the given
+        /// GroupDAO will be deleted, however the users and plugins will not be.
+        /// </summary>
+        /// <param name="user">The PluginDAO to delete from the database.</param>
+        /// <returns>true if the plugin was successfully deleted.</returns>
+        /// <exception cref="ArgumentNullException">If the given PluginDAO or PluginDAO.PluginID is null.</exception>
         bool DeleteGroup(GroupDAO group);
+
+        /// <summary>
+        /// Checks to see if a group with the given name exists in the database.
+        /// </summary>
+        /// <param name="name">The name of the group to check in the database.</param>
+        /// <returns>true if the group already exists.</returns>
+        /// <exception cref="ArgumentNullException">If the given name is null.</exception>
+        bool GroupExists(string name);
+
+        /// <summary>
+        /// Adds a user with a specified administrative level to a group.
+        /// </summary>
+        /// <param name="groupID">The GroupID of the group to add the user to.</param>
+        /// <param name="userID">The UserID of the user to add.</param>
+        /// <param name="groupLevel">The level of the user's permissions in the group.</param>
+        /// <returns>true if the user was added successfully.</returns>
+        /// <exception cref="ArgumentNullException">If the given groupID or userID are null.</exception>
+        /// <seealso cref="GroupLevel"/>
+        bool AddMemberToGroup(int? groupID, int? userID, GroupLevel groupLevel);
+
+        /// <summary>
+        /// Checks to see if the given user is already a member of the given group.
+        /// </summary>
+        /// <param name="groupID">The GroupID of the group to check.</param>
+        /// <param name="userID">The UserID of the user.</param>
+        /// <returns>true if the user is already a member of the group.</returns>
+        bool IsUserMemberOfGroup(int? groupID, int? userID);
+
+        /// <summary>
+        /// Removes an individual user from a group. If the user was not already in the group, this method returns false.
+        /// </summary>
+        /// <param name="groupID">The GroupID of the group to remove the user from.</param>
+        /// <param name="userID">The UserID of the user to remove.</param>
+        /// <returns>true if the user was successfully removed</returns>
+        bool RemoveMemberFromGroup(int? groupID, int? userID);
+
+        /// <summary>
+        /// Gets a list of all members (regardless of group level) for the given groupID.
+        /// </summary>
+        /// <param name="groupID"></param>
+        /// <returns>A list of UserDAOs that is representative of all users for a group.</returns>
+        List<UserDAO> GetAllGroupMembers(int? groupID);
+
+        /// <summary>
+        /// Adds a plugin as an enabled plugin for a group in the database.
+        /// </summary>
+        /// <param name="groupID">The ID of the group to add the plugin relationship to.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <param name="isDisabled">Initially set whether or not the plugin can be used by the group.</param>
+        /// <returns>true if successful.</returns>
+        bool AddPluginToGroup(int? groupID, int? pluginID, bool isDisabled);
+
+        /// <summary>
+        /// Checks to see if the group already has the plugin associated with the group.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if there is an associated plugin for the group already.</returns>
+        bool IsPluginInGroup(int? groupID, int? pluginID);
+
+        /// <summary>
+        /// Removes a plugin from the group entirely. This does not remove the plugin itself, only the relationship between the group and the plugin.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        bool RemovePluginFromGroup(int? groupID, int? pluginID);
+
+        /// <summary>
+        /// Enables a plugin for a group if it is not already.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        bool EnablePluginForGroup(int? groupID, int? pluginID);
+
+        /// <summary>
+        /// Disables a plugin for a group if it is not already.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        bool DisablePluginForGroup(int? groupID, int? pluginID);
+
+        /// <summary>
+        /// Gets a list of all enabled plugins for a group.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <returns>A list of PluginDAOs.</returns>
+        List<PluginDAO> GetAllEnabledGroupPlugins(int? groupID);
 
         /// <summary>
         /// Creates a new plugin entry in the database with the given PluginDAO. The PluginID of the given
@@ -70,6 +211,15 @@ namespace t2sDbLibrary
         PluginDAO RetrievePlugin(string commandText);
 
         /// <summary>
+        /// Grabs an individual plugin from the database that matches the given command.
+        /// </summary>
+        /// <param name="pluginID">The plugin id to search for.</param>
+        /// <returns>A new PluginDAO object with data related to the given plugin id.</returns>
+        /// <exception cref="ArgumentNullException">If the given plugin id is null.</exception>
+        /// <exception cref="CouldNotFindException">If the plugin for the given plugin id could not be found.</exception>
+        PluginDAO RetrievePlugin(int? pluginID);
+
+        /// <summary>
         /// Updates plugin information in the database. If there is no entry in the database that matches the given
         /// PluginDAO.PluginID no entries will be updated and <code>false</code> will be returned.
         /// </summary>
@@ -85,6 +235,70 @@ namespace t2sDbLibrary
         /// <returns>true if the plugin was successfully deleted.</returns>
         /// <exception cref="ArgumentNullException">If the given PluginDAO or PluginDAO.PluginID is null.</exception>
         bool DeletePlugin(PluginDAO plugin);
+
+        /// <summary>
+        /// Checks to see if a plugin already exists with the given command text.
+        /// </summary>
+        /// <param name="plugin">The command text to search for.</param>
+        /// <returns>true if a plugin exists that matches the given string.</returns>
+        /// <exception cref="ArgumentNullException">If the given command text is null.</exception>
+        bool PluginExists(string commandText);
+
+        /// <summary>
+        /// Enables a plugin for global use by all groups.
+        /// </summary>
+        /// <param name="pluginID">The id of the plugin to enable.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given plugin id is null.</exception>
+        bool EnableGlobalPlugin(int? pluginID);
+
+        /// <summary>
+        /// Disables a plugin for global use by all groups.
+        /// </summary>
+        /// <param name="pluginID">The id of the plugin to disable.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given plugin id is null.</exception>
+        bool DisableGlobalPlugin(int? pluginID);
+
+        /// <summary>
+        /// Increments the failed attempt count of the given pluginID by 1.
+        /// </summary>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        bool IncrementPluginFailedAttemptCount(int? pluginID);
+
+        /// <summary>
+        /// Gets the current count of failed attempts for the given pluginID.
+        /// </summary>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>The failed attempt count of the given pluginID.</returns>
+        int GetPluginFailedAttemptCount(int? pluginID);
+
+        /// <summary>
+        /// Resets the failed attempt count of the plugin to 0.
+        /// </summary>
+        /// <param name="pluginID">The ID of the plugin.</param>
+        /// <returns>true if successful.</returns>
+        public bool ResetPluginFailedAttemptCount(int? pluginID);
+
+        /// <summary>
+        /// Gets the associated value for the given key entry.
+        /// </summary>
+        /// <param name="keyEntry">The key entry to search for.</param>
+        /// <returns>The string representation of the value assoviated with the key.</returns>
+        /// <exception cref="ArgumentNullException">If the given key entry is null.</exception>
+        /// <exception cref="CouldNotFindException">If the key entry does not exist.</exception>
+        string GetPairEntryValue(string keyEntry);
+
+        /// <summary>
+        /// Performs an upsert on a key-value entry, e.g. if the key-value entry does not exist, it is inserted; 
+        /// otherwise it updates the given key's value with the given value.
+        /// </summary>
+        /// <param name="keyEntry">The key entry to upsert.</param>
+        /// <param name="valueEntry">The value to upsert.</param>
+        /// <returns>true if successful</returns>
+        /// <exception cref="ArgumentNullException">If the given key or value is null.</exception>
+        bool SetPairEntryValue(string keyEntry, string valueEntry);
 
         /// <summary>
         /// Inserts a message into the database with the given message and level of importance.

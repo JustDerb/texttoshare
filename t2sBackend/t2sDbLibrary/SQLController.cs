@@ -98,6 +98,13 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Grabs an individual user based on the given user id.
+        /// </summary>
+        /// <param name="userID">The user id to query for.</param>
+        /// <returns>A new UserDAO object with data related to the given user id.</returns>
+        /// <exception cref="ArgumentNullException">If the given id is null.</exception>
+        /// <exception cref="CouldNotFindException">If the user for the given id could not be found.</exception>
         public UserDAO RetrieveUser(int? userID)
         {
             if (null == userID) throw new ArgumentNullException();
@@ -215,10 +222,12 @@ namespace t2sDbLibrary
         }
 
         /// <summary>
-        /// Checks if the given username or phoneEmail exists in the database.
+        /// Checks if the given username or phoneEmail exists in the database. Since usernames and phone emails are unique,
+        /// this method is useful to see if a user already exists with the name or phone email.
         /// </summary>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="username">The username of the user to check.</param>
+        /// <param name="phoneEmail">The phone email of the user to check.</param>
+        /// <returns>true if a user exists.</returns>
         public virtual bool UserExists(string username, string phoneEmail)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(phoneEmail)) throw new ArgumentNullException();
@@ -636,7 +645,7 @@ namespace t2sDbLibrary
                 int effectedRows = query.ExecuteNonQuery();
 
                 /* One or more records should have been deleted:
-                 * The plugin record itself (1), and any additional groupplugin entries (0 or more)
+                 * The group record itself (1), any groupmember references (>= 0), and any groupplugin references (>= 0)
                  */
                 return 0 < effectedRows;
             }
@@ -1030,10 +1039,10 @@ namespace t2sDbLibrary
         /// <summary>
         /// Grabs an individual plugin from the database that matches the given command.
         /// </summary>
-        /// <param name="pluginID">The PluginID of the plugin to search for.</param>
-        /// <returns>A new PluginDAO object with data related to the given command text.</returns>
-        /// <exception cref="ArgumentNullException">If the given commandText is null.</exception>
-        /// <exception cref="CouldNotFindException">If the plugin for the given commandText could not be found.</exception>
+        /// <param name="pluginID">The plugin id to search for.</param>
+        /// <returns>A new PluginDAO object with data related to the given plugin id.</returns>
+        /// <exception cref="ArgumentNullException">If the given plugin id is null.</exception>
+        /// <exception cref="CouldNotFindException">If the plugin for the given plugin id could not be found.</exception>
         public PluginDAO RetrievePlugin(int? pluginID)
         {
             if (null == pluginID) throw new ArgumentNullException();
@@ -1166,16 +1175,35 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Enables a plugin for global use by all groups.
+        /// </summary>
+        /// <param name="pluginID">The id of the plugin to enable.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given plugin id is null.</exception>
         public bool EnableGlobalPlugin(int? pluginID)
         {
             return ToggleGlobalPluginDisableStatus(pluginID, false);
         }
 
+        /// <summary>
+        /// Disables a plugin for global use by all groups.
+        /// </summary>
+        /// <param name="pluginID">The id of the plugin to disable.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given plugin id is null.</exception>
         public bool DisableGlobalPlugin(int? pluginID)
         {
             return ToggleGlobalPluginDisableStatus(pluginID, true);
         }
 
+        /// <summary>
+        /// Enables or disables a plugin depending on the boolean flag isDisabled (true = disabled).
+        /// </summary>
+        /// <param name="pluginID">The id of the plugin to toggle.</param>
+        /// <param name="isDisabled">Set to true if the given plugin is to be disabled.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given plugin id is null.</exception>
         private bool ToggleGlobalPluginDisableStatus(int? pluginID, bool isDisabled)
         {
             if (null == pluginID) throw new ArgumentNullException("Cannot update status for null plugin.");
@@ -1284,7 +1312,14 @@ namespace t2sDbLibrary
 
         #region PairEntries Getter/Setter actions
 
-        public static string GetPairEntryValue(string keyEntry)
+        /// <summary>
+        /// Gets the associated value for the given key entry.
+        /// </summary>
+        /// <param name="keyEntry">The key entry to search for.</param>
+        /// <returns>The string representation of the value assoviated with the key.</returns>
+        /// <exception cref="ArgumentNullException">If the given key entry is null.</exception>
+        /// <exception cref="CouldNotFindException">If the key entry does not exist.</exception>
+        public string GetPairEntryValue(string keyEntry)
         {
             if (string.IsNullOrEmpty(keyEntry)) throw new ArgumentNullException();
 
@@ -1303,7 +1338,15 @@ namespace t2sDbLibrary
             }
         }
 
-        public static bool SetPairEntryValue(string keyEntry, string valueEntry)
+        /// <summary>
+        /// Performs an upsert on a key-value entry, e.g. if the key-value entry does not exist, it is inserted; 
+        /// otherwise it updates the given key's value with the given value.
+        /// </summary>
+        /// <param name="keyEntry">The key entry to upsert.</param>
+        /// <param name="valueEntry">The value to upsert.</param>
+        /// <returns>true if successful</returns>
+        /// <exception cref="ArgumentNullException">If the given key or value is null.</exception>
+        public bool SetPairEntryValue(string keyEntry, string valueEntry)
         {
             if (string.IsNullOrEmpty(keyEntry) || string.IsNullOrEmpty(valueEntry)) throw new ArgumentNullException();
             
