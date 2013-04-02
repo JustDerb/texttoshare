@@ -95,7 +95,7 @@ namespace t2sBackend
                 bool doMessage = true;
 
                 // Not a valid group ID
-                if (message.Group.Equals(null))
+                if (message.Group == null)
                 {
                     message.ContentMessage = INVALID_GROUP_MESSAGE;
                 }
@@ -161,7 +161,7 @@ namespace t2sBackend
                     message.ContentMessage = INVALID_PLUGIN_MESSAGE;
                 }
 
-                if (!doMessage)
+                if (doMessage)
                 {
                     // NOTE: Make sure thread is not disposed after running because it lost scope
                     BackgroundWorker pluginThread = new BackgroundWorker();
@@ -203,7 +203,7 @@ namespace t2sBackend
 
         private readonly static Dictionary<string, IPlugin> defaultPlugins = new Dictionary<string, IPlugin>()
         {
-            {"ERROR", new ErrorPlugin()}, {null, null}
+            {"ERROR", new ErrorPlugin()}
         };
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
