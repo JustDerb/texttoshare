@@ -355,7 +355,7 @@ namespace t2sDbLibrary
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@name", group.Name);
                 query.Parameters.AddWithValue("@description", group.Description);
-                query.Parameters.AddWithValue("@owner_id", group.Owner);
+                query.Parameters.AddWithValue("@owner_id", group.Owner.UserID);
                 query.Parameters.AddWithValue("@grouptag", group.GroupTag);
 
                 conn.Open();
