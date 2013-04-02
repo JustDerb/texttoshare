@@ -172,7 +172,7 @@ namespace t2sDbLibrary
                 queryBuilder.Append("WHERE id = @id");
 
                 query.CommandText = queryBuilder.ToString();
-                query.Parameters.AddWithValue("@phoneEmail", userID);
+                query.Parameters.AddWithValue("@id", userID);
 
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
