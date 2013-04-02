@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Mail;
 using S22.Imap;
 using t2sDbLibrary;
+using System.Net;
 
 namespace t2sBackend
 {
@@ -181,7 +182,15 @@ namespace t2sBackend
             messageToSend.From = new System.Net.Mail.MailAddress(this.UserName);
             messageToSend.Body = message.FullMessage;
 
-            SmtpClient smtp = new SmtpClient(this.SMTPServer,this.SMTPPort);
+            SmtpClient smtp = new SmtpClient()
+            {
+                Host = this.SMTPServer,
+                Port = this.SMTPPort,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(this.UserName, this.Password)
+            };
             if (async)
                 smtp.SendAsync(messageToSend, null);
             else
