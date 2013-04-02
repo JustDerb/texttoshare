@@ -14,6 +14,8 @@ namespace t2sBackend
         static void Main(string[] args)
         {
             IDBController database = new SqlController();
+            Logger.LogMessage("Established connection to SQL server", LoggerLevel.DEBUG);
+            PrivateInfo.addTestUsers(database);
             AWatcherService gmailServ = new GMailWatcherService(
                 PrivateInfo.Email.UserName,
                 PrivateInfo.Email.Password,
@@ -27,7 +29,9 @@ namespace t2sBackend
             PluginLibrary pluginLib = new PluginLibrary(controller, gmailServ, database);
 
             pluginLib.Start();
+            Logger.LogMessage("Started PluginLibrary", LoggerLevel.DEBUG);
             gmailServ.Start();
+            Logger.LogMessage("Started AWatcherService", LoggerLevel.DEBUG);
 
             // Add fake emails (For testing)
             List<Message> msgArray = new List<Message>();
@@ -36,6 +40,7 @@ namespace t2sBackend
             foreach (Message msg in msgArray)
                 controller.putNextMessage(MessageParser.Parse(msg, database));
 
+            Logger.LogMessage("Waiting for messages...", LoggerLevel.DEBUG);
             // BAD
             while (true) ;
         }
