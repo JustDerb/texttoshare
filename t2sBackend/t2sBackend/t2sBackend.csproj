@@ -67,10 +67,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddUserPlugin.cs" />
     <Compile Include="BlockingQueue.cs" />
     <Compile Include="GMailWatcherService.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="AWatcherService.cs" />
+    <Compile Include="ListEnabledPlugin.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LUAPlugin.cs" />
     <Compile Include="LuaScriptingEngine.cs" />
@@ -78,18 +80,25 @@
     <Compile Include="MessageController.cs" />
     <Compile Include="MessageControllerOverride.cs" />
     <Compile Include="MessageParser.cs" />
+    <Compile Include="NumberRequestPlugin.cs" />
     <Compile Include="ParsedMessage.cs" />
     <Compile Include="PluginError.cs" />
     <Compile Include="PluginLibrary.cs" />
     <Compile Include="nogit\PrivateInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoveUserPlugin.cs" />
+    <Compile Include="SuppressPlugin.cs" />
+    <Compile Include="TextGroupPlugin.cs" />
+    <Compile Include="TextModsPlugin.cs" />
+    <Compile Include="TextUserPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
