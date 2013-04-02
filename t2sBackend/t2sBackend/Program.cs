@@ -24,7 +24,7 @@ namespace t2sBackend
                 465);
 
             MessageControllerOverride controller = new MessageControllerOverride(gmailServ, database);
-            PluginLibrary pluginLib = new PluginLibrary(controller, gmailServ);
+            PluginLibrary pluginLib = new PluginLibrary(controller, gmailServ, database);
 
             pluginLib.Start();
             gmailServ.Start();
