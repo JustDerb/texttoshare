@@ -6,96 +6,43 @@ using t2sDbLibrary;
 
 namespace t2sBackend
 {
-    public class RemoveUserPlugin : IPlugin
+    /// <summary>
+    /// Plugin that removes a specified user from the specified group
+    /// </summary>
+    public class ListEnabledPlugins : IPlugin
     {
+        /// <summary>
+        /// Takes in the info from the moderator/owner and removes a user from the group
+        /// </summary>
+        /// <param name="message">Message to be handled</param>
+        /// <param name="service">Service to send/recieve messages through</param>
+        public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
+        {
+            Message msgSender = new Message();
+            Message msgRemovedUser = new Message();
+            try
+            {
+                UserDAO userToBeRemoved = controller.RetrieveUser(message.ContentMessage);
+                controller.RemoveMemberFromGroup(message.Group.GroupID, userToBeRemoved.UserID);
+                msgSender.FullMessage = "Successfully removed " + message.ContentMessage + " from the group " + message.Group.GroupID + ".";
+                msgRemovedUser.FullMessage = "You have been removed from group " + message.Group.GroupID + ".";
+                msgRemovedUser.Reciever.Add(userToBeRemoved.PhoneEmail);
+            }
+            catch (Exception)
+            {
+                msgSender.FullMessage = "Failed to remove " + message.ContentMessage + " from the group " + message.Group.GroupID + ".";
+            }
+            msgSender.Reciever.Add(message.Sender.PhoneEmail);
+            service.SendMessage(msgSender);
+        }
+
+        /// <summary>
+        /// Stores metadata related to this plugin
+        /// </summary>
         public PluginDAO PluginDAO
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public void Run(ParsedMessage message, AWatcherService service)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public bool AlwaysEnabled
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool IsDisabled
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool IsHidden
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public PluginAccess Access
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string Command
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string HelpText
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
     }
 }

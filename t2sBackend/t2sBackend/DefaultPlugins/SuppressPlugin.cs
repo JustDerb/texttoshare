@@ -6,93 +6,28 @@ using t2sDbLibrary;
 
 namespace t2sBackend
 {
-    public class SuppressPlugin : IPlugin
+    /// <summary>
+    /// Plugin that removes a specified user from the specified group
+    /// </summary>
+    public class ListEnabledPlugins : IPlugin
     {
+        /// <summary>
+        /// Takes in the info from the moderator/owner and removes a user from the group
+        /// </summary>
+        /// <param name="message">Message in error to be handled</param>
+        /// <param name="service">Service to send/recieve messages through</param>
+        public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
+        {
+            
+        }
+
+        /// <summary>
+        /// Stores metadata related to this plugin
+        /// </summary>
         public PluginDAO PluginDAO
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public void Run(ParsedMessage message, AWatcherService service)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public bool AlwaysEnabled
-        {
-            get
-            {
-                return true;
-            }
-            set { throw new InvalidOperationException("This variable cannot be set"); }
-        }
-
-        public bool IsDisabled
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool IsHidden
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public PluginAccess Access
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string Command
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string HelpText
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
     }
 }
