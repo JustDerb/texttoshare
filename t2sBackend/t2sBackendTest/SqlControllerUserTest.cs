@@ -127,7 +127,7 @@ namespace t2sBackendTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void RetrieveNullUserShouldThrowException()
         {
-            _controller.RetrieveUser("");
+            _controller.RetrieveUserByUserName("");
         }
 
         [TestCategory("SqlController.User")]
@@ -135,15 +135,31 @@ namespace t2sBackendTest
         [ExpectedException(typeof(CouldNotFindException))]
         public void RetreiveNonExistingUserShouldThrowException()
         {
-            _controller.RetrieveUser(_user1.UserName);
+            _controller.RetrieveUserByUserName(_user1.UserName);
         }
 
         [TestCategory("SqlController.User")]
         [TestMethod]
-        public void CreateAndRetrieveShouldReturnSameUser()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void RetrieveNullUserByPhoneEmailShouldThrowException()
+        {
+            _controller.RetrieveUserByPhoneEmail("");
+        }
+
+        [TestCategory("SqlController.User")]
+        [TestMethod]
+        [ExpectedException(typeof(CouldNotFindException))]
+        public void RetreiveNonExistingUserByPhoneEmailShouldThrowException()
+        {
+            _controller.RetrieveUserByPhoneEmail(_user1.PhoneEmail);
+        }
+
+        [TestCategory("SqlController.User")]
+        [TestMethod]
+        public void CreateAndRetrieveByUserNameShouldReturnSameUser()
         {
             _controller.CreateUser(_user1, "password");
-            UserDAO retUserDAO = _controller.RetrieveUser(_user1.UserName);
+            UserDAO retUserDAO = _controller.RetrieveUserByUserName(_user1.UserName);
 
             Assert.AreEqual(_user1.UserID, retUserDAO.UserID, "UserIDs do not match.");
         }
@@ -154,8 +170,32 @@ namespace t2sBackendTest
         {
             _controller.CreateUser(_user1, "password");
             _controller.CreateUser(_user2, "password");
-            UserDAO u1 = _controller.RetrieveUser(_user1.UserName);
-            UserDAO u2 = _controller.RetrieveUser(_user2.UserName);
+            UserDAO u1 = _controller.RetrieveUserByUserName(_user1.UserName);
+            UserDAO u2 = _controller.RetrieveUserByUserName(_user2.UserName);
+
+            Assert.AreEqual(_user1.UserID, u1.UserID);
+            Assert.AreEqual(_user2.UserID, u2.UserID);
+            Assert.AreNotEqual(u1.UserID, u2.UserID);
+        }
+
+        [TestCategory("SqlController.User")]
+        [TestMethod]
+        public void CreateAndRetrieveByPhoneEmailShouldReturnSameUser()
+        {
+            _controller.CreateUser(_user1, "password");
+            UserDAO retUserDAO = _controller.RetrieveUserByPhoneEmail(_user1.PhoneEmail);
+
+            Assert.AreEqual(_user1.UserID, retUserDAO.UserID, "UserIDs do not match.");
+        }
+
+        [TestCategory("SqlController.User")]
+        [TestMethod]
+        public void CreateAndRetrieveMultipleUsersByPhoneEmailShouldReturnDifferentUsers()
+        {
+            _controller.CreateUser(_user1, "password");
+            _controller.CreateUser(_user2, "password");
+            UserDAO u1 = _controller.RetrieveUserByPhoneEmail(_user1.PhoneEmail);
+            UserDAO u2 = _controller.RetrieveUserByPhoneEmail(_user2.PhoneEmail);
 
             Assert.AreEqual(_user1.UserID, u1.UserID);
             Assert.AreEqual(_user2.UserID, u2.UserID);
