@@ -10,6 +10,9 @@ namespace t2sDbLibrary
         public GroupDAO(UserDAO Owner)
         {
             this.Owner = Owner;
+            this.Users = new List<UserDAO>();
+            this.Moderators = new List<UserDAO>();
+            this.EnabledPlugins = new List<PluginDAO>();
         }
 
         public GroupDAO() { }
