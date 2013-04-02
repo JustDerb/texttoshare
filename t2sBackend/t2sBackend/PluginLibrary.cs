@@ -100,7 +100,9 @@ namespace t2sBackend
                     message.ContentMessage = INVALID_GROUP_MESSAGE;
                 }
                 // Not a user within the given group
-                else if (!message.Group.Users.Contains(message.Sender))
+                else if (!message.Group.Users.Contains(message.Sender) && 
+                    !message.Group.Moderators.Contains(message.Sender) &&
+                    !message.Group.Owner.Equals(message.Sender))
                 {
                     message.ContentMessage = INVALID_USER_MESSAGE;
                 }
@@ -123,7 +125,8 @@ namespace t2sBackend
                         if (d.Name.Equals(message.Command, StringComparison.OrdinalIgnoreCase))
                         {
                             // If the plugin can only be accessed by moderators and the calling user is not a moderator/owner
-                            if (d.Access == PluginAccess.MODERATOR && (message.Group.Moderators.Contains(message.Sender) || message.Sender.Equals(message.Group.Owner)))
+                            if (d.Access == PluginAccess.MODERATOR && 
+                                !(message.Group.Moderators.Contains(message.Sender) || message.Group.Owner.Equals(message.Sender)))
                             {
                                 message.ContentMessage = RESTRICTED_ACCESS_MESSAGE;
                             }
