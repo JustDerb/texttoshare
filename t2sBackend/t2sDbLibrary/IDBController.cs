@@ -279,7 +279,7 @@ namespace t2sDbLibrary
         /// </summary>
         /// <param name="pluginID">The ID of the plugin.</param>
         /// <returns>true if successful.</returns>
-        public bool ResetPluginFailedAttemptCount(int? pluginID);
+        bool ResetPluginFailedAttemptCount(int? pluginID);
 
         /// <summary>
         /// Gets the associated value for the given key entry.
