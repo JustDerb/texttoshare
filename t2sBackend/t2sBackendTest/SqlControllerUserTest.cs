@@ -224,7 +224,7 @@ namespace t2sBackendTest
         {
             _controller.CreateUser(_user1, "password");
             _controller.UpdateUser(_user1);
-            _user2 = _controller.RetrieveUser(_user1.UserName);
+            _user2 = _controller.RetrieveUserByUserName(_user1.UserName);
 
             Assert.AreEqual(_user1.UserName, _user2.UserName, "UserNames do not match");
             Assert.AreEqual(_user1.FirstName, _user2.FirstName, "FirstNames do not match.");
