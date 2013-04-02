@@ -35,7 +35,7 @@ namespace t2sBackend
 
             // Add fake emails (For testing)
             List<Message> msgArray = new List<Message>();
-            //msgArray.add(...)
+            //msgArray.Add(new Message(...));
 
             foreach (Message msg in msgArray)
                 controller.putNextMessage(MessageParser.Parse(msg, database));
