@@ -27,6 +27,7 @@ namespace t2sBackend
         /// <seealso cref="LoggerLevel"/>
         public static bool LogMessage(string message, LoggerLevel level)
         {
+            Console.WriteLine(System.Enum.GetName(level.GetType(), level) + ": " + message);
             return controller.LogMessage(message, level);
         }
     }
