@@ -135,7 +135,7 @@ namespace t2sBackendTest
         [ExpectedException(typeof(CouldNotFindException))]
         public void RetreiveNonExistingUserShouldThrowException()
         {
-            _controller.RetrieveUser(_user1.PhoneEmail);
+            _controller.RetrieveUser(_user1.UserName);
         }
 
         [TestCategory("SqlController.User")]
@@ -143,7 +143,7 @@ namespace t2sBackendTest
         public void CreateAndRetrieveShouldReturnSameUser()
         {
             _controller.CreateUser(_user1, "password");
-            UserDAO retUserDAO = _controller.RetrieveUser(_user1.PhoneEmail);
+            UserDAO retUserDAO = _controller.RetrieveUser(_user1.UserName);
 
             Assert.AreEqual(_user1.UserID, retUserDAO.UserID, "UserIDs do not match.");
         }
@@ -154,8 +154,8 @@ namespace t2sBackendTest
         {
             _controller.CreateUser(_user1, "password");
             _controller.CreateUser(_user2, "password");
-            UserDAO u1 = _controller.RetrieveUser(_user1.PhoneEmail);
-            UserDAO u2 = _controller.RetrieveUser(_user2.PhoneEmail);
+            UserDAO u1 = _controller.RetrieveUser(_user1.UserName);
+            UserDAO u2 = _controller.RetrieveUser(_user2.UserName);
 
             Assert.AreEqual(_user1.UserID, u1.UserID);
             Assert.AreEqual(_user2.UserID, u2.UserID);
@@ -184,7 +184,7 @@ namespace t2sBackendTest
         {
             _controller.CreateUser(_user1, "password");
             _controller.UpdateUser(_user1);
-            _user2 = _controller.RetrieveUser(_user1.PhoneEmail);
+            _user2 = _controller.RetrieveUser(_user1.UserName);
 
             Assert.AreEqual(_user1.UserName, _user2.UserName, "UserNames do not match");
             Assert.AreEqual(_user1.FirstName, _user2.FirstName, "FirstNames do not match.");

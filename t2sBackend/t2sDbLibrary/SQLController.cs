@@ -37,14 +37,17 @@ namespace t2sDbLibrary
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("INSERT INTO users (username, password, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed, created_dt) ");
+                queryBuilder.Append("INSERT INTO users (username, password, salt, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed, created_dt) ");
                 queryBuilder.Append("VALUES ");
-                queryBuilder.Append("(@username, CONVERT(VARBINARY, HASHBYTES('SHA1', @password)), @first_name, @last_name, @phone, @email_phone, @carrier, @user_level, @banned, @suppressed, GETDATE()) ");
+                queryBuilder.Append("(@username, CONVERT(VARBINARY, HASHBYTES('SHA1', @password)), @salt, @first_name, @last_name, @phone, @email_phone, @carrier, @user_level, @banned, @suppressed, GETDATE()) ");
                 queryBuilder.Append("; SELECT SCOPE_IDENTITY()");
+
+                String salt = GenerateSalt(128);
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@username", user.UserName);
-                query.Parameters.AddWithValue("@password", password);
+                query.Parameters.AddWithValue("@password", password + salt);
+                query.Parameters.AddWithValue("@salt", salt);
                 query.Parameters.AddWithValue("@first_name", user.FirstName);
                 query.Parameters.AddWithValue("@last_name", user.LastName);
                 query.Parameters.AddWithValue("@phone", user.PhoneNumber);
@@ -65,18 +68,38 @@ namespace t2sDbLibrary
             }
         }
 
+        private static Random _random = new Random((int)DateTime.Now.Ticks);
+
+        /// <summary>
+        /// Used to generate 128 character strings to act as a random salt for passwords
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        private string GenerateSalt(int size)
+        {
+            StringBuilder builder = new StringBuilder();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * _random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
+        }
+
         /// <summary>
         /// Grabs an individual user based on the given phone email string. The string should be in a format similar to
         /// <code>String userPhoneEmail = "1234567890@carrier.com"</code>
         /// in order to grab the correct information.
         /// </summary>
-        /// <param name="userPhoneEmail">The user phone email to query for.</param>
-        /// <returns>A new UserDAO object with data related to the given phone email.</returns>
+        /// <param name="username">The username to query for.</param>
+        /// <returns>A new UserDAO object with data related to the given username.</returns>
         /// <exception cref="ArgumentNullException">If the given string is null.</exception>
-        /// <exception cref="CouldNotFindException">If the user for the given phone email could not be found.</exception>
-        public virtual UserDAO RetrieveUser(string userPhoneEmail)
+        /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
+        public virtual UserDAO RetrieveUser(string username)
         {
-            if (string.IsNullOrEmpty(userPhoneEmail)) throw new ArgumentNullException();
+            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException();
 
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
@@ -84,17 +107,17 @@ namespace t2sDbLibrary
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT id, username, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed ");
                 queryBuilder.Append("FROM users ");
-                queryBuilder.Append("WHERE email_phone = @phoneEmail");
+                queryBuilder.Append("WHERE username = @username");
 
                 query.CommandText = queryBuilder.ToString();
-                query.Parameters.AddWithValue("@phoneEmail", userPhoneEmail);
+                query.Parameters.AddWithValue("@username", username);
 
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
                 // If there are no records returned from the select statement, the DataReader will be empty
                 if (reader.Read()) return BuildUserDAO(reader);
-                else throw new CouldNotFindException("Could not find user with userPhoneEmail: " + userPhoneEmail);
+                else throw new CouldNotFindException("Could not find user with username: " + username);
             }
         }
 
@@ -1412,7 +1435,9 @@ namespace t2sDbLibrary
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
-                query.CommandText = "SELECT * FROM users WHERE username = @username AND password = CONVERT(VARBINARY, HASHBYTES('SHA1', @password))";
+                StringBuilder queryBuilder = new StringBuilder();
+
+                query.CommandText = "SELECT username FROM users WHERE username = @username AND password = CONVERT(VARBINARY, HASHBYTES('SHA1', @password + salt))";
                 query.Parameters.AddWithValue("@username", username);
                 query.Parameters.AddWithValue("@password", password);
 

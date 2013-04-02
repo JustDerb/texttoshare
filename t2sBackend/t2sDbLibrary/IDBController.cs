@@ -21,11 +21,11 @@ namespace t2sDbLibrary
         /// <code>String userPhoneEmail = "1234567890@carrier.com"</code>
         /// in order to grab the correct information.
         /// </summary>
-        /// <param name="userPhoneEmail">The user phone email to query for.</param>
-        /// <returns>A new UserDAO object with data related to the given phone email.</returns>
+        /// <param name="username">The username to query for.</param>
+        /// <returns>A new UserDAO object with data related to the given username.</returns>
         /// <exception cref="ArgumentNullException">If the given string is null.</exception>
-        /// <exception cref="CouldNotFindException">If the user for the given phone email could not be found.</exception>
-        UserDAO RetrieveUser(string userPhoneEmail);
+        /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
+        UserDAO RetrieveUser(string username);
 
         /// <summary>
         /// Grabs an individual user based on the given user id.
