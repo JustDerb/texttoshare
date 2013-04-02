@@ -13,18 +13,20 @@ namespace t2sBackend
     public class PluginLibrary
     {
 
-        private MessageController controller;
+        private MessageController messageController;
         private AWatcherService service;
+        private IDBController idbController;
 
         private BackgroundWorker libraryThread;
 
         /// <summary>
         /// Constructs a list of plug-ins and initializes the library
         /// </summary>
-        public PluginLibrary(MessageController Controller, AWatcherService Service)
+        public PluginLibrary(MessageController messageController, AWatcherService Service, IDBController idbController)
         {
-            this.controller = Controller;
+            this.messageController = messageController;
             this.service = Service;
+            this.idbController = idbController;
             ScanForPlugins();
         }
 
@@ -59,7 +61,7 @@ namespace t2sBackend
         /// <returns></returns>
         public ParsedMessage GetNextMessage()
         {
-            return this.controller.getNextMessage();
+            return this.messageController.getNextMessage();
         }
 
         /// <summary>
@@ -89,6 +91,7 @@ namespace t2sBackend
                 ParsedMessage message = GetNextMessage();
 
                 IPlugin plugin = new ErrorPlugin();
+                
                 bool doMessage = true;
 
                 // Not a valid group ID
@@ -104,7 +107,6 @@ namespace t2sBackend
                 // User is banned
                 else if (message.Sender.IsBanned)
                 {
-                    message.ContentMessage = BANNED_USER_MESSAGE;
                     doMessage = false;
                 }
                 // User is suppressed 
@@ -114,19 +116,36 @@ namespace t2sBackend
                 }
 
                 Boolean foundPlugin = false;
-                foreach (IPlugin i in message.Group.EnabledPlugins)
+                if (message.ContentMessage.Equals("") && doMessage)
                 {
-                    if (i.PluginDAO.PluginID.Equals(message.Command))
+                    foreach (PluginDAO d in message.Group.EnabledPlugins)
                     {
-                        // If the plugin can only be accessed by moderators and the calling user is not a moderator/owner
-                        if (i.PluginDAO.Access == PluginAccess.MODERATOR && (message.Group.Moderators.Contains(message.Sender) || message.Sender.Equals(message.Group.Owner)))
+                        if (d.PluginID.Equals(message.Command))
                         {
-                            message.ContentMessage = RESTRICTED_ACCESS_MESSAGE;
-                        }
-                        else
-                        {
-                            foundPlugin = true;
-                            plugin = i;
+                            // If the plugin can only be accessed by moderators and the calling user is not a moderator/owner
+                            if (d.Access == PluginAccess.MODERATOR && (message.Group.Moderators.Contains(message.Sender) || message.Sender.Equals(message.Group.Owner)))
+                            {
+                                message.ContentMessage = RESTRICTED_ACCESS_MESSAGE;
+                            }
+                            else
+                            {
+                                foundPlugin = true;
+                                if (defaultPlugins.ContainsKey(d.Name))
+                                {
+                                    plugin = defaultPlugins[d.Name];
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        plugin = new LUAPlugin(d);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -169,11 +188,14 @@ namespace t2sBackend
             }
         }
 
+        private readonly static Dictionary<string, IPlugin> defaultPlugins = new Dictionary<string, IPlugin>()
+        {
+            {"ERROR", new ErrorPlugin()}, {null, null}
+        };
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
         private static string INVALID_GROUP_MESSAGE = "Invalid group. Please check your message and try again.";
         private static string INVALID_USER_MESSAGE = "You are not a valid member of this group. Please check your message and try again.";
-        private static string BANNED_USER_MESSAGE = "";
         private static string SUPPRESSED_USER_MESSAGE = "You have currently suppressed recieving messages. To disable, please reply, \"SUPPRESS OFF\"";
         private static string INVALID_PLUGIN_MESSAGE = "Invalid command. Please check your message and try again.";
         private static string RESTRICTED_ACCESS_MESSAGE = "You are not authorized to use this command. Please check with your group's owner and try again.";
