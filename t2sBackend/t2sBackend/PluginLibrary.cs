@@ -181,7 +181,7 @@ namespace t2sBackend
             // Do plugin work
             try
             {
-                plugin.Run(message, this.service);
+                plugin.Run(message, this.service, this.idbController);
             }
             catch (Exception ex)
             {
