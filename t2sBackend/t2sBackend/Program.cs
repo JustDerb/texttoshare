@@ -21,7 +21,7 @@ namespace t2sBackend
                 "imap.gmail.com",
                 993,
                 "smtp.gmail.com",
-                465);
+                587);
 
             MessageControllerOverride controller = new MessageControllerOverride(gmailServ, database);
             PluginLibrary pluginLib = new PluginLibrary(controller, gmailServ, database);
