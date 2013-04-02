@@ -8,7 +8,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.BlockingQueue&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="6" Y="0.5" Width="1.5" />
+    <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACBAAAAAAAAAABAAEAAAAAAAAAAABAAAAACAAAAAAAA=</HashCode>
       <FileName>BlockingQueue.cs</FileName>
@@ -23,14 +23,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.Logger" Collapsed="true">
-    <Position X="9.5" Y="0.5" Width="1.5" />
+    <Position X="13" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Logger.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.LUAPlugin" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="11.25" Y="0.5" Width="1.5" />
+    <Position X="6" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAICAAUBIgAAAEAAAAAgAgAAAAIAY=</HashCode>
       <FileName>LUAPlugin.cs</FileName>
@@ -38,14 +38,14 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="t2sBackend.LuaScriptingEngine" Collapsed="true">
-    <Position X="6" Y="1.5" Width="1.5" />
+    <Position X="7.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
       <FileName>LuaScriptingEngine.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.Message" Collapsed="true">
-    <Position X="7.75" Y="1.5" Width="1.5" />
+    <Position X="9.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAABABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Message.cs</FileName>
@@ -66,21 +66,21 @@
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.MessageParser" Collapsed="true">
-    <Position X="9.5" Y="1.5" Width="1.5" />
+    <Position X="11.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAgAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>MessageParser.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.ParsedMessage" Collapsed="true">
-    <Position X="11.25" Y="1.5" Width="1.5" />
+    <Position X="6" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAEAAAAAAAAAAAAAABAAAAAAAAAAAIAAAAAAMAAA=</HashCode>
       <FileName>ParsedMessage.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.ErrorPlugin" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="7.75" Y="0.5" Width="1.5" />
+    <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAgAAEAAIAAABAEAAAAAAAEAAAAAAAAAEAI=</HashCode>
       <FileName>PluginError.cs</FileName>
@@ -88,79 +88,84 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="t2sBackend.PluginLibrary" Collapsed="true">
-    <Position X="6" Y="2.5" Width="1.5" />
+    <Position X="7.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAAiAAAEEAQQAAAAAAAAgAAAAIIEAAQgBAAAA=</HashCode>
       <FileName>PluginLibrary.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="t2sBackend.Program" Collapsed="true">
-    <Position X="7.75" Y="2.5" Width="1.5" />
+    <Position X="9.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="t2sBackend.AddUserPlugin">
-    <Position X="10.75" Y="3.25" Width="1.5" />
+  <Class Name="t2sBackend.AddUserPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>AddUserPlugin.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="t2sBackend.RemoveUserPlugin">
-    <Position X="7.75" Y="3.25" Width="1.5" />
+  <Class Name="t2sBackend.RemoveUserPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>RemoveUserPlugin.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="t2sBackend.TextGroupPlugin">
-    <Position X="2.5" Y="3.25" Width="1.5" />
+  <Class Name="t2sBackend.TextGroupPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>TextGroupPlugin.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="t2sBackend.ListEnabledPlugin">
-    <Position X="1" Y="3.25" Width="1.5" />
+  <Class Name="t2sBackend.ListEnabledPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>ListEnabledPlugin.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="t2sBackend.SuppressPlugin">
-    <Position X="2.5" Y="2.75" Width="1.5" />
+  <Class Name="t2sBackend.SuppressPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="13" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>SuppressPlugin.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="t2sBackend.TextModsPlugin">
-    <Position X="1.5" Y="2.75" Width="1.5" />
+  <Class Name="t2sBackend.TextModsPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>TextModsPlugin.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="t2sBackend.NumberRequestPlugin">
-    <Position X="2.75" Y="1.75" Width="1.5" />
+  <Class Name="t2sBackend.NumberRequestPlugin" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>NumberRequestPlugin.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="t2sBackend.TextUserPlugin">
-    <Position X="4.75" Y="3" Width="1.5" />
+  <Class Name="t2sBackend.TextUserPlugin" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>TextUserPlugin.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Interface Name="t2sBackend.IPlugin" Collapsed="true">
-    <Position X="6" Y="3.75" Width="1.5" />
+    <Position X="6" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>IPlugin.cs</FileName>

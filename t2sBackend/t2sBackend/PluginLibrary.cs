@@ -48,7 +48,7 @@ namespace t2sBackend
         /// <summary>
         /// Don't do until LUA Plugins
         /// </summary>
-        private void ScanForPlugins()
+        private static void ScanForPlugins()
         {
             return;
         }
@@ -89,6 +89,7 @@ namespace t2sBackend
                 ParsedMessage message = GetNextMessage();
 
                 IPlugin plugin = new ErrorPlugin();
+                bool doMessage = true;
 
                 // Not a valid group ID
                 if (message.Group.Equals(null))
@@ -104,6 +105,7 @@ namespace t2sBackend
                 else if (message.Sender.IsBanned)
                 {
                     message.ContentMessage = BANNED_USER_MESSAGE;
+                    doMessage = false;
                 }
                 // User is suppressed 
                 else if (message.Sender.IsSuppressed)
@@ -135,14 +137,14 @@ namespace t2sBackend
                     message.ContentMessage = INVALID_PLUGIN_MESSAGE;
                 }
 
-                // Let's run this beeyotch
-                plugin.Run(message, service);
-
-                // NOTE: Make sure thread is not disposed after running because it lost scope
-                BackgroundWorker pluginThread = new BackgroundWorker();
-                pluginThread.DoWork += pluginThread_DoWork;
-                Object[] parameters = new Object[] { plugin, message };
-                pluginThread.RunWorkerAsync(parameters);
+                if (!doMessage)
+                {
+                    // NOTE: Make sure thread is not disposed after running because it lost scope
+                    BackgroundWorker pluginThread = new BackgroundWorker();
+                    pluginThread.DoWork += pluginThread_DoWork;
+                    Object[] parameters = new Object[] { plugin, message };
+                    pluginThread.RunWorkerAsync(parameters);
+                }
             }
         }
 
@@ -154,7 +156,6 @@ namespace t2sBackend
 
             // Do plugin work
             plugin.Run(message, this.service);
-            throw new NotImplementedException();
         }
 
         /// <summary>
