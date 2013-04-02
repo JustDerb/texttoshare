@@ -130,9 +130,9 @@ namespace t2sBackend
                             else
                             {
                                 foundPlugin = true;
-                                if (defaultPlugins.ContainsKey(d.Name))
+                                if (defaultPlugins.ContainsKey(d.Name.ToUpperInvariant()))
                                 {
-                                    plugin = defaultPlugins[d.Name];
+                                    plugin = defaultPlugins[d.Name.ToUpperInvariant()];
                                     break;
                                 }
                                 else
@@ -204,7 +204,7 @@ namespace t2sBackend
 
         private readonly static Dictionary<string, IPlugin> defaultPlugins = new Dictionary<string, IPlugin>()
         {
-            {"ERROR", new ErrorPlugin()}
+            {"ERROR".ToUpperInvariant(), new ErrorPlugin()}
         };
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
