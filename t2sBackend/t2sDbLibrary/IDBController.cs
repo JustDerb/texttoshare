@@ -17,15 +17,24 @@ namespace t2sDbLibrary
         bool CreateUser(UserDAO user, string password);
 
         /// <summary>
-        /// Grabs an individual user based on the given phone email string. The string should be in a format similar to
-        /// <code>String userPhoneEmail = "1234567890@carrier.com"</code>
-        /// in order to grab the correct information.
+        /// Grabs an individual user based on the given username string.
         /// </summary>
         /// <param name="username">The username to query for.</param>
         /// <returns>A new UserDAO object with data related to the given username.</returns>
         /// <exception cref="ArgumentNullException">If the given string is null.</exception>
         /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
-        UserDAO RetrieveUser(string username);
+        UserDAO RetrieveUserByUserName(string username);
+
+        /// <summary>
+        /// Grabs an individual user based on the given phone email string. The string should be in a format similar to
+        /// <code>String userPhoneEmail = "1234567890@carrier.com"</code>
+        /// in order to grab the correct information.
+        /// </summary>
+        /// <param name="username">The username to query for.</param>
+        /// <returns>A new UserDAO object with data related to the given phone email.</returns>
+        /// <exception cref="ArgumentNullException">If the given string is null.</exception>
+        /// <exception cref="CouldNotFindException">If the user for the given phone email could not be found.</exception>
+        UserDAO RetrieveUserByPhoneEmail(string phoneEmail);
 
         /// <summary>
         /// Grabs an individual user based on the given user id.

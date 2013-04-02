@@ -89,15 +89,13 @@ namespace t2sDbLibrary
         }
 
         /// <summary>
-        /// Grabs an individual user based on the given phone email string. The string should be in a format similar to
-        /// <code>String userPhoneEmail = "1234567890@carrier.com"</code>
-        /// in order to grab the correct information.
+        /// Grabs an individual user based on the given username string.
         /// </summary>
         /// <param name="username">The username to query for.</param>
         /// <returns>A new UserDAO object with data related to the given username.</returns>
         /// <exception cref="ArgumentNullException">If the given string is null.</exception>
         /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
-        public virtual UserDAO RetrieveUser(string username)
+        public virtual UserDAO RetrieveUserByUserName(string username)
         {
             if (string.IsNullOrEmpty(username)) throw new ArgumentNullException();
 
@@ -118,6 +116,39 @@ namespace t2sDbLibrary
                 // If there are no records returned from the select statement, the DataReader will be empty
                 if (reader.Read()) return BuildUserDAO(reader);
                 else throw new CouldNotFindException("Could not find user with username: " + username);
+            }
+        }
+
+        /// <summary>
+        /// Grabs an individual user based on the given phone email string. The string should be in a format similar to
+        /// <code>String userPhoneEmail = "1234567890@carrier.com"</code>
+        /// in order to grab the correct information.
+        /// </summary>
+        /// <param name="username">The username to query for.</param>
+        /// <returns>A new UserDAO object with data related to the given phone email.</returns>
+        /// <exception cref="ArgumentNullException">If the given string is null.</exception>
+        /// <exception cref="CouldNotFindException">If the user for the given phone email could not be found.</exception>
+        public virtual UserDAO RetrieveUserByPhoneEmail(string phoneEmail)
+        {
+            if (string.IsNullOrEmpty(phoneEmail)) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT id, username, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed ");
+                queryBuilder.Append("FROM users ");
+                queryBuilder.Append("WHERE email_phone = @email_phone");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@email_phone", phoneEmail);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                // If there are no records returned from the select statement, the DataReader will be empty
+                if (reader.Read()) return BuildUserDAO(reader);
+                else throw new CouldNotFindException("Could not find user with username: " + phoneEmail);
             }
         }
 
