@@ -34,6 +34,7 @@ namespace t2sBackendTest
 
         [TestCategory("LoginRegister")]
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void CheckLoginWithNullUsernameThrowsException()
         {
             Assert.IsFalse(_controller.CheckLogin(null, "password"));
@@ -41,6 +42,7 @@ namespace t2sBackendTest
 
         [TestCategory("LoginRegister")]
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void CheckLoginWithNullPasswordThrowsException()
         {
             Assert.IsFalse(_controller.CheckLogin("TESTUSER1", null));
