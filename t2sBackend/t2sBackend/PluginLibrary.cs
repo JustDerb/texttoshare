@@ -120,7 +120,7 @@ namespace t2sBackend
                 {
                     foreach (PluginDAO d in message.Group.EnabledPlugins)
                     {
-                        if (d.Name.Equals(message.Command))
+                        if (d.Name.Equals(message.Command, StringComparison.OrdinalIgnoreCase))
                         {
                             // If the plugin can only be accessed by moderators and the calling user is not a moderator/owner
                             if (d.Access == PluginAccess.MODERATOR && (message.Group.Moderators.Contains(message.Sender) || message.Sender.Equals(message.Group.Owner)))
