@@ -187,6 +187,7 @@ namespace t2sBackend
             {
                 // Add logic to increment LUA Plugin Error count
                 // And disable, if necessary
+                Logger.LogMessage(plugin.GetType().ToString() + " - " + ex.Message, LoggerLevel.SEVERE);
             }
         }
 
