@@ -15,7 +15,7 @@ namespace t2sBackend
         {
             IDBController database = new SqlController();
             Logger.LogMessage("Established connection to SQL server", LoggerLevel.DEBUG);
-            PrivateInfo.addTestUsers(database);
+            PrivateInfo.addTestData(database);
             AWatcherService gmailServ = new GMailWatcherService(
                 PrivateInfo.Email.UserName,
                 PrivateInfo.Email.Password,
