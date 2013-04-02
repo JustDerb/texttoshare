@@ -72,7 +72,7 @@
     <Compile Include="GMailWatcherService.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="AWatcherService.cs" />
-    <Compile Include="ListEnabledPlugin.cs" />
+    <Compile Include="DefaultPlugins\ListEnabledPlugin.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LUAPlugin.cs" />
     <Compile Include="LuaScriptingEngine.cs" />
@@ -82,16 +82,16 @@
     <Compile Include="MessageParser.cs" />
     <Compile Include="NumberRequestPlugin.cs" />
     <Compile Include="ParsedMessage.cs" />
-    <Compile Include="PluginError.cs" />
+    <Compile Include="DefaultPlugins\ErrorPlugin.cs" />
     <Compile Include="PluginLibrary.cs" />
     <Compile Include="nogit\PrivateInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoveUserPlugin.cs" />
-    <Compile Include="SuppressPlugin.cs" />
-    <Compile Include="TextGroupPlugin.cs" />
-    <Compile Include="TextModsPlugin.cs" />
-    <Compile Include="TextUserPlugin.cs" />
+    <Compile Include="DefaultPlugins\RemoveUserPlugin.cs" />
+    <Compile Include="DefaultPlugins\SuppressPlugin.cs" />
+    <Compile Include="DefaultPlugins\TextGroupPlugin.cs" />
+    <Compile Include="DefaultPlugins\TextModsPlugin.cs" />
+    <Compile Include="DefaultPlugins\TextUserPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
