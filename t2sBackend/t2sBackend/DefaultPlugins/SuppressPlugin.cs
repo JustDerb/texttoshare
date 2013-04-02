@@ -9,7 +9,7 @@ namespace t2sBackend
     /// <summary>
     /// Plugin that removes a specified user from the specified group
     /// </summary>
-    public class ListEnabledPlugins : IPlugin
+    public class SuppressPlugin : IPlugin
     {
         /// <summary>
         /// Takes in the info from the moderator/owner and removes a user from the group

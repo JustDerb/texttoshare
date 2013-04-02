@@ -9,7 +9,7 @@ namespace t2sBackend
     /// <summary>
     /// Plugin that messages the entire specified group
     /// </summary>
-    public class ListEnabledPlugins : IPlugin
+    public class TextGroupPlugin : IPlugin
     {
         /// <summary>
         /// Takes in a message content to send to all users in group (excluding sender) and replies to sender with confirmation

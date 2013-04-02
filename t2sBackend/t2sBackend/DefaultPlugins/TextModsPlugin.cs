@@ -9,7 +9,7 @@ namespace t2sBackend
     /// <summary>
     /// Plugin that messages the moderators of a specified group
     /// </summary>
-    public class ListEnabledPlugins : IPlugin
+    public class TextModsPlugin : IPlugin
     {
         /// <summary>
         /// Takes in a message content to send to all moderators in group (excluding sender) and replies to sender with confirmation

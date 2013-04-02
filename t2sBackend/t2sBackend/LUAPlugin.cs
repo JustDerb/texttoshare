@@ -256,7 +256,7 @@ namespace t2sBackend
             this.LuaEngine.DoString(this.SandboxLuaCode);
         }
 
-        public void Run(ParsedMessage message, AWatcherService service)
+        public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
             try
             {

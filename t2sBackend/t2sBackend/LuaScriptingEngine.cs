@@ -8,10 +8,10 @@ namespace t2sBackend
 {
     public static class LuaScriptingEngine
     {
-        public static void runPlugin(LUAPlugin plugin, ParsedMessage message, AWatcherService service)
+        public static void runPlugin(LUAPlugin plugin, ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
             // LUAPlugin is self-contained, so just run it.
-            plugin.Run(message, service);
+            plugin.Run(message, service, controller);
         }
     }
 }

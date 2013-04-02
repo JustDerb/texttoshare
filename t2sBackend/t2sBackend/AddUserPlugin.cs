@@ -19,7 +19,8 @@ namespace t2sBackend
             }
         }
 
-        public void Run(ParsedMessage message, AWatcherService service)
+
+        public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
             throw new NotImplementedException();
         }

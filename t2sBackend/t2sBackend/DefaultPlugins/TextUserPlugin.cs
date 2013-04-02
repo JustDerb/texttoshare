@@ -9,7 +9,7 @@ namespace t2sBackend
     /// <summary>
     /// Plugin that messages the specified user
     /// </summary>
-    public class ListEnabledPlugins : IPlugin
+    public class TextUserPlugin : IPlugin
     {
         /// <summary>
         /// Takes in a message content to send to a specified user and replies to sender with confirmation
