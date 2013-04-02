@@ -40,7 +40,7 @@ namespace t2sBackend
         }
 
         /// <summary>
-        /// Entire message unchanged from user expect for group id having been removed
+        /// The arguments from the users
         /// </summary>
         public string ContentMessage
         {
