@@ -177,7 +177,8 @@ namespace t2sBackend
             foreach (String to in message.Reciever)
                 messageToSend.To.Add(to);
             messageToSend.Subject = "";
-            messageToSend.From = new System.Net.Mail.MailAddress(message.Sender);
+            //messageToSend.From = new System.Net.Mail.MailAddress(message.Sender);
+            messageToSend.From = new System.Net.Mail.MailAddress(this.UserName);
             messageToSend.Body = message.FullMessage;
 
             SmtpClient smtp = new SmtpClient(this.SMTPServer,this.SMTPPort);
