@@ -258,6 +258,9 @@ namespace t2sBackend
 
         public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
+            // Register our plugin so we can call C# methods
+            String engineHash = LuaScriptingEngine.registerPlugin(this, service, controller, this.LuaEngine);
+
             try
             {
                 // Get to a clean state
@@ -269,6 +272,10 @@ namespace t2sBackend
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                LuaScriptingEngine.unregisterPlugin(engineHash);
             }
 
         }
