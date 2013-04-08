@@ -58,9 +58,18 @@ namespace codebehind
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void getRegister_Click(Object sender, EventArgs e)
+        public void getUser_Click(Object sender, EventArgs e)
         {
-
+            SqlController controller = new SqlController();
+            UserDAO user = new UserDAO();
+            //grab input from textboxs
+            String firstName = Request["rfirstNameBox"];
+            String lastName = Request["rlastNameBox"];
+            String phoneNumber = Request["rPhoneNumberBox"];
+            String phoneCarrier = Request["rCarrierBox"];
+            String password = Request["rPasswordBox"];
+            String userName = Request["rUserNameBox"];
+           
 
         }
 
