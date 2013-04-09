@@ -31,9 +31,16 @@ namespace t2sBackend
 
             parsed.Command = FindCommand(message.FullMessage, controller);
             parsed.ContentMessage = FindArguments(message.FullMessage, controller);
-            parsed.Arguments.AddRange(parsed.ContentMessage.Split(' '));
+            if (!parsed.ContentMessage.Trim().Equals(String.Empty))
+            {
+                parsed.Arguments.AddRange(parsed.ContentMessage.Split(' '));
+            }
 
             String groupId = FindGroup(message.FullMessage, controller);
+
+            //Strip out any leading, trailing delimiters
+            groupId = groupId.TrimStart(new char[] { MessageParser.delimiter });
+            groupId = groupId.TrimEnd(new char[] { MessageParser.secondDelimiter });
 
             TryFindGroup(parsed, groupId, controller);        
             
@@ -94,7 +101,7 @@ namespace t2sBackend
                 }
             }
 
-            // Get our bes guess by seeing if there is the first delimeter
+            // Get our best guess by seeing if there is the first delimeter
             int delimiter1Index = message.IndexOf(MessageParser.delimiter);
             if (delimiter1Index < 0)
             {
@@ -126,7 +133,11 @@ namespace t2sBackend
             }
             else
             {
-                message = message.Substring(indexes.Item1, indexes.Item2).Trim();
+                if (indexes.Item2 <= indexes.Item1)
+                {
+                    return "";
+                }
+                message = message.Substring(indexes.Item1, indexes.Item2 - indexes.Item1 + 1).Trim();
                 return message;
             }
         }
@@ -151,11 +162,11 @@ namespace t2sBackend
                 int secondDelimiterIndex = message.IndexOf(MessageParser.secondDelimiter);
                 if (secondDelimiterIndex < 0)
                 {
-                    return null;
+                    return new Tuple<int, int>(firstDelimiterIndex, firstDelimiterIndex + message.Length - 1);
                 }
 
                 // Grab that section
-                return new Tuple<int,int>(firstDelimiterIndex, secondDelimiterIndex);
+                return new Tuple<int, int>(firstDelimiterIndex, firstDelimiterIndex + secondDelimiterIndex);
             }
         }
 
