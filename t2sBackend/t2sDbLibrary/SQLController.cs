@@ -330,6 +330,7 @@ namespace t2sDbLibrary
              */
 
             // Make sure the group owner exists first
+            if (null == group.Owner) throw new CouldNotFindException("Group Owner is null, cannot find in database.");
             if (!UserExists(group.Owner.UserName, group.Owner.PhoneEmail)) 
                 throw new CouldNotFindException("User with username: " + group.Owner.UserName + " needs to be created before the group can be created.");
 
@@ -1365,6 +1366,34 @@ namespace t2sDbLibrary
                 int effectedRows = query.ExecuteNonQuery();
 
                 return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all the names of plugins that are globally enabled
+        /// </summary>
+        /// <returns>A list containing all plugin names.</returns>
+        /// <exception cref="SqlException">If a SQL-related exception is thrown.</exception>
+        public List<string> RetrieveEnabledPluginNameList()
+        {
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT name FROM plugins WHERE disabled = 0");
+
+                query.CommandText = queryBuilder.ToString();
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<string> pluginNameList = new List<string>();
+                while (reader.Read())
+                {
+                    pluginNameList.Add((string)reader["name"]);
+                }
+
+                return pluginNameList;
             }
         }
 
