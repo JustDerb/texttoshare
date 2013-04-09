@@ -291,6 +291,13 @@ namespace t2sDbLibrary
         bool ResetPluginFailedAttemptCount(int? pluginID);
 
         /// <summary>
+        /// Gets a list of all the names of plugins that are globally enabled
+        /// </summary>
+        /// <returns>A list containing all plugin names.</returns>
+        /// <exception cref="SqlException">If a SQL-related exception is thrown.</exception>
+        List<string> RetrieveEnabledPluginNameList();
+
+        /// <summary>
         /// Gets the associated value for the given key entry.
         /// </summary>
         /// <param name="keyEntry">The key entry to search for.</param>
