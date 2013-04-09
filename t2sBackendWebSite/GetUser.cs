@@ -30,12 +30,33 @@ namespace users
             SqlController controller = new SqlController();
             UserDAO user = new UserDAO();
             //grab input from textboxs
-            String firstName = Request["firstNameBox"];
-            String lastName = Request["lastNameBox"];
-            String phoneNumber = Request["PhoneNumberBox"];
-            String phoneCarrier = Request["CarrierBox"];
-            String password = Request["passwordBox"];
-            String userName = Request["userNameBox"];
+            String firstName = Request["rFirstNameBox"];
+            String lastName = Request["rLastNameBox"];
+            String phoneNumber = Request["rPhoneNumberBox"];
+            String phoneCarrier = Request["rCarrierBox"];
+            String password = Request["rPasswordBox"];
+            String userName = Request["rUserNameBox"];
+
+            if (!firstName.Equals(""))
+            {
+
+
+
+            }else if(!lastName.Equals("")){
+
+            }else if(!phoneNumber.Equals("")){
+
+
+            }else if(!phoneCarrier.Equals("")){
+
+
+            }else if(!password.Equals("")){
+
+
+            }else if(!userName.Equals("")){
+
+
+            }
         }
 
 
