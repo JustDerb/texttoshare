@@ -9,6 +9,43 @@ namespace t2sBackend
 
     public class ParsedMessage
     {
+
+        /// <summary>
+        /// Content Message Types
+        /// </summary>
+        public enum ContentMessageType
+        {
+            /// <summary>
+            /// User wants to stop recieving messages 
+            /// from the system.
+            /// </summary>
+            STOP,
+            /// <summary>
+            /// User is banned from the system (drop message)
+            /// </summary>
+            BAN,
+            /// <summary>
+            /// User is suppressed from the system (Send note back to user about it)
+            /// </summary>
+            SUPPRESS,
+            /// <summary>
+            /// Error parsing message in some way
+            /// </summary>
+            ERROR,
+            /// <summary>
+            /// Totally not a invalid message
+            /// </summary>
+            VALID
+        }
+
+        /// <summary>
+        /// The type of message this is
+        /// </summary>
+        public ContentMessageType Type
+        {
+            get;
+            set;
+        }
         
         /// <summary>
         /// The UserDAO which sent the message
@@ -60,6 +97,7 @@ namespace t2sBackend
         public ParsedMessage()
         {
             this.Arguments = new List<string>();
+            this.Type = ContentMessageType.ERROR;
         }
     }
 }

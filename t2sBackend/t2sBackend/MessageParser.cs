@@ -44,6 +44,31 @@ namespace t2sBackend
 
             TryFindGroup(parsed, groupId, controller);        
             
+            // Set our type flag (by importance)
+            if (parsed.Command.Equals("stop", StringComparison.OrdinalIgnoreCase)) {
+                parsed.Type = ParsedMessage.ContentMessageType.STOP;
+            }
+            else if (parsed.Sender != null &&
+                parsed.Sender.IsBanned)
+            {
+                parsed.Type = ParsedMessage.ContentMessageType.BAN;
+            }
+            else if (parsed.Sender != null &&
+                parsed.Sender.IsSuppressed)
+            {
+                parsed.Type = ParsedMessage.ContentMessageType.SUPPRESS;
+            }
+            else if (parsed.Command.Equals(String.Empty) ||
+                parsed.Group == null ||
+                parsed.Sender == null)
+            {
+                parsed.Type = ParsedMessage.ContentMessageType.ERROR;
+            }
+            else
+            {
+                parsed.Type = ParsedMessage.ContentMessageType.VALID;
+            }
+
             return parsed;
         }
 

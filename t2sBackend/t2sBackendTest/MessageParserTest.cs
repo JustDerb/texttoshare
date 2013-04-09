@@ -125,6 +125,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -151,6 +154,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(null, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -177,6 +183,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -203,6 +212,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -229,6 +241,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(null, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -249,6 +264,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(null, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -275,6 +293,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(null, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -301,6 +322,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -327,6 +351,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -356,6 +383,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -382,6 +412,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -410,6 +443,9 @@ namespace t2sBackendTest
             // Check DAO's
             Assert.AreEqual(this._group, pmsg.Group);
             Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
         }
     }
 }
