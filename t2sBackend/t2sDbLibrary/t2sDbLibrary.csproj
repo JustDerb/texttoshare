@@ -42,6 +42,7 @@
     <Compile Include="GroupDAO.cs" />
     <Compile Include="GroupLevel.cs" />
     <Compile Include="IDBController.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="LoggerLevel.cs" />
     <Compile Include="PairEntries.cs" />
     <Compile Include="PhoneCarrier.cs" />

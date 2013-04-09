@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using t2sDbLibrary;
 
-namespace t2sBackend
+namespace t2sDbLibrary
 {
 
     /// <summary>

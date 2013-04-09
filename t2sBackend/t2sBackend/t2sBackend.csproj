@@ -73,7 +73,6 @@
     <Compile Include="IPlugin.cs" />
     <Compile Include="AWatcherService.cs" />
     <Compile Include="DefaultPlugins\ListEnabledPlugin.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="LUAPlugin.cs" />
     <Compile Include="LuaScriptingEngine.cs" />
     <Compile Include="Message.cs" />
