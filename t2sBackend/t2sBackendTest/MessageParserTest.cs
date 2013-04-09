@@ -11,386 +11,405 @@ namespace t2sBackendTest
     [TestClass]
     public class MessageParserTest
     {
-        //// TODO: Change to IDBController when the interface is updated
-        //private SqlController stubbedController;
-        //private Message msg;
+        // TODO: Change to IDBController when the interface is updated
+        private SqlController stubbedController;
 
-        //private GroupDAO _group;
-        //private UserDAO _user1;
-        //private UserDAO _user2;
-        //private UserDAO _user3;
+        private GroupDAO _group;
+        private UserDAO _user1;
+        private UserDAO _user2;
+        private UserDAO _user3;
 
-        //[TestInitialize]
-        //public void Setup()
-        //{
-        //    this.stubbedController = MockRepository.GenerateStub<SqlController>();
-        //    this.msg = new Message();
+        [TestInitialize]
+        public void Setup()
+        {
+            this.stubbedController = MockRepository.GenerateStub<SqlController>();
 
-        //    this._user1 = new UserDAO()
-        //    {
-        //        UserName = "TESTUSER1",
-        //        FirstName = "TEST",
-        //        LastName = "USER",
-        //        PhoneNumber = "1111111111",
-        //        PhoneEmail = "1111111111@test.com",
-        //        Carrier = PhoneCarrier.Verizon,
-        //        UserLevel = UserLevel.User,
-        //        IsBanned = false,
-        //        IsSuppressed = false
-        //    };
+            this._user1 = new UserDAO()
+            {
+                UserName = "TESTUSER1",
+                FirstName = "TEST",
+                LastName = "USER",
+                PhoneNumber = "1111111111",
+                PhoneEmail = "1111111111@test.com",
+                Carrier = PhoneCarrier.Verizon,
+                UserLevel = UserLevel.User,
+                IsBanned = false,
+                IsSuppressed = false
+            };
 
-        //    this._user2 = new UserDAO()
-        //    {
-        //        UserName = "TESTUSER2",
-        //        FirstName = "TEST",
-        //        LastName = "USER",
-        //        PhoneNumber = "1111111112",
-        //        PhoneEmail = "1111111112@test.com",
-        //        Carrier = PhoneCarrier.Verizon,
-        //        UserLevel = UserLevel.User,
-        //        IsBanned = false,
-        //        IsSuppressed = false
-        //    };
+            this._user2 = new UserDAO()
+            {
+                UserName = "TESTUSER2",
+                FirstName = "TEST",
+                LastName = "USER",
+                PhoneNumber = "1111111112",
+                PhoneEmail = "1111111112@test.com",
+                Carrier = PhoneCarrier.Verizon,
+                UserLevel = UserLevel.User,
+                IsBanned = false,
+                IsSuppressed = false
+            };
 
-        //    this._user3 = new UserDAO()
-        //    {
-        //        UserName = "TESTUSER3",
-        //        FirstName = "TEST",
-        //        LastName = "USER",
-        //        PhoneNumber = "1111111113",
-        //        PhoneEmail = "1111111113@test.com",
-        //        Carrier = PhoneCarrier.Verizon,
-        //        UserLevel = UserLevel.User,
-        //        IsBanned = false,
-        //        IsSuppressed = false
-        //    };
+            this._user3 = new UserDAO()
+            {
+                UserName = "TESTUSER3",
+                FirstName = "TEST",
+                LastName = "USER",
+                PhoneNumber = "1111111113",
+                PhoneEmail = "1111111113@test.com",
+                Carrier = PhoneCarrier.Verizon,
+                UserLevel = UserLevel.User,
+                IsBanned = false,
+                IsSuppressed = false
+            };
 
-        //    this._group = new GroupDAO(this._user1)
-        //    {
-        //        Description = "Test description",
-        //        GroupID = 1,
-        //        GroupTag = "TEST",
-        //        Moderators = new List<UserDAO>(),
-        //        Name = "TEST GROUP",
-        //        EnabledPlugins = new List<PluginDAO>(),
-        //        Users = new List<UserDAO>()
-        //    };
-        //    this._group.Users.Add(this._user2);
+            this._group = new GroupDAO(this._user1)
+            {
+                Description = "Test description",
+                GroupID = 1,
+                GroupTag = "TEST",
+                Moderators = new List<UserDAO>(),
+                Name = "TEST GROUP",
+                EnabledPlugins = new List<PluginDAO>(),
+                Users = new List<UserDAO>()
+            };
+            this._group.Users.Add(this._user2);
 
-        //    this.stubbedController.Stub(x => x.RetrieveGroup(this._group.GroupTag)).Return(this._group);
-        //    this.stubbedController.Stub(x => x.RetrieveUser(this._user1.PhoneEmail)).Return(this._user1);
-        //    this.stubbedController.Stub(x => x.RetrieveUser(this._user2.PhoneEmail)).Return(this._user2);
-        //}
+            this.stubbedController.Stub(x => x.RetrieveGroup(this._group.GroupTag)).Return(this._group);
+            this.stubbedController.Stub(x => x.RetrieveUserByPhoneEmail(this._user1.PhoneEmail)).Return(this._user1);
+            this.stubbedController.Stub(x => x.RetrieveUserByPhoneEmail(this._user2.PhoneEmail)).Return(this._user2);
+        }
 
-        //[TestCleanup]
-        //public void TearDown()
-        //{
-        //    this._user2 = null;
-        //    this._user1 = null;
-        //    this._group = null;
-        //    this.stubbedController = null;
-        //    this.msg = null;
-        //}
+        [TestCleanup]
+        public void TearDown()
+        {
+            this._user2 = null;
+            this._user1 = null;
+            this._group = null;
+            this.stubbedController = null;
+        }
 
-        //[TestCategory("MessageParser.Texts.Good")]
-        //[TestMethod]
-        //public void NormalTextNoArgs()
-        //{
-        //    msg.Sender = this._user1.PhoneEmail;
-        //    StringBuilder sbuilder = new StringBuilder();
-        //    StringBuilder sbuilderMessage = new StringBuilder();
-        //    String command = "command";
-        //    List<string> args = new List<string>()
-        //    {
-        //    };
-        //    sbuilder.Append(this._group.GroupTag);
-        //    sbuilder.Append(MessageParser.delimiter);
+        private Message getMessage(string sender, string[] reciever, string command, string group, string args)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append(command);
+            builder.Append(MessageParser.delimiter);
+            builder.Append(group);
+            builder.Append(MessageParser.secondDelimiter);
+            builder.Append(args);
+            string fullmessage = builder.ToString();
+            return new Message(sender, reciever, fullmessage);
+        }
 
-        //    // Main message
-        //    sbuilderMessage.Append(command);
-        //    sbuilderMessage.Append(" ");
-        //    foreach (string arg in args) 
-        //    {
-        //        sbuilderMessage.Append(arg);
-        //        sbuilderMessage.Append(" ");
-        //    }
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithNoInvalidFields()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = this._group.GroupTag;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
 
-        //    //Tack on to text
-        //    sbuilder.Append(sbuilderMessage);
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
 
-        //    msg.FullMessage = sbuilder.ToString();
-        //    ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //   // Assert.AreEqual(command, pmsg.Command, true);
-        //    String outputContentMsg = sbuilderMessage.ToString();
-        //    int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
-        //    outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
-        //    Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
-        //    CollectionAssert.AreEquivalent(args, pmsg.Arguments);
-        //    Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
-        //    // TODO: Check for correct UserDAO and GroupDAO
-        //}
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
 
-        //[TestCategory("MessageParser.Texts.Good")]
-        //[TestMethod]
-        //public void NormalTextWithArguments()
-        //{
-        //    msg.Sender = this._user1.PhoneEmail;
-        //    StringBuilder sbuilder = new StringBuilder();
-        //    StringBuilder sbuilderMessage = new StringBuilder();
-        //    String command = "command";
-        //    List<string> args = new List<string>()
-        //    {
-        //        "this",
-        //        "is",
-        //        "an",
-        //        "argument"
-        //    };
-        //    sbuilder.Append(this._group.GroupTag);
-        //    sbuilder.Append(MessageParser.delimiter);
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
 
-        //    // Main message
-        //    sbuilderMessage.Append(command);
-        //    sbuilderMessage.Append(" ");
-        //    foreach (string arg in args)
-        //    {
-        //        sbuilderMessage.Append(arg);
-        //        sbuilderMessage.Append(" ");
-        //    }
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextInvalidFieldGroup()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = "NOGROUP";
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
 
-        //    //Tack on to text
-        //    sbuilder.Append(sbuilderMessage);
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
 
-        //    msg.FullMessage = sbuilder.ToString();
-        //    ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //   // Assert.AreEqual(command, pmsg.Command, true);
-        //    String outputContentMsg = sbuilderMessage.ToString();
-        //    int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
-        //    outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
-        //    Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
-        //    CollectionAssert.AreEquivalent(args, pmsg.Arguments);
-        //    Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
-        //    // TODO: Check for correct UserDAO and GroupDAO
-        //}
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
 
-        //[TestCategory("MessageParser.Texts.Good")]
-        //[TestMethod]
-        //public void StopText()
-        //{
-        //    msg.Sender = this._user1.PhoneEmail;
-        //    StringBuilder sbuilder = new StringBuilder();
-        //    StringBuilder sbuilderMessage = new StringBuilder();
-        //    String command = "stop";
-        //    List<string> args = new List<string>()
-        //    {
-        //    };
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
 
-        //    // Main message
-        //    sbuilderMessage.Append(command);
-        //    sbuilder.Append(MessageParser.delimiter);
-        //  //  sbuilderMessage.Append(" ");
-        //    foreach (string arg in args)
-        //    {
-        //        sbuilderMessage.Append(arg);
-        //        sbuilderMessage.Append(" ");
-        //    }
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextInvalidFieldCommand()
+        {
+            // Set our variables for testing
+            String command = "";
+            String group = this._group.GroupTag;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
 
-        //    //Tack on to text
-        //    sbuilder.Append(sbuilderMessage);
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
 
-        //    msg.FullMessage = sbuilder.ToString();
-        //    ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //   // Assert.AreEqual(command, pmsg.Command, true);
-        //    String outputContentMsg = sbuilderMessage.ToString();
-        //    int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
-        //    outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
-        //    Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
-        //    CollectionAssert.AreEquivalent(args, pmsg.Arguments);
-        //    Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
-        //    // TODO: Check for correct UserDAO and GroupDAO
-        //}
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
 
-        //[TestCategory("MessageParser.Texts.Good")]
-        //[TestMethod]
-        //public void StopTextWithArguments()
-        //{
-        //    msg.Sender = this._user1.PhoneEmail;
-        //    StringBuilder sbuilder = new StringBuilder();
-        //    StringBuilder sbuilderMessage = new StringBuilder();
-        //    String command = "stop";
-        //    List<string> args = new List<string>()
-        //    {
-        //        "sending",
-        //        "me",
-        //        "messages",
-        //        "now!"
-        //    };
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
 
-        //    // Main message
-        //    sbuilderMessage.Append(command);
-        //    //changed this from " " to "." to account for second delimiter we are requirign
-        //    sbuilder.Append(MessageParser.delimiter);
-        //    foreach (string arg in args)
-        //    {
-        //        sbuilderMessage.Append(arg);
-        //        sbuilderMessage.Append(" ");
-        //    }
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithNoArgs()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = this._group.GroupTag;
+            String args = "";
+            String[] argsArr = new string[0];
 
-        //    //Tack on to text
-        //    sbuilder.Append(sbuilderMessage);
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
 
-        //    msg.FullMessage = sbuilder.ToString();
-        //    ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //   // Assert.AreEqual(command, pmsg.Command, true);
-        //    String outputContentMsg = sbuilderMessage.ToString();
-        //    int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
-        //    outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
-        //    Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
-        //    CollectionAssert.AreEquivalent(args, pmsg.Arguments);
-        //    Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
-        //    // TODO: Check for correct UserDAO and GroupDAO
-        //}
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
 
-        //[TestCategory("MessageParser.Texts.Bad")]
-        //[TestMethod]
-        //public void IncorrectGroupTagNoCommandOrArguments()
-        //{
-        //    string fakeGroupTag = "HAHA";
-            
-            
-        //    this.stubbedController.Stub(x => x.RetrieveGroup(fakeGroupTag)).Throw(new CouldNotFindException("Could not find group"));
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
 
-        //    msg.Sender = this._user1.PhoneEmail;
-        //    StringBuilder sbuilder = new StringBuilder();
-        //    StringBuilder sbuilderMessage = new StringBuilder();
-        //    String command = "";
-        //    List<string> args = new List<string>()
-        //    {
-        //    };
-        //    sbuilder.Append(fakeGroupTag);
-        //    sbuilder.Append(MessageParser.delimiter);
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithNoArgsGroup()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = "";
+            String args = "";
+            String[] argsArr = new string[0];
 
-        //    // Main message
-        //    sbuilderMessage.Append(command);
-        //    sbuilderMessage.Append(MessageParser.delimiter);
-        //   // sbuilderMessage.Append(" ");
-        //    foreach (string arg in args)
-        //    {
-        //        sbuilderMessage.Append(arg);
-        //        sbuilderMessage.Append(" ");
-        //    }
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
 
-        //    //Tack on to text
-        //    sbuilder.Append(sbuilderMessage);
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //    msg.FullMessage = sbuilder.ToString();
-        //    ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
 
-        //   // Assert.AreEqual(command, pmsg.Command, true);
-        //    String outputContentMsg = sbuilderMessage.ToString();
-        //    int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
-        //    outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
-        //    Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
-        //    CollectionAssert.AreEquivalent(args, pmsg.Arguments);
-        //    Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
-        //    // TODO: Check for correct UserDAO and GroupDAO
-        //    Assert.AreEqual(null, pmsg.Group);
-        //}
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
 
-        //[TestCategory("MessageParser.Texts.Bad")]
-        //[TestMethod]
-        //public void IncorrectGroupTagNoArguments()
-        //{
-        //    string fakeGroupTag = "HAHA";
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextBlank()
+        {
+            // Create our test message
+            Message msg = new Message(this._user1.PhoneEmail, new string[0], "");
 
-        //    this.stubbedController.Stub(x => x.RetrieveGroup(fakeGroupTag)).Throw(new CouldNotFindException("Could not find group"));
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //    msg.Sender = this._user1.PhoneEmail;
-        //    StringBuilder sbuilder = new StringBuilder();
-        //    StringBuilder sbuilderMessage = new StringBuilder();
-        //    String command = "command";
-        //    List<string> args = new List<string>()
-        //    {
-        //    };
-        //    sbuilder.Append(fakeGroupTag);
-        //    sbuilder.Append(MessageParser.delimiter);
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual("", pmsg.Command, true);
+            Assert.AreEqual("", pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(new List<string>(), pmsg.Arguments);
 
-        //    // Main message
-        //    sbuilderMessage.Append(command);
-        //    //changed this from " " to "." to account for second delimiter we are requirign
-        //    sbuilderMessage.Append(MessageParser.delimiter);
-        //    foreach (string arg in args)
-        //    {
-        //        sbuilderMessage.Append(arg);
-        //        sbuilderMessage.Append(" ");
-        //    }
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
 
-        //    //Tack on to text
-        //    sbuilder.Append(sbuilderMessage);
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextInvalidUser()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = this._group.GroupTag;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
 
-        //    msg.FullMessage = sbuilder.ToString();
-        //    ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
+            // Create our test message
+            Message msg = getMessage("nope@nospam.net", new string[0], command, group, args);
 
-        //   // Assert.AreEqual(command, pmsg.Command, true);
-        //    CollectionAssert.AreEquivalent(args, pmsg.Arguments);
-        //    String outputContentMsg = sbuilderMessage.ToString();
-        //    int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
-        //    outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
-        //    Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
-        //    // TODO: Check for correct UserDAO and GroupDAO
-        //    Assert.AreEqual(null, pmsg.Group);
-        //}
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //[TestCategory("MessageParser.Texts.Bad")]
-        //[TestMethod]
-        //public void IncorrectGroupTagWithCommandAndArguments()
-        //{
-        //    string fakeGroupTag = "HAHA";
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
 
-        //    this.stubbedController.Stub(x => x.RetrieveGroup(fakeGroupTag)).Throw(new CouldNotFindException("Could not find group"));
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(null, pmsg.Sender);
+        }
 
-        //    msg.Sender = this._user1.PhoneEmail;
-        //    StringBuilder sbuilder = new StringBuilder();
-        //    StringBuilder sbuilderMessage = new StringBuilder();
-        //    String command = "command";
-        //    List<string> args = new List<string>()
-        //    {
-        //        "this",
-        //        "is",
-        //        "an",
-        //        "argument"
-        //    };
-        //    sbuilder.Append(fakeGroupTag);
-        //    sbuilder.Append(MessageParser.delimiter);
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithNoCommand()
+        {
+            // Set our variables for testing
+            String command = "";
+            String group = this._group.GroupTag;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
 
-        //    // Main message
-        //    sbuilderMessage.Append(command);
-        //    //changed this from " " to "." to account for second delimiter we are requirign
-        //    sbuilder.Append(MessageParser.delimiter);
-        //    foreach (string arg in args)
-        //    {
-        //        sbuilderMessage.Append(arg);
-        //        sbuilderMessage.Append(" ");
-        //    }
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
 
-        //    //Tack on to text
-        //    sbuilder.Append(sbuilderMessage);
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
 
-        //    msg.FullMessage = sbuilder.ToString();
-        //    ParsedMessage pmsg = MessageParser.Parse(this.msg, this.stubbedController);
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
 
-        //   // Assert.AreEqual(command, pmsg.Command, true);
-        //    String outputContentMsg = sbuilderMessage.ToString();
-        //    int firstDelimeter = outputContentMsg.IndexOf(MessageParser.delimiter);
-        //    outputContentMsg = outputContentMsg.Substring(0, firstDelimeter) + " " + outputContentMsg.Substring(firstDelimeter + 1);
-        //    Assert.AreEqual(outputContentMsg, pmsg.ContentMessage, true);
-        //    CollectionAssert.AreEquivalent(args, pmsg.Arguments);
-        //    Assert.AreEqual(sbuilderMessage.ToString(), pmsg.ContentMessage, true);
-        //    // TODO: Check for correct UserDAO and GroupDAO
-        //    Assert.AreEqual(null, pmsg.Group);
-        //}
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithFirstDelimiterTwice()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = MessageParser.delimiter + this._group.GroupTag;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithFirstDelimiterATonOfTimes()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = "";
+            for (int i = 0; i < 200; ++i)
+                group += MessageParser.delimiter;
+            group += this._group.GroupTag;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithSecondDelimiterTwice()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = this._group.GroupTag + MessageParser.secondDelimiter;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithSecondDelimiterATonOfTimes()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = this._group.GroupTag;
+            for (int i = 0; i < 200; ++i)
+                group += MessageParser.secondDelimiter;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+        }
     }
 }
