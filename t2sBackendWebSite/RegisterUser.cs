@@ -5,15 +5,17 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using t2sDbLibrary;
+using System.Data.SqlClient;
+
 
 namespace codebehind
 {
     /// <summary>
     /// Summary description for Default
     /// </summary>
-    public class Default : Page
+    public class RegisterUser : Page
     {
-        public Default()
+        public RegisterUser()
         { 
         }
 
@@ -50,7 +52,28 @@ namespace codebehind
             user.IsBanned = false;
             user.IsSuppressed = false;
             //check to see is needs to be hashed before
-            controller.CreateUser(user,password);
+            try
+            {
+                controller.CreateUser(user, password);
+
+            }
+            catch (EntryAlreadyExistsException)
+            {
+                Response.Write("User Already Exists");
+                return;
+
+            }
+            catch (ArgumentNullException)
+            {
+                Response.Write("A Field was left blank");
+                return;
+            }
+            catch (SqlException error)
+            {
+                //logger.logMessage("SQLException when Registering User", 4);
+            }
+            Response.Write("You successfully registered!");
+            return;
         }
 
         /// <summary>
