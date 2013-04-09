@@ -14,7 +14,13 @@ namespace t2sDbLibrary
         /// The connection string used for connecting to the database. 
         /// Do NOT modify these values unless the directory of the database changes.
         /// </summary>
-        public static readonly string CONNECTION_STRING = @"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\MainDatabase.mdf;Integrated Security=True";
+        private static string _CONNECTION_STRING = @"Data Source=(LocalDB)\v11.0;Integrated Security=True;AttachDbFilename=|DataDirectory|\MainDatabase.mdf";
+        public static string CONNECTION_STRING
+        {
+            get { return _CONNECTION_STRING; }
+            set { _CONNECTION_STRING = value; }
+        }
+
 
         #region UserDAO "CRUD" actions
 
