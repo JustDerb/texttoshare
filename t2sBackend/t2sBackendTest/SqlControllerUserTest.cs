@@ -278,6 +278,9 @@ namespace t2sBackendTest
         [TestCleanup]
         public void TearDown()
         {
+            if (null != _user1.UserID) _controller.DeleteUser(_user1);
+            if (null != _user2.UserID) _controller.DeleteUser(_user2);
+
             using (SqlConnection conn = new SqlConnection(SqlController.CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
