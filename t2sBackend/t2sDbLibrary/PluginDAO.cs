@@ -38,7 +38,7 @@ namespace t2sDbLibrary
             set;
         }
 
-        public int OwnerID
+        public int? OwnerID
         {
             get;
             set;
