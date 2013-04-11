@@ -57,9 +57,10 @@ namespace t2sDbLibrary
         /// Deletes an existing user that matches the given UserDAO.
         /// </summary>
         /// <param name="user">The UserDAO to delete from the database.</param>
-        /// <returns>true if the user was successfully deleted.</returns>
+        /// <param name="isOwner">If true, checks to see if the user is an owner of a group or plugin.</param>
+        /// <returns>true if the user was successfully deleted. Returns false if the user cannot be deleted due to them owning a Plugin or Group.</returns>
         /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
-        bool DeleteUser(UserDAO user);
+        bool DeleteUser(UserDAO user, bool isOwner);
 
         /// <summary>
         /// Checks if the given username or phoneEmail exists in the database. Since usernames and phone emails are unique,
@@ -303,6 +304,15 @@ namespace t2sDbLibrary
         /// <returns>A list containing all plugin names.</returns>
         /// <exception cref="SqlException">If a SQL-related exception is thrown.</exception>
         List<PluginDAO> RetrieveEnabledPlugins();
+
+        /// <summary>
+        /// Updates the given plugin's owner with the given user. On completion, updates
+        /// the given PluginDAO's owner id with the given user.
+        /// </summary>
+        /// <param name="group">The group to update the owner of.</param>
+        /// <param name="newOwner">The user to set as owner of the given group.</param>
+        /// <returns>true if successful.</returns>
+        bool UpdatePluginOwner(PluginDAO plugin, UserDAO newOwner);
 
         /// <summary>
         /// Gets the associated value for the given key entry.

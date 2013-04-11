@@ -258,11 +258,15 @@ namespace t2sDbLibrary
         /// Deletes an existing user that matches the given UserDAO.
         /// </summary>
         /// <param name="user">The UserDAO to delete from the database.</param>
-        /// <returns>true if the user was successfully deleted.</returns>
+        /// <param name="isOwner">If true, checks to see if the user is an owner of a group or plugin.</param>
+        /// <returns>true if the user was successfully deleted. Returns false if the user cannot be deleted due to them owning a Plugin or Group.</returns>
         /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
-        public bool DeleteUser(UserDAO user)
+        public bool DeleteUser(UserDAO user, bool isOwner)
         {
             if (null == user || null == user.UserID) throw new ArgumentNullException();
+
+            if (isOwner && CheckIfOwnerOfGroupOrPlugin(user))
+                return false;
 
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
@@ -277,7 +281,29 @@ namespace t2sDbLibrary
                 /* One or more records should have been deleted:
                  * The user record itself (1), and any additional groupmember entries (0 or more)
                  */
-                return 0 < effectedRows;
+                return effectedRows > 0;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the given user is the owner of a group or plugin.
+        /// </summary>
+        /// <param name="user">The user to check in the database.</param>
+        /// <returns>true if the user is an owner.</returns>
+        private bool CheckIfOwnerOfGroupOrPlugin(UserDAO user)
+        {
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                query.CommandText = "SELECT COUNT(*) FROM groups, plugins WHERE owner_id = @userid";
+                query.Parameters.AddWithValue("@userid", user.UserID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                /* If 1 or more records exist, then the user owns a group or plugin
+                 */
+                return effectedRows > 0;
             }
         }
 
@@ -1053,6 +1079,48 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Updates the given group's owner with the given user. On completion, updates
+        /// the given GroupDAO's owner object with the given user.
+        /// </summary>
+        /// <param name="group">The group to update the owner of.</param>
+        /// <param name="newOwner">The user to set as owner of the given group.</param>
+        /// <returns>true if successful.</returns>
+        public bool UpdateGroupOwner(GroupDAO group, UserDAO newOwner)
+        {
+            if (null == group || null == newOwner) throw new ArgumentNullException("Cannot update null group or user");
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                query.CommandText = "UPDATE groups SET owner_id = @userid WHERE id = @groupid";
+                query.Parameters.AddWithValue("@userid", newOwner.UserID);
+                query.Parameters.AddWithValue("@groupid", group.GroupID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                if (1 == effectedRows)
+                {
+                    // Update the GroupDAO reference with the new UserDAO
+                    group = new GroupDAO(newOwner)
+                    {
+                        GroupID = group.GroupID,
+                        Name = group.Name,
+                        Description = group.Description,
+                        GroupTag = group.GroupTag,
+                        Moderators = group.Moderators,
+                        Users = group.Users,
+                        EnabledPlugins = group.EnabledPlugins
+                    };
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         #endregion
 
         #region PluginDAO "CRUD" actions
@@ -1438,6 +1506,39 @@ namespace t2sDbLibrary
                 }
 
                 return pluginList;
+            }
+        }
+
+        /// <summary>
+        /// Updates the given plugin's owner with the given user. On completion, updates
+        /// the given PluginDAO's owner id with the given user.
+        /// </summary>
+        /// <param name="group">The group to update the owner of.</param>
+        /// <param name="newOwner">The user to set as owner of the given group.</param>
+        /// <returns>true if successful.</returns>
+        public bool UpdatePluginOwner(PluginDAO plugin, UserDAO newOwner)
+        {
+            if (null == plugin || null == newOwner) throw new ArgumentNullException("Cannot update null plugin or user");
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                query.CommandText = "UPDATE plugins SET owner_id = @userid WHERE id = @pluginid";
+                query.Parameters.AddWithValue("@userid", newOwner.UserID);
+                query.Parameters.AddWithValue("@pluginid", plugin.PluginID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                if (1 == effectedRows)
+                {
+                    // Update the PluginDAO reference with the new UserDAO
+                    plugin.OwnerID = newOwner.UserID;
+
+                    return true;
+                }
+
+                return false;
             }
         }
 
