@@ -113,8 +113,7 @@ namespace t2sBackendTest
         [ExpectedException(typeof(CouldNotFindException))]
         public void CreateGroupWithNoOwnerThrowsException()
         {
-            _group = new GroupDAO();
-            _controller.CreateGroup(_group);
+            _controller.CreateGroup(new GroupDAO());
         }
 
         [TestCleanup]
@@ -123,9 +122,9 @@ namespace t2sBackendTest
             if (null != _group.GroupID) _controller.DeleteGroup(_group);
             if (null != _enabledPlugin.PluginID) _controller.DeletePlugin(_enabledPlugin);
             if (null != _disabledPlugin.PluginID) _controller.DeletePlugin(_disabledPlugin);
-            if (null != _owner.UserID) _controller.DeleteUser(_owner);
-            if (null != _moderator.UserID) _controller.DeleteUser(_moderator);
-            if (null != _user.UserID) _controller.DeleteUser(_user);
+            if (null != _owner.UserID) _controller.DeleteUser(_owner, false);
+            if (null != _moderator.UserID) _controller.DeleteUser(_moderator, false);
+            if (null != _user.UserID) _controller.DeleteUser(_user, false);
         }
     }
 }
