@@ -91,6 +91,7 @@
     <Compile Include="DefaultPlugins\TextGroupPlugin.cs" />
     <Compile Include="DefaultPlugins\TextModsPlugin.cs" />
     <Compile Include="DefaultPlugins\TextUserPlugin.cs" />
+    <Compile Include="TextAPI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

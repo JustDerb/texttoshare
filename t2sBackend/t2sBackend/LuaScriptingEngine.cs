@@ -10,6 +10,15 @@ namespace t2sBackend
 {
     public static class LuaScriptingEngine
     {
+        #region "LUA C# Callbacks"
+
+        private static Dictionary<String, System.Reflection.MethodBase> LuaCallbacks = new Dictionary<string, System.Reflection.MethodBase>()
+        {
+            {"sendMessage", typeof(TextAPI).GetMethod("SendMessage")}
+        };
+
+        #endregion
+
         /// <summary>
         /// Conatainer to hold all our information that we need for 
         /// </summary>
@@ -70,6 +79,7 @@ namespace t2sBackend
 
             if (pluginEngine != null)
             {
+                pluginEngine.DoString("pluginHashIdentifier = \""+hash+"\"\n");
                 LuaScriptingEngine.registerLUAPluginCallbacks(pluginEngine);
             }
 
@@ -100,16 +110,17 @@ namespace t2sBackend
             //return null;
         }
 
-        private static void registerLUAPluginCallbacks(Lua pluginEngine)
+        private static String generateLUAPluginCallbackWrappers(Lua pluginEngine)
         {
-            // TODO: 
-            //pluginEngine.RegisterFunction("sendMessage", null, typeof(LuaScriptingEngine).GetMethod(""));
 
+            return "";
         }
 
-        #region "LUA C# Callbacks"
+        private static void registerLUAPluginCallbacks(Lua pluginEngine)
+        {
+            
+            pluginEngine.RegisterFunction("sendMessage", null, );
 
-
-        #endregion
+        }
     }
 }
