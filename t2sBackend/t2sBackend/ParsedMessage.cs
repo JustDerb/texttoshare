@@ -39,7 +39,15 @@ namespace t2sBackend
             /// <summary>
             /// No Group Specified/Invalid Group Format
             /// </summary>
-            NO_GROUP
+            NO_GROUP,
+            /// <summary>
+            /// No Command specified (Empty command)
+            /// </summary>
+            NO_COMMAND,
+            /// <summary>
+            /// No sender found in the system
+            /// </summary>
+            NO_SENDER
 
         }
 
