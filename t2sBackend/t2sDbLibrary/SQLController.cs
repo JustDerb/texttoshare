@@ -367,6 +367,51 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Suppresses a user to prevent them from receiving texts.
+        /// </summary>
+        /// <param name="pluginID">The user to suppress.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        public bool SuppressUser(UserDAO user)
+        {
+            return ToggleUserSuppression(user, true);
+        }
+
+        /// <summary>
+        /// Unsuppresses a user so they can continue to receive texts.
+        /// </summary>
+        /// <param name="pluginID">The user to unsuppress.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        public bool UnsuppressUser(UserDAO user)
+        {
+            return ToggleUserSuppression(user, false);
+        }
+
+        private bool ToggleUserSuppression(UserDAO user, bool isSuppressed)
+        {
+            if (null == user) throw new ArgumentNullException("Cannot update suppression for null user.");
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("UPDATE users ");
+                queryBuilder.Append("SET suppressed = @suppressed ");
+                queryBuilder.Append("WHERE id = @user_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@suppressed", isSuppressed);
+                query.Parameters.AddWithValue("@user_id", user.UserID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
         #endregion
 
         #region GroupDAO "CRUD" actions

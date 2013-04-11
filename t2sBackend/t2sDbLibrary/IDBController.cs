@@ -79,6 +79,22 @@ namespace t2sDbLibrary
         List<UserDAO> GetAllUsers();
 
         /// <summary>
+        /// Suppresses a user to prevent them from receiving texts.
+        /// </summary>
+        /// <param name="pluginID">The user to suppress.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        bool SuppressUser(UserDAO user);
+
+        /// <summary>
+        /// Unsuppresses a user so they can continue to receive texts.
+        /// </summary>
+        /// <param name="pluginID">The user to unsuppress.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        bool UnsuppressUser(UserDAO user);
+
+        /// <summary>
         /// Inserts the given GroupDAO object into the database, along with the different relations
         /// between users, permissions, and plugins.
         /// </summary>
