@@ -23,7 +23,7 @@ namespace t2sBackend
 
             Message msgSender = new Message();
 
-            UserDAO receiver = controller.RetrieveUserByUserName(message.Arguments[0])
+            UserDAO receiver = controller.RetrieveUserByUserName(message.Arguments[0]);
 
             if (receiver == null || receiver.IsBanned)
             {
