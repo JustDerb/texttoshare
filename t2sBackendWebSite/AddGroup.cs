@@ -15,8 +15,7 @@ namespace users
     public class AddGroup : Page
     {
         public AddGroup()
-        {
-         
+        {     
         }
 
         protected System.Web.UI.WebControls.Label MyLabel;
@@ -26,36 +25,55 @@ namespace users
 
         public void addGroup_Click(Object sender, EventArgs e)
         {
+
             //TODO
             SqlController controller = new SqlController();
-            UserDAO user = new UserDAO();
-            GroupDAO group = new GroupDAO();
-            //grab input from textboxs
-            //get owner from session
-          //  String owner = Request["ownerNamebox"];
-            String users = Request["usersNameBox"];
-            String moderators = Request["moderatorsBox"];
-            String enabledPlugins = Request["enabledPluginsBox"];
-            String groupName = Request["groupNameBox"];
-            String userName = Request["groupTagBox"];
-            String descripation = Request["groupDescripationBox"];
-            //get owner
+            GroupDAO group=null;
+            UserDAO owner = new UserDAO();
+            String ownerUsername = Request["groupOwner"];
             try
             {
-              //  controller.RetrieveUserByUserName(owner);
 
-            }
-            catch (CouldNotFindException)
-            {
-
+               owner =  controller.RetrieveUserByUserName(ownerUsername);
             }
             catch (ArgumentNullException)
             {
-
+                Response.Write("Owner username is null! ");
             }
+            catch (CouldNotFindException)
+            {
+                Response.Write("Could not find the username in database! ");
+            }
+
+            if (owner != null)
+            {
+                group = new GroupDAO(owner);
+                group.Name = Request["groupNameBox"];
+                group.GroupTag = Request["groupTagBox"];
+                group.Description = Request["groupDescripationBox"];
+            }
+            bool added=false;
+            try
+            {
+                added = controller.CreateGroup(group);
+            }
+            catch (ArgumentNullException)
+            {
+                Response.Write("The group being inserted is NULL ");
+            }
+            catch (EntryAlreadyExistsException)
+            {
+                Response.Write("This group already exists! ");
+            }
+            if(added){
+                Response.Write("Your group was created successfully! ");
+            }else{
+                Response.Write("Your group was not created successfully. Please try again!");
+            }
+
             //get moderators
-            List<UserDAO> userList = new List<UserDAO>();
-            String[] usersArray = users.Split(',');
+          //  List<UserDAO> userList = new List<UserDAO>();
+          /*  String[] usersArray = users.Split(',');
             foreach (String i in usersArray)
             {
                 try
@@ -74,7 +92,7 @@ namespace users
                     Response.Write("Null ArgumentException");
                     return;
                 }
-            }
+            }*/
         }
 
 

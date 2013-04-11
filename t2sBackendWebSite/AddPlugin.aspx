@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AddPlugin.aspx.cs" Inherits="AddPlugin" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true"  Inherits="plugin.AddPlugin" src="AddPlugin.cs" %>
 
 <!DOCTYPE html>
 
@@ -7,7 +7,16 @@
     <title></title>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="formAddPlugin" runat="server">
+        <asp:textbox id="pluginNameBox" placeholder="Plugin Name" runat="server"></asp:textbox>
+        <asp:textbox id="pluginOwner" placeholder="Owner's Users Name" runat="server"></asp:textbox>
+        <asp:textbox id="helpTextBox" placeholder="Help Text" runat="server"></asp:textbox>
+        <asp:textbox id="pluginDescripationBox" placeholder="Descripation of Plugin" runat="server"></asp:textbox>
+        <asp:textbox id="versionBox" placeholder="VersionNumber" runat="server"></asp:textbox>
+        <asp:TextBox ID="filebox"  placeholder ="Add file path" runat="server"></asp:TextBox>
+        <input type="file" name="file">
+        <asp:button id="addPluginButton" text="Add Plugin" Onclick="AddPlugin_Click" runat="server"></asp:button>
+
     <div>
     
     </div>
