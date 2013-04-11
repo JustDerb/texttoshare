@@ -119,7 +119,7 @@ namespace t2sBackend
         private static void registerLUAPluginCallbacks(Lua pluginEngine)
         {
             
-            pluginEngine.RegisterFunction("sendMessage", null, );
+            //pluginEngine.RegisterFunction("sendMessage", null, );
 
         }
     }

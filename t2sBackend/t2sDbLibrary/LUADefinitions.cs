@@ -11,7 +11,7 @@ namespace t2sDbLibrary
         /// <summary>
         /// Location within the filesystem that holds all our Lua Scripts
         /// </summary>
-        protected static readonly String LuaScriptLocation = @"C:\LUAPlugins\";
+        public static readonly String LuaScriptLocation = @"C:\LUAPlugins\";
 
         /// <summary>
         /// Extension for Lua scripts

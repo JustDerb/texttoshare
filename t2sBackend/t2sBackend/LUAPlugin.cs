@@ -184,9 +184,9 @@ namespace t2sBackend
             }
             // Make sure we are using the file extension
             script = script.Trim();
-            if (!script.EndsWith(LUAPlugin.LuaExtension))
+            if (!script.EndsWith(LUADefinitions.LuaExtension))
             {
-                script += LUAPlugin.LuaExtension;
+                script += LUADefinitions.LuaExtension;
             }
             // See if it's there
             if (!File.Exists(script))
@@ -209,14 +209,14 @@ namespace t2sBackend
         {
             // TODO - Make this more elegant and use a File object
             if (name == null)
-                return LUAPlugin.LuaScriptLocation;
+                return LUADefinitions.LuaScriptLocation;
             name = name.Trim();
             if (name.Equals(String.Empty))
-                return LUAPlugin.LuaScriptLocation;
+                return LUADefinitions.LuaScriptLocation;
             else if (name.StartsWith("/") || name.StartsWith("\\"))
-                return LUAPlugin.LuaScriptLocation + name;
+                return LUADefinitions.LuaScriptLocation + name;
             else
-                return LUAPlugin.LuaScriptLocation + "\\" + name;
+                return LUADefinitions.LuaScriptLocation + "\\" + name;
         }
 
         ~LUAPlugin()
