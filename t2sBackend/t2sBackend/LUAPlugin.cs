@@ -148,16 +148,6 @@ namespace t2sBackend
         protected String ScriptFileLoc;
 
         /// <summary>
-        /// Location within the filesystem that holds all our Lua Scripts
-        /// </summary>
-        protected static readonly String LuaScriptLocation = "";
-
-        /// <summary>
-        /// Extension for Lua scripts
-        /// </summary>
-        public static readonly String LuaExtension = ".lua";
-
-        /// <summary>
         /// Sandbox code that is run before any script is run for security reasons
         /// </summary>
         protected readonly String SandboxLuaCode;
