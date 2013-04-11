@@ -447,5 +447,63 @@ namespace t2sBackendTest
             // Check type
             Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
         }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextStop()
+        {
+            // Set our variables for testing
+            String command = "STOP";
+            String group = "";
+            String args = "";
+            String[] argsArr = new string[0];
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextStopYes()
+        {
+            // Set our variables for testing
+            String command = "STOP";
+            String group = "";
+            String args = "YES";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
+        }
     }
 }
