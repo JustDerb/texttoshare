@@ -389,7 +389,7 @@ namespace t2sDbLibrary
             return ToggleUserSuppression(user, false);
         }
 
-        private bool ToggleUserSuppression(UserDAO user, bool isSuppressed)
+        private bool ToggleUserSuppression(UserDAO user, bool value)
         {
             if (null == user) throw new ArgumentNullException("Cannot update suppression for null user.");
 
@@ -398,11 +398,56 @@ namespace t2sDbLibrary
             {
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("UPDATE users ");
-                queryBuilder.Append("SET suppressed = @suppressed ");
+                queryBuilder.Append("SET suppressed = @value ");
                 queryBuilder.Append("WHERE id = @user_id ");
 
                 query.CommandText = queryBuilder.ToString();
-                query.Parameters.AddWithValue("@suppressed", isSuppressed);
+                query.Parameters.AddWithValue("@value", value);
+                query.Parameters.AddWithValue("@user_id", user.UserID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Bans a user to prevent them from sending or receiving texts.
+        /// </summary>
+        /// <param name="pluginID">The user to ban.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        public bool BanUser(UserDAO user)
+        {
+            return ToggleUserBanned(user, true);
+        }
+
+        /// <summary>
+        /// Unbans a user so they can continue to send and receive texts.
+        /// </summary>
+        /// <param name="pluginID">The user to unban.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        public bool UnbanUser(UserDAO user)
+        {
+            return ToggleUserBanned(user, false);
+        }
+
+        private bool ToggleUserBanned(UserDAO user, bool value)
+        {
+            if (null == user) throw new ArgumentNullException("Cannot update banning for null user.");
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("UPDATE users ");
+                queryBuilder.Append("SET banned = @value ");
+                queryBuilder.Append("WHERE id = @user_id ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@value", value);
                 query.Parameters.AddWithValue("@user_id", user.UserID);
 
                 conn.Open();

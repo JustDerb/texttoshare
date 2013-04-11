@@ -95,6 +95,22 @@ namespace t2sDbLibrary
         bool UnsuppressUser(UserDAO user);
 
         /// <summary>
+        /// Bans a user to prevent them from sending or receiving texts.
+        /// </summary>
+        /// <param name="pluginID">The user to ban.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        bool BanUser(UserDAO user);
+
+        /// <summary>
+        /// Unbans a user so they can continue to send and receive texts.
+        /// </summary>
+        /// <param name="pluginID">The user to unban.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given user is null.</exception>
+        bool UnbanUser(UserDAO user);
+
+        /// <summary>
         /// Inserts the given GroupDAO object into the database, along with the different relations
         /// between users, permissions, and plugins.
         /// </summary>
