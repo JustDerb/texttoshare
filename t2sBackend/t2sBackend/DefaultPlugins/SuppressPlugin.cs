@@ -18,7 +18,15 @@ namespace t2sBackend
         /// <param name="service">Service to send/recieve messages through</param>
         public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
-            
+            Message msgSender = new Message();
+
+            if (message.Arguments[0] == null)
+            {
+
+            }
+                
+            msgSender.Reciever.Add(message.Sender.PhoneEmail);
+            service.SendMessage(msgSender);
         }
 
         /// <summary>
