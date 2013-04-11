@@ -58,11 +58,13 @@ namespace t2sBackend
             {
                 parsed.Type = ParsedMessage.ContentMessageType.SUPPRESS;
             }
-            else if (parsed.Command.Equals(String.Empty) ||
-                parsed.Group == null ||
-                parsed.Sender == null)
+            else if (parsed.Command.Equals(String.Empty) || parsed.Sender == null)
             {
                 parsed.Type = ParsedMessage.ContentMessageType.ERROR;
+            }
+            else if (groupId==null)
+            {
+                parsed.Type = ParsedMessage.ContentMessageType.NO_GROUP;
             }
             else
             {

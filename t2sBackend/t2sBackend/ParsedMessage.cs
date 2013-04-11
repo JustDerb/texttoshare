@@ -35,7 +35,12 @@ namespace t2sBackend
             /// <summary>
             /// Totally not a invalid message
             /// </summary>
-            VALID
+            VALID,
+            /// <summary>
+            /// No Group Specified/Invalid Group Format
+            /// </summary>
+            NO_GROUP
+
         }
 
         /// <summary>
