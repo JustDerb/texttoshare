@@ -71,6 +71,13 @@ namespace t2sDbLibrary
         bool UserExists(string username, string phoneEmail);
 
         /// <summary>
+        /// Gets all users currently in the system.
+        /// </summary>
+        /// <returns>A list of all users.</returns>
+        /// <exception cref="SqlException">If there is an issue in querying the database.</exception>
+        List<UserDAO> GetAllUsers();
+
+        /// <summary>
         /// Inserts the given GroupDAO object into the database, along with the different relations
         /// between users, permissions, and plugins.
         /// </summary>
@@ -295,7 +302,7 @@ namespace t2sDbLibrary
         /// </summary>
         /// <returns>A list containing all plugin names.</returns>
         /// <exception cref="SqlException">If a SQL-related exception is thrown.</exception>
-        List<string> RetrieveEnabledPluginNameList();
+        List<PluginDAO> RetrieveEnabledPlugins();
 
         /// <summary>
         /// Gets the associated value for the given key entry.

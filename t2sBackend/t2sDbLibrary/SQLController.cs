@@ -307,6 +307,40 @@ namespace t2sDbLibrary
             }
         }
 
+        public List<UserDAO> GetAllUsers()
+        {
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT id, username, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed FROM users ");
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<UserDAO> userList = new List<UserDAO>();
+
+                while (reader.Read())
+                {
+                    userList.Add(new UserDAO()
+                    {
+                        UserID = (int?)reader["id"],
+                        UserName = (string)reader["username"],
+                        FirstName = (string)reader["firstname"],
+                        LastName = (string)reader["lastname"],
+                        PhoneNumber = (string)reader["phone"],
+                        PhoneEmail = (string)reader["email_phone"],
+                        Carrier = (PhoneCarrier)reader["carrier"],
+                        UserLevel = (UserLevel)reader["user_level"],
+                        IsBanned = (bool)reader["banned"],
+                        IsSuppressed = (bool)reader["suppressed"]
+                    });
+                }
+
+                return userList;
+            }
+        }
+
         #endregion
 
         #region GroupDAO "CRUD" actions
@@ -1374,26 +1408,36 @@ namespace t2sDbLibrary
         /// </summary>
         /// <returns>A list containing all plugin names.</returns>
         /// <exception cref="SqlException">If a SQL-related exception is thrown.</exception>
-        public List<string> RetrieveEnabledPluginNameList()
+        public List<PluginDAO> RetrieveEnabledPlugins()
         {
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("SELECT name FROM plugins WHERE disabled = 0");
+                queryBuilder.Append("SELECT id, name, description, disabled, version_num, owner_id, plugin_access, help_text FROM plugins WHERE disabled = 0");
 
                 query.CommandText = queryBuilder.ToString();
 
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
 
-                List<string> pluginNameList = new List<string>();
+                List<PluginDAO> pluginList = new List<PluginDAO>();
                 while (reader.Read())
                 {
-                    pluginNameList.Add((string)reader["name"]);
+                    pluginList.Add(new PluginDAO()
+                    {
+                        PluginID = (int?)reader["id"],
+                        Name = (string)reader["name"],
+                        Description = (string)reader["description"],
+                        IsDisabled = (bool)reader["disabled"],
+                        VersionNum = (string)reader["version_num"],
+                        OwnerID = (int?)reader["owner_id"],
+                        Access = (PluginAccess)reader["plugin_access"],
+                        HelpText = (string)reader["help_text"]
+                    });
                 }
 
-                return pluginNameList;
+                return pluginList;
             }
         }
 
