@@ -94,27 +94,41 @@ namespace t2sBackend
                 
                 bool doMessage = true;
 
-                // Not a valid group ID
-                if (message.Type==ParsedMessage.ContentMessageType.NO_GROUP)
+                switch (message.Type)
                 {
-                    message.ContentMessage = INVALID_GROUP_MESSAGE;
+                    // Not a valid group ID
+                    case ParsedMessage.ContentMessageType.NO_GROUP:
+                        message.ContentMessage = INVALID_GROUP_MESSAGE;
+                        break;
+                    // User is banned
+                    case ParsedMessage.ContentMessageType.BAN:
+                        doMessage = false;
+                        break;
+                    // User is suppressed
+                    case ParsedMessage.ContentMessageType.SUPPRESS:
+                        message.ContentMessage = SUPPRESSED_USER_MESSAGE;
+                        break;
+                    case ParsedMessage.ContentMessageType.NO_COMMAND:
+                        message.ContentMessage = INVALID_COMMAND_MESSAGE;
+                        break;
+                    case ParsedMessage.ContentMessageType.NO_SENDER:
+                        message.ContentMessage = INVALID_SENDER_MESSAGE;
+                        break;
+                    case ParsedMessage.ContentMessageType.STOP:
+                        message.ContentMessage = STOP_MESSAGE;
+                        idbController.DeleteUser(message.Sender);
+                        break;
+                    case ParsedMessage.ContentMessageType.VALID:
+                        break;
                 }
-                // Not a user within the given group
-                else if (!message.Group.Users.Contains(message.Sender) && 
+                
+                    
+                    // Not a user within the given group
+                if (!message.Group.Users.Contains(message.Sender) && 
                     !message.Group.Moderators.Contains(message.Sender) &&
                     !message.Group.Owner.Equals(message.Sender))
                 {
                     message.ContentMessage = INVALID_USER_MESSAGE;
-                }
-                // User is banned
-                else if (message.Type == ParsedMessage.ContentMessageType.BAN)
-                {
-                    doMessage = false;
-                }
-                // User is suppressed 
-                else if (message.Type == ParsedMessage.ContentMessageType.SUPPRESS)
-                {
-                    message.ContentMessage = SUPPRESSED_USER_MESSAGE;
                 }
 
                 Boolean foundPlugin = false;
@@ -216,5 +230,8 @@ namespace t2sBackend
         private static string SUPPRESSED_USER_MESSAGE = "You have currently suppressed recieving messages. To disable, please reply, \"SUPPRESS OFF\"";
         private static string INVALID_PLUGIN_MESSAGE = "Invalid command. Please check your message and try again.";
         private static string RESTRICTED_ACCESS_MESSAGE = "You are not authorized to use this command. Please check with your group's owner and try again.";
+        private static string INVALID_COMMAND_MESSAGE = "Invalid command. Please check your message and try again.";
+        private static string INVALID_SENDER_MESSAGE = "Invalid Sender. Please check message or register with System to use services.";
+        private static string STOP_MESSAGE = "You have been removed from the System. Thank you.";
     }
 }
