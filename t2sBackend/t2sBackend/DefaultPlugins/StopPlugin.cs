@@ -26,8 +26,7 @@ namespace t2sBackend
             }
             catch (Exception)
             {
-                msgSender.FullMessage = "Failed to remove " + message.ContentMessage + " from the group "
-                    + message.Group.GroupID + ". Please check user/group and try again.";
+                msgSender.FullMessage = "Failed to remove.";
             }
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
             service.SendMessage(msgSender);
