@@ -18,14 +18,28 @@ namespace t2sBackend
         /// <param name="service">Service to send/recieve messages through</param>
         public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
-            Message msg = new Message();
-            msg.FullMessage = message.ContentMessage;
+            Message msgReceiver = new Message();
+            msgReceiver.FullMessage = message.ContentMessage;
 
             Message msgSender = new Message();
-            msgSender.FullMessage = "Message sent successfully.";
+
+            UserDAO receiver = controller.RetrieveUserByUserName(message.Arguments[0])
+
+            if (receiver == null || receiver.IsBanned)
+            {
+                msgSender.FullMessage = "Not a valid user. Please check their username and retry.";
+            }
+            else if(receiver.IsSuppressed)
+            {
+                msgSender.FullMessage = "User has suppressed messages.";
+            }
+            else
+            {
+                msgSender.FullMessage = "Message sent successfully.";
+            }
 
             service.SendMessage(msgSender);
-            service.SendMessage(msg);
+            service.SendMessage(msgReceiver);
         }
 
         /// <summary>
