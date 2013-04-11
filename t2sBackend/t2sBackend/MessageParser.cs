@@ -62,7 +62,7 @@ namespace t2sBackend
             {
                 parsed.Type = ParsedMessage.ContentMessageType.ERROR;
             }
-            else if (groupId==null)
+            else if (parsed.Group == null)
             {
                 parsed.Type = ParsedMessage.ContentMessageType.NO_GROUP;
             }
@@ -119,12 +119,12 @@ namespace t2sBackend
         private static String FindCommand(String message, IDBController controller)
         {
             // Try and find our plugin at the start
-            List<string> plugins = controller.RetrieveEnabledPluginNameList();
-            foreach (string plugin in plugins)
+            List<PluginDAO> plugins = controller.RetrieveEnabledPlugins();
+            foreach (PluginDAO plugin in plugins)
             {
-                if (message.StartsWith(plugin, StringComparison.OrdinalIgnoreCase))
+                if (message.StartsWith(plugin.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    return plugin;
+                    return plugin.Name;
                 }
             }
 

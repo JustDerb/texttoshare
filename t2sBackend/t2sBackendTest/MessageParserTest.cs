@@ -156,7 +156,7 @@ namespace t2sBackendTest
             Assert.AreEqual(this._user1, pmsg.Sender);
 
             // Check type
-            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
+            Assert.AreEqual(ParsedMessage.ContentMessageType.NO_GROUP, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
@@ -243,7 +243,7 @@ namespace t2sBackendTest
             Assert.AreEqual(this._user1, pmsg.Sender);
 
             // Check type
-            Assert.AreEqual(ParsedMessage.ContentMessageType.ERROR, pmsg.Type);
+            Assert.AreEqual(ParsedMessage.ContentMessageType.NO_GROUP, pmsg.Type);
         }
 
         [TestCategory("MessageParser")]
