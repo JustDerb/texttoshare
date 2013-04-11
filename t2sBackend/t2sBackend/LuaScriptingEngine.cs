@@ -155,7 +155,7 @@ namespace t2sBackend
             foreach (KeyValuePair<String, MethodBase> entry in LuaCallbacks)
             {
                 pluginEngine.RegisterFunction(entry.Key, null, entry.Value);
-                pluginEngine.DoString(generateLUAPluginCallbackWrapper(entry.Value));
+                pluginEngine.DoString(LuaScriptingEngine.generateLUAPluginCallbackWrapper(entry.Value));
             }
         }
     }
