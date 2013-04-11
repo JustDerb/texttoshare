@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="AddUserPlugin.cs" />
     <Compile Include="BlockingQueue.cs" />
+    <Compile Include="DefaultPlugins\StopPlugin.cs" />
     <Compile Include="GMailWatcherService.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="AWatcherService.cs" />
