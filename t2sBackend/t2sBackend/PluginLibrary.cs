@@ -95,7 +95,7 @@ namespace t2sBackend
                 bool doMessage = true;
 
                 // Not a valid group ID
-                if (message.Group == null)
+                if (message.Type==ParsedMessage.ContentMessageType.NO_GROUP)
                 {
                     message.ContentMessage = INVALID_GROUP_MESSAGE;
                 }
@@ -107,12 +107,12 @@ namespace t2sBackend
                     message.ContentMessage = INVALID_USER_MESSAGE;
                 }
                 // User is banned
-                else if (message.Sender.IsBanned)
+                else if (message.Type == ParsedMessage.ContentMessageType.BAN)
                 {
                     doMessage = false;
                 }
                 // User is suppressed 
-                else if (message.Sender.IsSuppressed)
+                else if (message.Type == ParsedMessage.ContentMessageType.SUPPRESS)
                 {
                     message.ContentMessage = SUPPRESSED_USER_MESSAGE;
                 }
