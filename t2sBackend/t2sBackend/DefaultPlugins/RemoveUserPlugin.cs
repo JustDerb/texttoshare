@@ -23,14 +23,24 @@ namespace t2sBackend
             try
             {
                 UserDAO userToBeRemoved = controller.RetrieveUserByUserName(message.ContentMessage);
-                controller.RemoveMemberFromGroup(message.Group.GroupID, userToBeRemoved.UserID);
-                msgSender.FullMessage = "Successfully removed " + message.ContentMessage + " from the group " + message.Group.GroupID + ".";
-                msgRemovedUser.FullMessage = "You have been removed from group " + message.Group.GroupID + ".";
-                msgRemovedUser.Reciever.Add(userToBeRemoved.PhoneEmail);
+                if (userToBeRemoved == null || !message.Group.Users.Contains(userToBeRemoved))
+                {
+                    msgSender.FullMessage = "Failed to remove " + message.Arguments[0] + " from the group "
+                        + message.Group.GroupID + ". Please check user/group and try again.";
+                }
+                else
+                {
+                    controller.RemoveMemberFromGroup(message.Group.GroupID, userToBeRemoved.UserID);
+                    msgSender.FullMessage = "Successfully removed " + message.ContentMessage + " from the group "
+                        + message.Group.GroupID + ".";
+                    msgRemovedUser.FullMessage = "You have been removed from group " + message.Group.GroupID + ".";
+                    msgRemovedUser.Reciever.Add(userToBeRemoved.PhoneEmail);
+                }
             }
             catch (Exception)
             {
-                msgSender.FullMessage = "Failed to remove " + message.ContentMessage + " from the group " + message.Group.GroupID + ".";
+                msgSender.FullMessage = "Failed to remove " + message.ContentMessage + " from the group "
+                    + message.Group.GroupID + ". Please check user/group and try again.";
             }
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
             service.SendMessage(msgSender);
