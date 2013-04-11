@@ -25,10 +25,6 @@ namespace t2sBackend
                 "smtp.gmail.com",
                 587);
 
-            // Set our API up
-            TextAPI.SendingService = gmailServ;
-            TextAPI.Controller = database;
-
             MessageControllerOverride controller = new MessageControllerOverride(gmailServ, database);
             PluginLibrary pluginLib = new PluginLibrary(controller, gmailServ, database);
 

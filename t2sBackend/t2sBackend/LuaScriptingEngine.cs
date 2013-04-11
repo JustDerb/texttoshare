@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using t2sDbLibrary;
@@ -12,9 +13,9 @@ namespace t2sBackend
     {
         #region "LUA C# Callbacks"
 
-        private static Dictionary<String, System.Reflection.MethodBase> LuaCallbacks = new Dictionary<string, System.Reflection.MethodBase>()
+        private static Dictionary<String, MethodBase> LuaCallbacks = new Dictionary<string, MethodBase>()
         {
-            {"sendMessage", typeof(TextAPI).GetMethod("SendMessage")}
+            {"sendMessage", typeof(LUAAPI).GetMethod("SendMessage")}
         };
 
         #endregion
@@ -22,7 +23,7 @@ namespace t2sBackend
         /// <summary>
         /// Conatainer to hold all our information that we need for 
         /// </summary>
-        private struct LUAPluginContainer
+        public struct LUAPluginContainer
         {
             public LUAPlugin plugin;
             public AWatcherService service;
@@ -34,6 +35,8 @@ namespace t2sBackend
         /// </summary>
         private static Dictionary<String, LUAPluginContainer> register = new Dictionary<String, LUAPluginContainer>();
         private static Object registerLock = new Object();
+
+        private static String hashVarName = "TTSpluginHashIdentifier";
 
         /// <summary>
         /// Registers the plugin with the 
@@ -94,7 +97,7 @@ namespace t2sBackend
             }
         }
 
-        private static LUAPluginContainer getPluginContainerByHash(String hash)
+        public static LUAPluginContainer getPluginContainerByHash(String hash)
         {
             LUAPluginContainer plugin;
             lock (registerLock)
@@ -110,17 +113,50 @@ namespace t2sBackend
             //return null;
         }
 
-        private static String generateLUAPluginCallbackWrappers(Lua pluginEngine)
+        private static String generateLUAPluginCallbackWrapper(MethodBase function)
         {
+            String name = function.Name;
+            String userFriendlyName = name.TrimStart('_');
+            ParameterInfo[] parameters = function.GetParameters();
 
-            return "";
+            StringBuilder paramsb = new StringBuilder();
+            // Add all parameters
+            bool first = true;
+            foreach (ParameterInfo parameter in parameters)
+            {
+                if (!first)
+                {
+                    paramsb.Append(", ");
+                }
+                paramsb.Append(parameter.Name);
+
+                if (first)
+                    first = false;
+            }
+            String paramString = paramsb.ToString();
+
+            StringBuilder sb = new StringBuilder();
+            // Yeah, I do appends here because it's easier to read... so sue me.
+            sb.Append(@"function " + userFriendlyName + " (" + paramString + ") \n");
+            if (parameters.Length > 0)
+            {
+                sb.Append(@"    return " + name + "(" + hashVarName + ", " + paramString + ") \n");
+            }
+            else
+            {
+                sb.Append(@"    return " + name + "(" + hashVarName + ") \n");
+            }
+            sb.Append(@"end \n");
+            return sb.ToString();
         }
 
         private static void registerLUAPluginCallbacks(Lua pluginEngine)
         {
-            
-            //pluginEngine.RegisterFunction("sendMessage", null, );
-
+            foreach (KeyValuePair<String, MethodBase> entry in LuaCallbacks)
+            {
+                pluginEngine.RegisterFunction(entry.Key, null, entry.Value);
+                pluginEngine.DoString(generateLUAPluginCallbackWrapper(entry.Value));
+            }
         }
     }
 }
