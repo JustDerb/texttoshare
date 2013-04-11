@@ -40,6 +40,16 @@ namespace manageGroup
 
         }
 
+
+        public void createListBox()
+        {
+            SqlController controller = new SqlController();
+            List<UserDAO> users = controller.GetAllUsers();
+            ListBox allUser = new ListBox();
+            
+        }
+
+
     }
 
 
