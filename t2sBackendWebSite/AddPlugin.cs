@@ -43,7 +43,7 @@ namespace plugin
             }catch(ArgumentNullException){
                 Response.Write("Owner username is Null");
             }catch(CouldNotFindException){
-                Response.Write("Could not find the owner");
+                Response.Write("Could not find the owner ");
             }
             if (owner != null)
             {
@@ -62,12 +62,15 @@ namespace plugin
                 // Read uploaded file from the Stream
                 myFile.InputStream.Read(myData, 0, nFileLen);
                 string strFilename = Path.GetFileName(myFile.FileName);
-                WriteToFile(strFilename, myData);
+                string path = LUADefinitions.LuaScriptLocation+strFilename;
+                
+                WriteToFile(path, myData);
+                Response.Write(" Plugin " + strFilename + " has been added successfully");
             }
             else
             {
                 // No file
-                Response.Write("NO file attached");
+                Response.Write("NO file attached. Plugin couldn't be added");
             }
 
         }
