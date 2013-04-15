@@ -153,6 +153,7 @@ namespace t2sBackend
                                     {
                                         // Fails if the file cannot be found
                                         Logger.LogMessage("LUA Plugin (" + d.Name + ") failed.  Cannot load plugin: " + ex.Message, LoggerLevel.SEVERE);
+                                        message.ContentMessage = INVALID_COMMAND_MESSAGE;
                                     }
                                 }
                             }
