@@ -174,6 +174,11 @@ namespace t2sBackend
 
         public override bool SendMessage(Message message, bool async)
         {
+            if (message.Sender == null || message.Sender.Equals(String.Empty))
+            {
+                message.Sender = this.UserName;
+            }
+
             System.Net.Mail.MailMessage messageToSend = new System.Net.Mail.MailMessage();
             foreach (String to in message.Reciever)
                 messageToSend.To.Add(to);
