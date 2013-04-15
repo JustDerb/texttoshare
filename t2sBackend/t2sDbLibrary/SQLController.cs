@@ -255,17 +255,29 @@ namespace t2sDbLibrary
         }
 
         /// <summary>
+        /// Deletes an existing user that matches the given UserDAO.  The user should not be admin of a group, or have plugins
+        /// </summary>
+        /// <param name="user">The UserDAO to delete from the database.</param>
+        /// <returns>true if the user was successfully deleted. Returns false if the user cannot be deleted due to them owning a Plugin or Group.</returns>
+        /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
+        public bool DeleteUser(UserDAO user)
+        {
+            // We should always check before deleting
+            return DeleteUser(user, true);
+        }
+
+        /// <summary>
         /// Deletes an existing user that matches the given UserDAO.
         /// </summary>
         /// <param name="user">The UserDAO to delete from the database.</param>
-        /// <param name="isOwner">If true, checks to see if the user is an owner of a group or plugin.</param>
+        /// <param name="checkIsOwnerBeforeRemoving">If true, checks to see if the user is an owner of a group or plugin.</param>
         /// <returns>true if the user was successfully deleted. Returns false if the user cannot be deleted due to them owning a Plugin or Group.</returns>
         /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
-        public bool DeleteUser(UserDAO user, bool isOwner)
+        public bool DeleteUser(UserDAO user, bool checkIsOwnerBeforeRemoving)
         {
             if (null == user || null == user.UserID) throw new ArgumentNullException();
 
-            if (isOwner && CheckIfOwnerOfGroupOrPlugin(user))
+            if (checkIsOwnerBeforeRemoving && CheckIfOwnerOfGroupOrPlugin(user))
                 return false;
 
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))

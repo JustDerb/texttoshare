@@ -54,6 +54,14 @@ namespace t2sDbLibrary
         bool UpdateUser(UserDAO user);
 
         /// <summary>
+        /// Deletes an existing user that matches the given UserDAO.  The user should not be admin of a group, or have plugins
+        /// </summary>
+        /// <param name="user">The UserDAO to delete from the database.</param>
+        /// <returns>true if the user was successfully deleted. Returns false if the user cannot be deleted due to them owning a Plugin or Group.</returns>
+        /// <exception cref="ArgumentNullException">If the given UserDAO or UserDAO.UserID is null.</exception>
+        bool DeleteUser(UserDAO user);
+
+        /// <summary>
         /// Deletes an existing user that matches the given UserDAO.
         /// </summary>
         /// <param name="user">The UserDAO to delete from the database.</param>
