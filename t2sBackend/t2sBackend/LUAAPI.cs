@@ -29,9 +29,9 @@ namespace t2sBackend
         }
 
         //160 7-bit characters, 140 8-bit characters, or 70 16-bit characters
-        public readonly int MAX_TEXT_SIZE_7BIT  = 160;
-        public readonly int MAX_TEXT_SIZE_8BIT  = 140;
-        public readonly int MAX_TEXT_SIZE_16BIT = 70;
+        public static readonly int MAX_TEXT_SIZE_7BIT  = 160;
+        public static readonly int MAX_TEXT_SIZE_8BIT = 140;
+        public static readonly int MAX_TEXT_SIZE_16BIT = 70;
 
         /// <summary>
         /// Tries to find the user by username
