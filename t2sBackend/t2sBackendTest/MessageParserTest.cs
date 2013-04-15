@@ -505,5 +505,434 @@ namespace t2sBackendTest
             // Check type
             Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
         }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextStop_Supressed()
+        {
+            this._user1.IsSuppressed = true;
+
+            // Set our variables for testing
+            String command = "STOP";
+            String group = "";
+            String args = "";
+            String[] argsArr = new string[0];
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextStopYes_Supressed()
+        {
+            this._user1.IsSuppressed = true;
+
+            // Set our variables for testing
+            String command = "STOP";
+            String group = "";
+            String args = "YES";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextSuppress_NotSuppressed()
+        {
+            // Set our variables for testing
+            String command = "SURPRESS";
+            String group = "";
+            String args = "";
+            String[] argsArr = new string[0];
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.NO_GROUP, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextSuppressWithGroup_NotSuppressed()
+        {
+            // Set our variables for testing
+            String command = "SURPRESS";
+            String group = this._group.GroupTag;
+            String args = "";
+            String[] argsArr = new string[0];
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextSuppressWithGroupArgs_NotSuppressed()
+        {
+            // Set our variables for testing
+            String command = "SURPRESS";
+            String group = this._group.GroupTag;
+            String args = "THIS IS MANY ARGUMENTS";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextSuppress_Suppressed()
+        {
+            this._user1.IsSuppressed = true;
+
+            // Set our variables for testing
+            String command = "SURPRESS";
+            String group = "";
+            String args = "";
+            String[] argsArr = new string[0];
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.SUPPRESS, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextSuppressWithGroup_Suppressed()
+        {
+            this._user1.IsSuppressed = true;
+
+            // Set our variables for testing
+            String command = "SURPRESS";
+            String group = this._group.GroupTag;
+            String args = "";
+            String[] argsArr = new string[0];
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.SUPPRESS, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextSuppressWithGroupArgs_Suppressed()
+        {
+            this._user1.IsSuppressed = true;
+
+            // Set our variables for testing
+            String command = "SURPRESS";
+            String group = this._group.GroupTag;
+            String args = "THIS IS MANY ARGUMENTS";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.SUPPRESS, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextNormal_Suppressed()
+        {
+            this._user1.IsSuppressed = true;
+
+            // Set our variables for testing
+            String command = "Plugini";
+            String group = this._group.GroupTag;
+            String args = "THIS IS MANY ARGUMENTS";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.SUPPRESS, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextNormal_Suppressed_Banned()
+        {
+            this._user1.IsSuppressed = true;
+            this._user1.IsBanned = true;
+
+            // Set our variables for testing
+            String command = "Plugini";
+            String group = this._group.GroupTag;
+            String args = "THIS IS MANY ARGUMENTS";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.BAN, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextNormal_Banned()
+        {
+            this._user1.IsBanned = true;
+
+            // Set our variables for testing
+            String command = "Plugini";
+            String group = this._group.GroupTag;
+            String args = "THIS IS MANY ARGUMENTS";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.BAN, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextStop_Banned()
+        {
+            this._user1.IsBanned = true;
+
+            // Set our variables for testing
+            String command = "Stop";
+            String group = "";
+            String args = "";
+            String[] argsArr = new string[0];
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextStopYes_Banned()
+        {
+            this._user1.IsBanned = true;
+
+            // Set our variables for testing
+            String command = "Stop";
+            String group = "";
+            String args = "yes";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(null, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextStopWithGroup()
+        {
+            this._user1.IsBanned = true;
+
+            // Set our variables for testing
+            String command = "Stop";
+            String group = this._group.GroupTag;
+            String args = "yes";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.STOP, pmsg.Type);
+        }
     }
 }
