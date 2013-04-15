@@ -27,7 +27,6 @@ namespace t2sBackend
             this.messageController = messageController;
             this.service = Service;
             this.idbController = idbController;
-            ScanForPlugins();
         }
 
 
@@ -45,14 +44,6 @@ namespace t2sBackend
             {
                 _Running = value;
             }
-        }
-
-        /// <summary>
-        /// Don't do until LUA Plugins
-        /// </summary>
-        private static void ScanForPlugins()
-        {
-            return;
         }
 
         /// <summary>
