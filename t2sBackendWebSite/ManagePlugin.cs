@@ -22,7 +22,37 @@ namespace managePlug
 
         public void updatePlugin_Click(Object sender, EventArgs e)
         {
+            String pluginName=Request["pluginNameBox"];
+            String pluginOwner = Request["pluginOwner"];
+            String helptext = Request["helpTextBox"];
+            String plugDescrip = Request["pluginDescripationBox"];
+            String version = Request["versionBox"];
+            SqlController control = new SqlController();
+            try
+            {
+                //TODO
+                //check session user id to make sure they are the owner of plugin
+                PluginDAO plugin = control.RetrievePlugin(pluginName);
+                if(!plugin.Description.Equals("")){
+                    plugin.Description = plugDescrip;
+                }
+                if(!plugin.VersionNum.Equals("")){
+                    plugin.VersionNum = version;
+                }if(plugin.HelpText.Equals("")){
+                    plugin.HelpText = helptext;
+                }
+                //plugin.OwnerID = control.RetrieveUserByUserName(pluginOwner).UserID;
+                control.UpdatePluginOwner(plugin, control.RetrieveUserByUserName(pluginOwner));
+                control.UpdatePlugin(plugin);
+            }
+            catch (CouldNotFindException error)
+            {
 
+            }
+            catch (ArgumentNullException error)
+            {
+
+            }
 
         }
 

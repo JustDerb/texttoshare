@@ -16,9 +16,9 @@
         <asp:textbox id="versionBox" placeholder="VersionNumber" runat="server"></asp:textbox>
         <asp:button id="updatePluginButton" text="Update Plugin" Onclick="updatePlugin_Click" runat="server"></asp:button>
         <!--<asp:DropDownList-->
-        <asp:DropDownList id="ddlPlugin" runat="server" onload="popluateList" >
+        <!--<asp:DropDownList id="ddlPlugin" runat="server" onload="popluateList" >
             <asp:ListItem Text="<Select Plugin>" Value="0" />
-        </asp:DropDownList>
+        </asp:DropDownList>-->
 
     <div>
     
