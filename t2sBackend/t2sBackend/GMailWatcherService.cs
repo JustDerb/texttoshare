@@ -6,6 +6,7 @@ using System.Net.Mail;
 using S22.Imap;
 using t2sDbLibrary;
 using System.Net;
+using System.IO;
 
 namespace t2sBackend
 {
@@ -143,6 +144,30 @@ namespace t2sBackend
         {
             // Download the message (Set as seen)
             MailMessage msg = this.ImapConnection.GetMessage(MessageUID, true);
+            
+            // Side case for iPhones/"Smart Phones"
+            if (msg.Attachments.Count > 0)
+            {
+                foreach (Attachment a in msg.Attachments) 
+                {
+                    // Only get text files
+                    if (a.ContentType.MediaType.Equals("text/plain", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Stream dataStream = a.ContentStream;
+                        byte[] dataBuffer = new byte[dataStream.Length];
+                        dataStream.Position = 0;
+                        dataStream.Read(dataBuffer, 0, dataBuffer.Length);
+                        String textData = Encoding.ASCII.GetString(dataBuffer);
+                        // Do it twice in-case theres a different order
+                        textData = textData.TrimEnd('\r');
+                        textData = textData.TrimEnd('\n');
+                        textData = textData.TrimEnd('\r');
+                        textData = textData.TrimEnd('\n');
+
+                        msg.Body += textData;
+                    }
+                }
+            }
 
             Console.WriteLine(msg.Body);
 
