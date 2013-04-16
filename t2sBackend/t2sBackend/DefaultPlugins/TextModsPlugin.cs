@@ -20,7 +20,9 @@ namespace t2sBackend
         {
             Message msg = new Message();
             msg.FullMessage = message.ContentMessage;
+
             Message msgSender = new Message();
+            msgSender.Reciever.Add(message.Sender.PhoneEmail);
             foreach (UserDAO u in message.Group.Moderators)
             {
                 if (!u.Equals(message.Sender) && !u.IsBanned && !u.IsSuppressed)
