@@ -16,7 +16,7 @@ namespace codebehind
     public class RegisterUser : Page
     {
         public RegisterUser()
-        { 
+        {
         }
 
 
@@ -31,23 +31,31 @@ namespace codebehind
         /// <param name="e"></param>
         public void Register_Click(Object sender, EventArgs e)
         {
-           // MyLabel.Text = FirstTextBox.Text.ToString();
+            // MyLabel.Text = FirstTextBox.Text.ToString();
             SqlController controller = new SqlController();
             UserDAO user = new UserDAO();
-           //grab input from textboxs
+            //grab input from textboxs
             String firstName = Request["firstNameBox"];
             String lastName = Request["lastNameBox"];
             String phoneNumber = Request["PhoneNumberBox"];
             String phoneCarrier = Request["CarrierBox"];
             String password = Request["passwordBox"];
+            String verifyPassword = Request["verifyPasswordBox"];
             String userName = Request["userNameBox"];
-           
-           //set fields of the userDAO
+
+            if (!password.Equals(verifyPassword))
+            {
+                Response.Write("The passwords you entered do not match. Please try again.");
+                return;
+            }
+
+            //set fields of the userDAO
             user.UserName = userName;
             user.FirstName = firstName;
             user.LastName = lastName;
             user.PhoneNumber = phoneNumber;
-            //to be be able to retrieve from database correct carrier ending
+
+            // TODO: need to be able to retrieve from database correct carrier ending
             user.PhoneEmail = phoneNumber + "@txt.att.com";
             user.IsBanned = false;
             user.IsSuppressed = false;
@@ -92,7 +100,7 @@ namespace codebehind
             String phoneCarrier = Request["rCarrierBox"];
             String password = Request["rPasswordBox"];
             String userName = Request["rUserNameBox"];
-           
+
 
         }
 
