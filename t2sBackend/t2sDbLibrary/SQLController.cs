@@ -688,7 +688,7 @@ namespace t2sDbLibrary
                 queryBuilder.Append("SELECT u.id, u.username, u.first_name, u.last_name, u.phone, u.email_phone, u.carrier, u.user_level, u.banned, u.suppressed, gm.group_level ");
                 queryBuilder.Append("FROM users u ");
                 queryBuilder.Append("INNER JOIN groupmembers gm ON u.id = gm.user_id ");
-                queryBuilder.Append("WHERE gm.group_id = 2 ");
+                queryBuilder.Append("WHERE gm.group_id = @groupid ");
                 queryBuilder.Append("AND u.suppressed = 0;");
 
                 query.CommandText = queryBuilder.ToString();
