@@ -23,12 +23,12 @@ namespace t2sBackend
             if (message.Arguments.Count > 0 && message.Arguments[0].Substring(0, 3).ToUpper().Equals("OFF"))
             {
                 controller.UnsuppressUser(message.Sender);
-                msgSender.FullMessage = "You have been unsupressed and can now receive messages. To supress yourself, please reply SUPRESS to disable messages.";
+                msgSender.FullMessage = "You have been unsuppressed and can now receive messages. To suppress yourself, please reply SUPPRESS to disable messages.";
             }
             else
             {
                 controller.SuppressUser(message.Sender);
-                msgSender.FullMessage = "You have been suppressed. If you would like to unsupress yourself, please reply SUPRESS OFF to remove.";
+                msgSender.FullMessage = "You have been suppressed. If you would like to unsuppress yourself, please reply SUPPRESS OFF to remove.";
             }
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
             service.SendMessage(msgSender);

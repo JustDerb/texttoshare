@@ -218,7 +218,7 @@ namespace t2sBackend
             {"ERROR".ToUpperInvariant(), new ErrorPlugin()}, {"TEXTUSER".ToUpperInvariant(), new TextUserPlugin()},
             {"TEXTGROUP".ToUpperInvariant(), new TextGroupPlugin()}, {"LISTPLUGINS".ToUpperInvariant(), new ListEnabledPlugins()},
             {"REMOVEUSER".ToUpperInvariant(), new RemoveUserPlugin()}, {"TEXTMODS".ToUpperInvariant(), new TextModsPlugin()},
-            {"SUPRESS".ToUpperInvariant(), new SuppressPlugin()}
+            {"SUPPRESS".ToUpperInvariant(), new SuppressPlugin()}
         });
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.

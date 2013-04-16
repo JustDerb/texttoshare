@@ -541,7 +541,7 @@ namespace t2sBackendTest
 
         [TestCategory("MessageParser")]
         [TestMethod]
-        public void TextStop_Supressed()
+        public void TextStop_Suppressed()
         {
             this._user1.IsSuppressed = true;
 
@@ -572,7 +572,7 @@ namespace t2sBackendTest
 
         [TestCategory("MessageParser")]
         [TestMethod]
-        public void TextStopYes_Supressed()
+        public void TextStopYes_Suppressed()
         {
             this._user1.IsSuppressed = true;
 
@@ -606,7 +606,7 @@ namespace t2sBackendTest
         public void TextSuppress_NotSuppressed()
         {
             // Set our variables for testing
-            String command = "SURPRESS";
+            String command = "suppress";
             String group = "";
             String args = "";
             String[] argsArr = new string[0];
@@ -635,7 +635,7 @@ namespace t2sBackendTest
         public void TextSuppressWithGroup_NotSuppressed()
         {
             // Set our variables for testing
-            String command = "SURPRESS";
+            String command = "suppress";
             String group = this._group.GroupTag;
             String args = "";
             String[] argsArr = new string[0];
@@ -664,7 +664,7 @@ namespace t2sBackendTest
         public void TextSuppressWithGroupArgs_NotSuppressed()
         {
             // Set our variables for testing
-            String command = "SURPRESS";
+            String command = "suppress";
             String group = this._group.GroupTag;
             String args = "THIS IS MANY ARGUMENTS";
             String[] argsArr = args.Split(' ');
@@ -695,7 +695,7 @@ namespace t2sBackendTest
             this._user1.IsSuppressed = true;
 
             // Set our variables for testing
-            String command = "SURPRESS";
+            String command = "suppress";
             String group = "";
             String args = "";
             String[] argsArr = new string[0];
@@ -726,7 +726,7 @@ namespace t2sBackendTest
             this._user1.IsSuppressed = true;
 
             // Set our variables for testing
-            String command = "SURPRESS";
+            String command = "suppress";
             String group = this._group.GroupTag;
             String args = "";
             String[] argsArr = new string[0];
@@ -757,7 +757,7 @@ namespace t2sBackendTest
             this._user1.IsSuppressed = true;
 
             // Set our variables for testing
-            String command = "SURPRESS";
+            String command = "suppress";
             String group = this._group.GroupTag;
             String args = "THIS IS MANY ARGUMENTS";
             String[] argsArr = args.Split(' ');

@@ -312,10 +312,10 @@ namespace t2sBackend
         /// Does simple syntax checking of a LUA plugin.  NOTE: Doe not find runtime errors!
         /// </summary>
         /// <param name="code">Code to compile</param>
-        /// <param name="surpressExceptions">Set to false if you would like to see 
+        /// <param name="suppressExceptions">Set to false if you would like to see 
         /// the exception thrown, good for debugging</param>
         /// <returns>True if compiling to bytecode is successful</returns>
-        public static Boolean canCompile(String code, Boolean surpressExceptions = true)
+        public static Boolean canCompile(String code, Boolean suppressExceptions = true)
         {
             Lua tempLua = null;
             try
@@ -325,7 +325,7 @@ namespace t2sBackend
             }
             catch (Exception ex)
             {
-                if (surpressExceptions)
+                if (suppressExceptions)
                     return false;
                 else
                     throw ex;
