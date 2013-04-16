@@ -29,7 +29,18 @@ namespace t2sBackend
             set;
         }
 
-        public Message() : this("", new List<string>(), "")
+        public Message()
+            : this(null, new string[0], "")
+        {
+        }
+
+        public Message(List<string> Reciever, string Message)
+            : this(null, Reciever, Message)
+        {
+        }
+
+        public Message(string[] Reciever, string Message)
+            : this(null, Reciever, Message)
         {
         }
 
