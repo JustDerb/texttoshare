@@ -1712,13 +1712,17 @@ namespace t2sDbLibrary
                 queryBuilder.Append("end \n");
                 queryBuilder.Append("else \n");
                 queryBuilder.Append("begin \n");
-                queryBuilder.Append("   insert pluginkeyvalue (plugin_id, key_string, value_object) \n");
-                queryBuilder.Append("   values (@pluginid, @keystring, @valueobj) \n");
+                queryBuilder.Append("   insert pluginkeyvalue (plugin_id, user_id, key_string, value_object) \n");
+                queryBuilder.Append("   values (@pluginid, @userid, @keystring, @valueobj) \n");
                 queryBuilder.Append("end \n");
                 queryBuilder.Append("commit tran \n");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@pluginid", plugin.PluginID.Value);
+                if (forUser == null)
+                    query.Parameters.AddWithValue("@userid", null);
+                else
+                    query.Parameters.AddWithValue("@userid", forUser.UserID.Value);
                 query.Parameters.AddWithValue("@keystring", key);
                 query.Parameters.AddWithValue("@valueobj", value);
 
@@ -1746,10 +1750,15 @@ namespace t2sDbLibrary
                 queryBuilder.Append("SELECT value_object ");
                 queryBuilder.Append("FROM pluginkeyvalue ");
                 queryBuilder.Append("WHERE plugin_id = @pluginid ");
+                queryBuilder.Append(" AND user_id = @userid ");
                 queryBuilder.Append(" AND key_string = @keystring ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@pluginid", plugin.PluginID.Value);
+                if (forUser == null)
+                    query.Parameters.AddWithValue("@userid", null);
+                else
+                    query.Parameters.AddWithValue("@userid", forUser.UserID.Value);
                 query.Parameters.AddWithValue("@keystring", key);
 
                 conn.Open();
