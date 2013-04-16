@@ -67,7 +67,7 @@ namespace t2sBackend
                         rng.GetBytes(bytes);
                         hash = BitConverter.ToString(bytes);
                     }
-                    while (!LuaScriptingEngine.register.ContainsKey(hash));
+                    while (LuaScriptingEngine.register.ContainsKey(hash));
                 }
             }
 
@@ -140,11 +140,11 @@ namespace t2sBackend
             sb.Append(@"function " + userFriendlyName + " (" + paramString + ") \n");
             if (parameters.Length > 0)
             {
-                sb.Append(@"    return " + name + "(" + hashVarName + ", " + paramString + ") \n");
+                sb.Append(@"    return " + name + "(\"" + hashVarName + "\", " + paramString + ") \n");
             }
             else
             {
-                sb.Append(@"    return " + name + "(" + hashVarName + ") \n");
+                sb.Append(@"    return " + name + "(\"" + hashVarName + "\") \n");
             }
             sb.Append(@"end \n");
             return sb.ToString();
