@@ -208,15 +208,16 @@ namespace t2sBackend
         public static String getLuaScriptLocation(String name)
         {
             // TODO - Make this more elegant and use a File object
+            String basePath = LUADefinitions.LuaScriptLocation.Trim().TrimEnd('\\');
             if (name == null)
-                return LUADefinitions.LuaScriptLocation;
+                return basePath;
             name = name.Trim();
             if (name.Equals(String.Empty))
-                return LUADefinitions.LuaScriptLocation;
-            else if (name.StartsWith("/") || name.StartsWith("\\"))
-                return LUADefinitions.LuaScriptLocation + name;
+                return basePath;
+            else if (name.StartsWith(@"/") || name.StartsWith(@"\"))
+                return basePath + name;
             else
-                return LUADefinitions.LuaScriptLocation + "\\" + name;
+                return basePath + @"\" + name;
         }
 
         ~LUAPlugin()
