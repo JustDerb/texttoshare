@@ -91,6 +91,8 @@ namespace manageGroup
         {
             try
             {
+                //TODO
+                //need to get groupid from session
                 SqlController controller = new SqlController();
                 GroupDAO group = controller.RetrieveGroup(Request["groupTagBox"]);
                 List<PluginDAO> plugins = controller.GetAllEnabledGroupPlugins(group.GroupID);
@@ -111,6 +113,82 @@ namespace manageGroup
         }
 
 
+
+        public void unEnablePlugin_Click(Object sender, EventArgs e)
+        {
+            //TODO
+            //remove from dropdown
+            SqlController control = new SqlController();
+            DropDownList unEnable = ((DropDownList)((DropDownList)sender).Parent.FindControl("unEnable"));
+            ListItem plugin = unEnable.SelectedItem;
+            String pluginName = plugin.Text;
+            try
+            {
+                PluginDAO toUnEnable = control.RetrievePlugin(pluginName);
+                try
+                {
+                    GroupDAO group = control.RetrieveGroup(Request["groupTagBox"]);
+                    control.DisablePluginForGroup(group.GroupID, toUnEnable.PluginID);
+                }
+                catch (ArgumentNullException)
+                {
+
+                }
+                catch (CouldNotFindException)
+                {
+
+                }
+
+            }
+            catch (ArgumentNullException error)
+            {
+
+            }
+            catch (CouldNotFindException error)
+            {
+
+            }
+        }
+
+
+
+
+        public void enablePlugin(Object sender, EventArgs e)
+        {
+            //TOOD
+            //add to other dropdown list
+            SqlController control = new SqlController();
+            DropDownList enabledPlugins = ((DropDownList)((DropDownList)sender).Parent.FindControl("enabledPlugins"));
+            ListItem plugin = enabledPlugins.SelectedItem;
+            String pluginName = plugin.Text;
+            try
+            {
+                PluginDAO toEnable = control.RetrievePlugin(pluginName);
+                try
+                {
+                    GroupDAO group = control.RetrieveGroup(Request["groupTagBox"]);
+                    control.EnablePluginForGroup(group.GroupID, toEnable.PluginID);
+                }
+                catch (ArgumentNullException)
+                {
+
+                }
+                catch (CouldNotFindException)
+                {
+
+                }
+                
+            }
+            catch (ArgumentNullException error)
+            {
+
+            }
+            catch (CouldNotFindException error)
+            {
+
+            }
+
+        }
 
     }
 
