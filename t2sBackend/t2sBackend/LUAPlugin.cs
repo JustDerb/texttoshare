@@ -140,7 +140,11 @@ namespace t2sBackend
         /// <summary>
         /// Engine that is used to run the script
         /// </summary>
-        protected Lua LuaEngine;
+        public Lua LuaEngine
+        {
+            get;
+            protected set;
+        }
 
         /// <summary>
         /// File location of the script to run
@@ -282,7 +286,7 @@ namespace t2sBackend
                 CreateDAOObjects(message.Group, message.Sender);
 
                 // Register our plugin so we can call C# methods
-                engineHash = LuaScriptingEngine.registerPlugin(this, service, controller, this.LuaEngine);
+                engineHash = LuaScriptingEngine.registerPlugin(this, message, service, controller, this.LuaEngine);
 
                 // Run the script
                 this.LuaEngine.DoFile(this.ScriptFileLoc);

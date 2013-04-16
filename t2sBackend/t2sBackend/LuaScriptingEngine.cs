@@ -20,6 +20,9 @@ namespace t2sBackend
             public LUAPlugin plugin;
             public AWatcherService service;
             public IDBController controller;
+            public ParsedMessage message;
+            public Dictionary<String, UserDAO> hashToUser;
+            public Dictionary<UserDAO, String> userToHash;
         }
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace t2sBackend
         /// <param name="service"></param>
         /// <param name="controller"></param>
         /// <returns></returns>
-        public static String registerPlugin(LUAPlugin plugin, AWatcherService service, IDBController controller, Lua pluginEngine = null)
+        public static String registerPlugin(LUAPlugin plugin, ParsedMessage message, AWatcherService service, IDBController controller, Lua pluginEngine = null)
         {
             if (plugin == null ||
                 service == null ||
@@ -76,6 +79,25 @@ namespace t2sBackend
             container.plugin = plugin;
             container.service = service;
             container.controller = controller;
+            container.message = message;
+            container.hashToUser = new Dictionary<string, UserDAO>();
+            container.userToHash = new Dictionary<UserDAO, string>();
+            // Populate our tables
+            foreach (UserDAO user in message.Group.Users)
+            {
+                String userHash = generateUniqueHash<UserDAO>(container.hashToUser);
+                container.hashToUser.Add(userHash, user);
+                container.userToHash.Add(user, userHash);
+            }
+            foreach (UserDAO user in message.Group.Moderators)
+            {
+                String modHash = generateUniqueHash<UserDAO>(container.hashToUser);
+                container.hashToUser.Add(modHash, user);
+                container.userToHash.Add(user, modHash);
+            }
+            String ownerHash = generateUniqueHash<UserDAO>(container.hashToUser);
+            container.hashToUser.Add(ownerHash, message.Group.Owner);
+            container.userToHash.Add(message.Group.Owner, ownerHash);
 
             lock (registerLock)
             {

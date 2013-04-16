@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LuaInterface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -62,11 +63,73 @@ namespace t2sBackend
             return user;
         }
 
+        /// <summary>
+        /// Doc: http://stackoverflow.com/questions/14299634/luainterface-a-function-which-will-return-a-luatable-value
+        /// </summary>
+        /// <param name="dict"></param>
+        /// <param name="lua"></param>
+        /// <returns></returns>
+        private static LuaTable ToLuaTable(Dictionary<String, String> dict, Lua lua)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("return {");
+            bool first = true;
+            foreach (KeyValuePair<String, String> keyValue in dict) 
+            {
+                if (!first)
+                    sb.Append(", ");
+                sb.Append("\"");
+                sb.Append(keyValue.Key.Replace("\"", "\\\""));
+                sb.Append("\" = \"");
+                sb.Append(keyValue.Value.Replace("\"", "\\\""));
+                sb.Append("\"");
+
+                if (first)
+                    first = false;
+            }
+            sb.Append("} \n");
+            LuaTable table = (LuaTable)lua.DoString(sb.ToString())[0];
+            return table;
+        }
+
+        /// <summary>
+        /// Doc: http://stackoverflow.com/questions/14299634/luainterface-a-function-which-will-return-a-luatable-value
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="lua"></param>
+        /// <returns></returns>
+        private static LuaTable ToLuaTable(List<String> list, Lua lua)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("return {");
+            bool first = true;
+            int index = 1;
+            foreach (String value in list)
+            {
+                if (!first)
+                    sb.Append(", ");
+                sb.Append(index);
+                sb.Append(" = \"");
+                sb.Append(value.Replace("\"", "\\\""));
+                sb.Append("\"");
+
+                if (first)
+                    first = false;
+            }
+            sb.Append("} \n");
+            LuaTable table = (LuaTable)lua.DoString(sb.ToString())[0];
+            return table;
+        }
+
         #region "LUA C# Callbacks"
 
         public static readonly Dictionary<String, MethodBase> LuaCallbacks = new Dictionary<string, MethodBase>()
         {
-            {"SendMessage", typeof(LUAAPI).GetMethod("__SendMessage")}
+            {"DebugPrint", typeof(LUAAPI).GetMethod("__DebugPrint")},
+            {"SendMessage", typeof(LUAAPI).GetMethod("__SendMessage")},
+            {"GetUserIdList", typeof(LUAAPI).GetMethod("__GetUserIdList")},
+            {"GetModeratorIdList", typeof(LUAAPI).GetMethod("__GetModeratorIdList")},
+            {"GetOwnerId", typeof(LUAAPI).GetMethod("__GetOwnerId")}
         };
 
         #endregion
@@ -76,6 +139,43 @@ namespace t2sBackend
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
             Message msg = new Message(new string[1] { to }, message);
             container.service.SendMessage(msg);
+        }
+
+        public static LuaTable __GetUserIdList(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            List<string> userIds = new List<string>();
+            foreach (UserDAO user in container.message.Group.Users)
+            {
+                userIds.Add(container.userToHash[user]);
+            }
+
+            return ToLuaTable(userIds, container.plugin.LuaEngine);
+        }
+
+        public static LuaTable __GetModeratorIdList(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            List<string> userIds = new List<string>();
+            foreach (UserDAO user in container.message.Group.Moderators)
+            {
+                userIds.Add(container.userToHash[user]);
+            }
+
+            return ToLuaTable(userIds, container.plugin.LuaEngine);
+        }
+
+        public static string __GetOwnerId(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            String ownerHash = container.userToHash[container.message.Group.Owner];
+            return ownerHash;
+        }
+
+        public static void __DebugPrint(String hash, String debugMessage)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            Console.Out.WriteLine(container.plugin.PluginDAO.Name + ": " + debugMessage);
         }
     }
 }
