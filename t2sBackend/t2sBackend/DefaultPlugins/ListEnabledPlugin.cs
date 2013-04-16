@@ -20,14 +20,31 @@ namespace t2sBackend
         public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
             Message msg = new Message();
+            StringBuilder fullMsg = new StringBuilder();
+            bool isModerator = message.Group.Moderators.Contains(message.Sender);
+            bool isOwner = message.Group.Owner.Equals(message.Sender);
+
+            // Put the group tag for
+            fullMsg.Append(message.Group.GroupTag);
+            fullMsg.Append(": \n");
+
+            bool first = true;
             foreach (PluginDAO d in message.Group.EnabledPlugins)
             {
-                if ((d.Access == PluginAccess.STANDARD || (d.Access == PluginAccess.MODERATOR && 
-                    (message.Group.Moderators.Contains(message.Sender) || message.Group.Owner.Equals(message.Sender)))) && !d.Name.Equals("Error"))
+                if (d.Access == PluginAccess.STANDARD ||
+                    (d.Access == PluginAccess.MODERATOR && (isModerator || isOwner)))
                 {
-                    msg.FullMessage += d.Name + " ";
+                    if (!d.Name.Equals("error", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!first)
+                            fullMsg.Append(", ");
+                        // Make it look pretty
+                        fullMsg.Append(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(d.Name.ToLower()));
+                        first = false;
+                    }
                 }
             }
+            msg.FullMessage = fullMsg.ToString();
             msg.Reciever.Add(message.Sender.PhoneEmail);
             service.SendMessage(msg);
         }
