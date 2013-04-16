@@ -45,24 +45,23 @@ namespace t2sBackend
             {"unpack", true},
             {"_VERSION", true},
             {"xpcall", true},
-            {"coroutine", false},
             {"coroutine.create", true},
             {"coroutine.resume", true},
             {"coroutine.running", true},
             {"coroutine.status", true},
             {"coroutine.wrap", true},
             {"coroutine.yield", true},
+            {"coroutine", false},
             {"module", false},
             {"require", false},
+            //{"package.*", false},
             {"package", false},
-            {"package.*", false},
-            {"package.loaded", false},
-            {"package.loaders", false},
-            {"package.loadlib", false},
-            {"package.path/package.cpath", false},
-            {"package.preload", false},
-            {"package.seeall", false},
-            {"string", false},
+            //{"package.loaded", false},
+            //{"package.loaders", false},
+            //{"package.loadlib", false},
+            //{"package.path/package.cpath", false},
+            //{"package.preload", false},
+            //{"package.seeall", false},
             {"string.byte", true},
             {"string.char", true},
             {"string.dump", false},
@@ -77,12 +76,12 @@ namespace t2sBackend
             {"string.reverse", true},
             {"string.sub", true},
             {"string.upper", true},
-            {"table", false},
+            {"string", false},
             {"table.insert", true},
             {"table.maxn", true},
             {"table.remove", true},
             {"table.sort", true},
-            {"math", false},
+            {"table", false},
             {"math.abs", true},
             {"math.acos", true},
             {"math.asin", true},
@@ -113,13 +112,13 @@ namespace t2sBackend
             {"math.sqrt", true},
             {"math.tan", true},
             {"math.tanh", true},
+            {"math", false},
+            //{"io.*", false},
+            //{"io.read", true},
+            //{"io.write", true},
+            //{"io.flush", true},
+            //{"io.type", true},
             {"io", false},
-            {"io.*", false},
-            {"io.read", true},
-            {"io.write", true},
-            {"io.flush", true},
-            {"io.type", true},
-            {"os", false},
             {"os.clock", true},
             {"os.date", false},
             {"os.difftime", true},
@@ -131,8 +130,9 @@ namespace t2sBackend
             {"os.setlocale", false},
             {"os.time", true},
             {"os.tmpname", false},
+            {"os", false},
+            //{"debug.*", false},
             {"debug", false},
-            {"debug.*", false},
             {"newproxy", false}
             #endregion
         };
@@ -249,13 +249,15 @@ namespace t2sBackend
 
         public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
-            // Register our plugin so we can call C# methods
-            String engineHash = LuaScriptingEngine.registerPlugin(this, service, controller, this.LuaEngine);
+            String engineHash = null;
 
             try
             {
                 // Get to a clean state
                 loadNewLuaEngine();
+
+                // Register our plugin so we can call C# methods
+                engineHash = LuaScriptingEngine.registerPlugin(this, service, controller, this.LuaEngine);
 
                 // Run the script
                 this.LuaEngine.DoFile(this.ScriptFileLoc);
@@ -266,7 +268,8 @@ namespace t2sBackend
             }
             finally
             {
-                LuaScriptingEngine.unregisterPlugin(engineHash);
+                if (engineHash != null)
+                    LuaScriptingEngine.unregisterPlugin(engineHash);
             }
 
         }
