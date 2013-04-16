@@ -247,7 +247,7 @@ namespace t2sBackendTest
         public void DeleteNonExistingUserShouldNotChangeDatabase()
         {
             _user1.UserID = -1;
-            Assert.IsFalse(_controller.DeleteUser(_user1), "There was a user with an invalid ID already in the database.");
+            Assert.IsFalse(_controller.DeleteUser(_user1, false), "There was a user with an invalid ID already in the database.");
         }
 
         [TestCategory("SqlController.User")]
@@ -255,7 +255,7 @@ namespace t2sBackendTest
         public void DeleteUserShouldUpdateDatabase()
         {
             _controller.CreateUser(_user1, "password");
-            Assert.IsTrue(_controller.DeleteUser(_user1), "Test user was not deleted from the database.");
+            Assert.IsTrue(_controller.DeleteUser(_user1, false), "Test user was not deleted from the database.");
         }
 
         [TestCategory("SqlController.User")]
@@ -266,10 +266,10 @@ namespace t2sBackendTest
             _controller.CreateUser(_user2, "password");
 
             int count = 2;
-            _controller.DeleteUser(_user1);
+            _controller.DeleteUser(_user1, false);
             if (!_controller.UserExists(_user1.UserName, _user1.PhoneEmail)) --count;
             
-            _controller.DeleteUser(_user1);
+            _controller.DeleteUser(_user1, false);
             if (!_controller.UserExists(_user1.UserName, _user1.PhoneEmail)) --count;
 
             Assert.AreEqual(0, count, "Not all test users were deleted from the database.");
@@ -278,8 +278,8 @@ namespace t2sBackendTest
         [TestCleanup]
         public void TearDown()
         {
-            if (null != _user1.UserID) _controller.DeleteUser(_user1);
-            if (null != _user2.UserID) _controller.DeleteUser(_user2);
+            if (null != _user1.UserID) _controller.DeleteUser(_user1, false);
+            if (null != _user2.UserID) _controller.DeleteUser(_user2, false);
 
             using (SqlConnection conn = new SqlConnection(SqlController.CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
