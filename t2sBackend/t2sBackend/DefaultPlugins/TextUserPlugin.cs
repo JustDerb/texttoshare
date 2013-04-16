@@ -19,7 +19,12 @@ namespace t2sBackend
         public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
             Message msgReceiver = new Message();
-            msgReceiver.FullMessage = message.ContentMessage;
+            String msgToSend = "";
+            for (int i = 1; i < message.Arguments.Count; i++)
+            {
+                msgToSend += message.Arguments[i];
+            }
+            msgReceiver.FullMessage = msgToSend;
 
             Message msgSender = new Message();
 
@@ -27,7 +32,7 @@ namespace t2sBackend
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
 
 
-            if (receiver == null || receiver.IsBanned)
+            if (!message.Group.Users.Contains(receiver) || receiver == null || receiver.IsBanned)
             {
                 msgSender.FullMessage = "Not a valid user. Please check their username and retry.";
                 service.SendMessage(msgSender);
