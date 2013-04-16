@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -212,13 +213,13 @@ namespace t2sBackend
             }
         }
 
-        private readonly static Dictionary<string, IPlugin> defaultPlugins = new Dictionary<string, IPlugin>()
+        public readonly static ReadOnlyDictionary<string, IPlugin> defaultPlugins = new ReadOnlyDictionary<string, IPlugin>(new Dictionary<string, IPlugin>()
         {
             {"ERROR".ToUpperInvariant(), new ErrorPlugin()}, {"TEXTUSER".ToUpperInvariant(), new TextUserPlugin()},
             {"TEXTGROUP".ToUpperInvariant(), new TextGroupPlugin()}, {"LISTPLUGINS".ToUpperInvariant(), new ListEnabledPlugins()},
             {"REMOVEUSER".ToUpperInvariant(), new RemoveUserPlugin()}, {"TEXTMODS".ToUpperInvariant(), new TextModsPlugin()},
             {"SUPRESS".ToUpperInvariant(), new SuppressPlugin()}
-        };
+        });
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
         private static string INVALID_GROUP_MESSAGE = "Invalid group. Please check your message and try again.";
