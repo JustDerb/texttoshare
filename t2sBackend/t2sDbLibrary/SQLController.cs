@@ -1644,6 +1644,39 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Gets a list of plugins that are owned by the given user.
+        /// </summary>
+        /// <param name="user">The user to retrieve a list of owned plugins for.</param>
+        /// <returns>A list containing the plugins owned by the user. If the user does not own any plugins, the list will return empty.</returns>
+        public List<PluginDAO> GetPluginsOwnedByUser(UserDAO user)
+        {
+            if (null == user || null == user.UserID) throw new ArgumentNullException("Cannot get plugins for null owner");
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT id, name, description, disabled, version_num, owner_id, plugin_access, help_text ");
+                queryBuilder.Append("FROM plugins ");
+                queryBuilder.Append("WHERE owner_id = @ownerid ");
+                query.CommandText = "";
+
+                query.Parameters.AddWithValue("@ownerid", user.UserID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<PluginDAO> plugins = new List<PluginDAO>();
+                while (reader.Read())
+                {
+                    plugins.Add(BuildPluginDAO(reader));
+                }
+
+                return plugins;
+            }
+        }
+
         #endregion
 
         #region PairEntries Getter/Setter actions
@@ -1772,6 +1805,11 @@ namespace t2sDbLibrary
         public bool RegisterUser(UserDAO user, string password)
         {
             return CreateUser(user, password);
+        }
+
+        public bool SetVerificationCodeForUser(string verificationCode, UserDAO user)
+        {
+            return false;
         }
 
         #endregion

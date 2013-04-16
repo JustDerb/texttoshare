@@ -355,6 +355,13 @@ namespace t2sDbLibrary
         bool UpdatePluginOwner(PluginDAO plugin, UserDAO newOwner);
 
         /// <summary>
+        /// Gets a list of plugins that are owned by the given user.
+        /// </summary>
+        /// <param name="user">The user to retrieve a list of owned plugins for.</param>
+        /// <returns>A list containing the plugins owned by the user. If the user does not own any plugins, the list will return empty.</returns>
+        List<PluginDAO> GetPluginsOwnedByUser(UserDAO user);
+
+        /// <summary>
         /// Gets the associated value for the given key entry.
         /// </summary>
         /// <param name="keyEntry">The key entry to search for.</param>
