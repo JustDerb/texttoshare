@@ -214,7 +214,7 @@ namespace t2sBackend
         private readonly static Dictionary<string, IPlugin> defaultPlugins = new Dictionary<string, IPlugin>()
         {
             {"ERROR".ToUpperInvariant(), new ErrorPlugin()}, {"TEXTUSER".ToUpperInvariant(), new TextUserPlugin()},
-            {"TEXTGROUP".ToUpperInvariant(), new TextGroupPlugin()}
+            {"TEXTGROUP".ToUpperInvariant(), new TextGroupPlugin()}, {"LISTPLUGINS".ToUpperInvariant(), new ListEnabledPlugins()}
         };
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
