@@ -19,6 +19,7 @@ namespace t2sBackend
         public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
             Message msgSender = new Message();
+            msgSender.Reciever.Add(message.Sender.PhoneEmail);
             Message msgRemovedUser = new Message();
             try
             {
@@ -30,11 +31,12 @@ namespace t2sBackend
                 }
                 else
                 {
+                    msgRemovedUser.Reciever.Add(userToBeRemoved.PhoneEmail);
                     controller.RemoveMemberFromGroup(message.Group.GroupID, userToBeRemoved.UserID);
                     msgSender.FullMessage = "Successfully removed " + message.ContentMessage + " from the group "
-                        + message.Group.GroupID + ".";
-                    msgRemovedUser.FullMessage = "You have been removed from group " + message.Group.GroupID + ".";
-                    msgRemovedUser.Reciever.Add(userToBeRemoved.PhoneEmail);
+                        + message.Group.Name + ".";
+                    msgRemovedUser.FullMessage = "You have been removed from group " + message.Group.Name + ".";
+                    service.SendMessage(msgRemovedUser);
                 }
             }
             catch (Exception)
