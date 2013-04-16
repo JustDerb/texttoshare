@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,10 +62,20 @@ namespace t2sBackend
             return user;
         }
 
+        #region "LUA C# Callbacks"
+
+        public static readonly Dictionary<String, MethodBase> LuaCallbacks = new Dictionary<string, MethodBase>()
+        {
+            {"SendMessage", typeof(LUAAPI).GetMethod("__SendMessage")}
+        };
+
+        #endregion
+
         public static void __SendMessage(String hash, String to, String message)
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
-            
+            Message msg = new Message(new string[1] { to }, message);
+            container.service.SendMessage(msg);
         }
     }
 }

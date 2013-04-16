@@ -165,7 +165,7 @@ namespace t2sBackend
         /// </summary>
         /// <param name="plugin">Plugin object to construct this object against</param>
         public LUAPlugin(PluginDAO plugin) 
-            : this(plugin, LUAPlugin.getLuaScriptLocation(plugin.Name))
+            : this(plugin, plugin.Name)
         {
             // Pass to more defined constructor
         }
@@ -182,20 +182,25 @@ namespace t2sBackend
             {
                 throw new ArgumentNullException();
             }
+
+
             // Make sure we are using the file extension
             script = script.Trim();
             if (!script.EndsWith(LUADefinitions.LuaExtension))
             {
                 script += LUADefinitions.LuaExtension;
             }
+
+            this.ScriptFileLoc = getLuaScriptLocation(script);
+
             // See if it's there
-            if (!File.Exists(script))
+            if (!File.Exists(this.ScriptFileLoc))
             {
-                throw new ArgumentException("Cannot find file " + script);
+                throw new ArgumentException("Cannot find file " + this.ScriptFileLoc);
             }
             
             this.PluginDAO      = plugin;
-            this.ScriptFileLoc  = getLuaScriptLocation(script);
+            
             // Store sandbox code in a variable so we only call it once
             this.SandboxLuaCode = GetSandBoxCode();
         }
@@ -269,7 +274,10 @@ namespace t2sBackend
             finally
             {
                 if (engineHash != null)
-                    LuaScriptingEngine.unregisterPlugin(engineHash);
+                {
+                    if (!LuaScriptingEngine.unregisterPlugin(engineHash))
+                        Logger.LogMessage("LUAPlugin.Run: Couldn't unregister plugin! (" + this.PluginDAO.Name + ")", LoggerLevel.SEVERE);
+                }
             }
 
         }

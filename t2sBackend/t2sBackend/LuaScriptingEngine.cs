@@ -11,14 +11,6 @@ namespace t2sBackend
 {
     public static class LuaScriptingEngine
     {
-        #region "LUA C# Callbacks"
-
-        private static Dictionary<String, MethodBase> LuaCallbacks = new Dictionary<string, MethodBase>()
-        {
-            {"sendMessage", typeof(LUAAPI).GetMethod("SendMessage")}
-        };
-
-        #endregion
 
         /// <summary>
         /// Conatainer to hold all our information that we need for 
@@ -82,7 +74,7 @@ namespace t2sBackend
 
             if (pluginEngine != null)
             {
-                pluginEngine.DoString("pluginHashIdentifier = \""+hash+"\"\n");
+                pluginEngine.DoString(hashVarName + " = \""+hash+"\"\n");
                 LuaScriptingEngine.registerLUAPluginCallbacks(pluginEngine);
             }
 
@@ -113,17 +105,18 @@ namespace t2sBackend
             //return null;
         }
 
-        private static String generateLUAPluginCallbackWrapper(MethodBase function)
+        private static String generateLUAPluginCallbackWrapper(String luaFunctionName, MethodBase function)
         {
             String name = function.Name;
-            String userFriendlyName = name.TrimStart('_');
             ParameterInfo[] parameters = function.GetParameters();
 
             StringBuilder paramsb = new StringBuilder();
             // Add all parameters
             bool first = true;
-            foreach (ParameterInfo parameter in parameters)
+            // Skip the first parameter (we enter the hash)
+            for (int p = 1; p < parameters.Length; ++p)
             {
+                ParameterInfo parameter = parameters[p];
                 if (!first)
                 {
                     paramsb.Append(", ");
@@ -137,25 +130,28 @@ namespace t2sBackend
 
             StringBuilder sb = new StringBuilder();
             // Yeah, I do appends here because it's easier to read... so sue me.
-            sb.Append(@"function " + userFriendlyName + " (" + paramString + ") \n");
+            sb.Append("function " + luaFunctionName + " (" + paramString + ") \n");
             if (parameters.Length > 0)
             {
-                sb.Append(@"    return " + name + "(\"" + hashVarName + "\", " + paramString + ") \n");
+                sb.Append("    return " + name + "(" + hashVarName + ", " + paramString + ") \n");
             }
             else
             {
-                sb.Append(@"    return " + name + "(\"" + hashVarName + "\") \n");
+                sb.Append("    return " + name + "(" + hashVarName + ") \n");
             }
-            sb.Append(@"end \n");
+            sb.Append("end \n");
             return sb.ToString();
         }
 
         private static void registerLUAPluginCallbacks(Lua pluginEngine)
         {
-            foreach (KeyValuePair<String, MethodBase> entry in LuaCallbacks)
+            foreach (KeyValuePair<String, MethodBase> entry in LUAAPI.LuaCallbacks)
             {
-                pluginEngine.RegisterFunction(entry.Key, null, entry.Value);
-                pluginEngine.DoString(LuaScriptingEngine.generateLUAPluginCallbackWrapper(entry.Value));
+                if (entry.Value != null)
+                {
+                    pluginEngine.RegisterFunction(entry.Value.Name, null, entry.Value);
+                    pluginEngine.DoString(LuaScriptingEngine.generateLUAPluginCallbackWrapper(entry.Key, entry.Value));
+                }
             }
         }
     }
