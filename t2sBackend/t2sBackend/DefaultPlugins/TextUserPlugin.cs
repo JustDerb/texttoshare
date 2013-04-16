@@ -24,22 +24,34 @@ namespace t2sBackend
             Message msgSender = new Message();
 
             UserDAO receiver = controller.RetrieveUserByUserName(message.Arguments[0]);
+            msgSender.Reciever.Add(message.Sender.PhoneEmail);
+
 
             if (receiver == null || receiver.IsBanned)
             {
                 msgSender.FullMessage = "Not a valid user. Please check their username and retry.";
+                service.SendMessage(msgSender);
             }
             else if(receiver.IsSuppressed)
             {
                 msgSender.FullMessage = "User has suppressed messages.";
+                service.SendMessage(msgSender);
             }
             else
             {
-                msgSender.FullMessage = "Message sent successfully.";
+                msgReceiver.Reciever.Add(receiver.PhoneEmail);
+                bool sent = service.SendMessage(msgReceiver);
+                if (sent)
+                {
+                    msgSender.FullMessage = "Message sent successfully.";
+                }
+                else
+                {
+                    msgSender.FullMessage = "Message was unable to send to user.";
+                }
+                service.SendMessage(msgSender);
             }
 
-            service.SendMessage(msgSender);
-            service.SendMessage(msgReceiver);
         }
 
         /// <summary>
