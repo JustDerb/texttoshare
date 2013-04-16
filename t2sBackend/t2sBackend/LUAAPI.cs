@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -135,7 +136,17 @@ namespace t2sBackend
             {"SetValue", typeof(LUAAPI).GetMethod("__SetValue")},
             {"GetValue", typeof(LUAAPI).GetMethod("__GetValue")},
             {"GetOwnerId", typeof(LUAAPI).GetMethod("__GetOwnerId")},
-            {"GetSenderId", typeof(LUAAPI).GetMethod("__GetSenderId")}
+            {"GetSenderId", typeof(LUAAPI).GetMethod("__GetSenderId")},
+            {"GetUserFirstName", typeof(LUAAPI).GetMethod("__GetUserFirstName")},
+            {"GetUserLastName", typeof(LUAAPI).GetMethod("__GetUserLastName")},
+            {"GetUsername", typeof(LUAAPI).GetMethod("__GetUsername")},
+            {"GetUserIsSuppressed", typeof(LUAAPI).GetMethod("__GetUserIsSuppressed")},
+            {"GetUserIsBanned", typeof(LUAAPI).GetMethod("__GetUserIsBanned")},
+            {"GetUserCarrier", typeof(LUAAPI).GetMethod("__GetUserCarrier")},
+            {"GetGroupDescription", typeof(LUAAPI).GetMethod("__GetGroupDescription")},
+            {"GetGroupName", typeof(LUAAPI).GetMethod("__GetGroupName")},
+            {"GetGroupTag", typeof(LUAAPI).GetMethod("__GetGroupTag")},
+            {"HTTPDownloadText", typeof(LUAAPI).GetMethod("__HTTPDownloadText")}
         };
 
         #endregion
@@ -187,6 +198,108 @@ namespace t2sBackend
             return ToLuaTable(userIds, container.plugin.LuaEngine);
         }
 
+        public static string __GetGroupTag(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            return container.message.Group.GroupTag;
+        }
+
+        public static string __GetGroupName(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            return container.message.Group.Name;
+        }
+
+        public static string __GetGroupDescription(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            return container.message.Group.Description;
+        }
+
+        public static string __GetUsername(String hash, String userhash)
+        {
+            if (userhash == null || userhash.Equals(String.Empty))
+                return "";
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = container.hashToUser[userhash];
+            String retValue = "";
+            if (user != null)
+                retValue = user.UserName;
+
+            return retValue;
+        }
+
+        public static string __GetUserFirstName(String hash, String userhash)
+        {
+            if (userhash == null || userhash.Equals(String.Empty))
+                return "";
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = container.hashToUser[userhash];
+            String retValue = "";
+            if (user != null)
+                retValue = user.FirstName;
+
+            return retValue;
+        }
+
+        public static string __GetUserLastName(String hash, String userhash)
+        {
+            if (userhash == null || userhash.Equals(String.Empty))
+                return "";
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = container.hashToUser[userhash];
+            String retValue = "";
+            if (user != null)
+                retValue = user.LastName;
+
+            return retValue;
+        }
+
+        public bool __GetUserIsSuppressed(String hash, String userhash)
+        {
+            if (userhash == null || userhash.Equals(String.Empty))
+                return false;
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = container.hashToUser[userhash];
+            bool retValue = false;
+            if (user != null)
+                retValue = user.IsSuppressed;
+
+            return retValue;
+        }
+
+        public bool __GetUserIsBanned(String hash, String userhash)
+        {
+            if (userhash == null || userhash.Equals(String.Empty))
+                return false;
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = container.hashToUser[userhash];
+            bool retValue = false;
+            if (user != null)
+                retValue = user.IsBanned;
+
+            return retValue;
+        }
+
+        public string __GetUserCarrier(String hash, String userhash)
+        {
+            if (userhash == null || userhash.Equals(String.Empty))
+                return "";
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = container.hashToUser[userhash];
+            string retValue = "";
+            if (user != null)
+                retValue = System.Enum.GetName(typeof(PhoneCarrier), user.Carrier);
+
+            return retValue;
+        }
+
         public static string __GetOwnerId(String hash)
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
@@ -225,10 +338,41 @@ namespace t2sBackend
             return container.controller.RetrievePluginValue(container.plugin.PluginDAO, key, user);
         }
 
-        public static void __DebugPrint(String hash, String debugMessage)
+        public static string __HTTPDownloadText(String hash, String URL)
         {
-            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
-            Console.Out.WriteLine(container.plugin.PluginDAO.Name + ": " + debugMessage);
+            if (URL == null
+                || !URL.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+                return null;
+
+            string retValue = "";
+            try
+            {
+                WebRequest req = HttpWebRequest.Create(URL);
+                req.Method = "HEAD";
+                using (WebResponse resp = req.GetResponse())
+                {
+                    int ContentLength;
+                    // Must be text, and we need to be able to parse the length to int
+                    if (resp.Headers.Get("Content-Type").IndexOf("text", StringComparison.OrdinalIgnoreCase) >= 0
+                        && int.TryParse(resp.Headers.Get("Content-Length"), out ContentLength))
+                    {
+                        // File size limit
+                        if (ContentLength < 100000)
+                        {
+                            using (WebClient client = new WebClient())
+                            {
+                                retValue = client.DownloadString(URL);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogMessage("__HTTPDownloadText: [" + URL + "] " + ex.Message, LoggerLevel.WARNING);
+                retValue = null;
+            }
+            return retValue;
         }
     }
 }
