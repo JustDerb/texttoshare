@@ -196,11 +196,19 @@ namespace t2sBackend
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(this.UserName, this.Password)
             };
-            if (async)
-                smtp.SendAsync(messageToSend, null);
-            else
-                smtp.Send(messageToSend);
-            return false;
+            try
+            {
+                if (async)
+                    smtp.SendAsync(messageToSend, null);
+                else
+                    smtp.Send(messageToSend);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogMessage("GMailWatcherService.SendMessage: SendMessage failed: " + ex.Message, LoggerLevel.WARNING);
+                return false;
+            }
+            return true;
         }
 
         public override bool SendMessage(Message message)
