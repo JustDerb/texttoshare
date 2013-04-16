@@ -23,10 +23,10 @@ namespace login
             SqlController controller = new SqlController();
             String userName = Request["userNameBox"];
             String pasword = Request["passwordBox"];
-            bool loggedIn = controller.CheckLogin(userName, pasword);
-            if (loggedIn)
+
+            if (controller.CheckLogin(userName, pasword))
             {
-                Response.Write("Your logged In");
+                Response.Write("You're logged In");
                 return;
             }
             else
