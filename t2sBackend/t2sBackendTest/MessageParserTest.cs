@@ -89,13 +89,17 @@ namespace t2sBackendTest
             this.stubbedController = null;
         }
 
-        private Message getMessage(string sender, string[] reciever, string command, string group, string args)
+        private Message getMessage(string sender, string[] reciever, string command, string group, string args, bool space=false)
         {
             StringBuilder builder = new StringBuilder();
             builder.Append(command);
+            if (space)
+                builder.Append(" ");
             builder.Append(MessageParser.delimiter);
             builder.Append(group);
             builder.Append(MessageParser.secondDelimiter);
+            if (space)
+                builder.Append(" ");
             builder.Append(args);
             string fullmessage = builder.ToString();
             return new Message(sender, reciever, fullmessage);
@@ -113,6 +117,35 @@ namespace t2sBackendTest
 
             // Create our test message
             Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args);
+
+            //Tack on to text
+            ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
+
+            // Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(command, pmsg.Command, true);
+            Assert.AreEqual(args, pmsg.ContentMessage);
+            CollectionAssert.AreEquivalent(argsArr, pmsg.Arguments);
+
+            // Check DAO's
+            Assert.AreEqual(this._group, pmsg.Group);
+            Assert.AreEqual(this._user1, pmsg.Sender);
+
+            // Check type
+            Assert.AreEqual(ParsedMessage.ContentMessageType.VALID, pmsg.Type);
+        }
+
+        [TestCategory("MessageParser")]
+        [TestMethod]
+        public void TextWithNoInvalidFields_Spaces()
+        {
+            // Set our variables for testing
+            String command = "command";
+            String group = this._group.GroupTag;
+            String args = "these are arguments";
+            String[] argsArr = args.Split(' ');
+
+            // Create our test message
+            Message msg = getMessage(this._user1.PhoneEmail, new string[0], command, group, args, true);
 
             //Tack on to text
             ParsedMessage pmsg = MessageParser.Parse(msg, this.stubbedController);
