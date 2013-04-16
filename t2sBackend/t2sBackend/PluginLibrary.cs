@@ -104,6 +104,7 @@ namespace t2sBackend
                         break;
                     case ParsedMessage.ContentMessageType.NO_SENDER:
                         message.ContentMessage = INVALID_SENDER_MESSAGE;
+                        doMessage = false;
                         break;
                     case ParsedMessage.ContentMessageType.STOP:
                         message.ContentMessage = STOP_MESSAGE;
@@ -112,66 +113,66 @@ namespace t2sBackend
                     case ParsedMessage.ContentMessageType.VALID:
                         break;
                 }
-                
-                    
-                    // Not a user within the given group
-                if (!message.Group.Users.Contains(message.Sender) && 
-                    !message.Group.Moderators.Contains(message.Sender) &&
-                    !message.Group.Owner.Equals(message.Sender))
-                {
-                    message.ContentMessage = INVALID_USER_MESSAGE;
-                }
 
-                Boolean foundPlugin = false;
                 if (doMessage)
                 {
-                    foreach (PluginDAO d in message.Group.EnabledPlugins)
+                    if (message.Type == ParsedMessage.ContentMessageType.VALID)
                     {
-                        if (d.Name.Equals(message.Command, StringComparison.OrdinalIgnoreCase))
+                        // Not a user within the given group
+                        if (!message.Group.Users.Contains(message.Sender) &&
+                        !message.Group.Moderators.Contains(message.Sender) &&
+                        !message.Group.Owner.Equals(message.Sender))
                         {
-                            // If the plugin can only be accessed by moderators and the calling user is not a moderator/owner
-                            if (d.Access == PluginAccess.MODERATOR && 
-                                !(message.Group.Moderators.Contains(message.Sender) || message.Group.Owner.Equals(message.Sender)))
+                            message.ContentMessage = INVALID_USER_MESSAGE;
+                        }
+
+
+                        Boolean foundPlugin = false;
+                        foreach (PluginDAO d in message.Group.EnabledPlugins)
+                        {
+                            if (d.Name.Equals(message.Command, StringComparison.OrdinalIgnoreCase))
                             {
-                                message.ContentMessage = RESTRICTED_ACCESS_MESSAGE;
-                            }
-                            else
-                            {
-                                foundPlugin = true;
-                                if (defaultPlugins.ContainsKey(d.Name.ToUpperInvariant()))
+                                // If the plugin can only be accessed by moderators and the calling user is not a moderator/owner
+                                if (d.Access == PluginAccess.MODERATOR &&
+                                    !(message.Group.Moderators.Contains(message.Sender) || message.Group.Owner.Equals(message.Sender)))
                                 {
-                                    plugin = defaultPlugins[d.Name.ToUpperInvariant()];
-                                    break;
+                                    message.ContentMessage = RESTRICTED_ACCESS_MESSAGE;
                                 }
                                 else
                                 {
-                                    try
+                                    foundPlugin = true;
+                                    if (defaultPlugins.ContainsKey(d.Name.ToUpperInvariant()))
                                     {
-                                        plugin = new LUAPlugin(d);
+                                        plugin = defaultPlugins[d.Name.ToUpperInvariant()];
+                                        break;
                                     }
-                                    catch (Exception ex)
+                                    else
                                     {
-                                        // Fails if the file cannot be found
-                                        Logger.LogMessage("LUA Plugin (" + d.Name + ") failed.  Cannot load plugin: " + ex.Message, LoggerLevel.SEVERE);
-                                        message.ContentMessage = INVALID_COMMAND_MESSAGE;
+                                        try
+                                        {
+                                            plugin = new LUAPlugin(d);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // Fails if the file cannot be found
+                                            Logger.LogMessage("LUA Plugin (" + d.Name + ") failed.  Cannot load plugin: " + ex.Message, LoggerLevel.SEVERE);
+                                            message.ContentMessage = INVALID_COMMAND_MESSAGE;
+                                        }
                                     }
                                 }
+                                // Set the DAO for the plugin
+                                plugin.PluginDAO = d;
+                                break;
                             }
-                            // Set the DAO for the plugin
-                            plugin.PluginDAO = d;
-                            break;
+                        }
+
+                        // No valid plugin was found for the given command
+                        if (!foundPlugin)
+                        {
+                            message.ContentMessage = INVALID_PLUGIN_MESSAGE;
                         }
                     }
-                }
 
-                // No valid plugin was found for the given command
-                if (!foundPlugin)
-                {
-                    message.ContentMessage = INVALID_PLUGIN_MESSAGE;
-                }
-
-                if (doMessage)
-                {
                     // NOTE: Make sure thread is not disposed after running because it lost scope
                     BackgroundWorker pluginThread = new BackgroundWorker();
                     pluginThread.DoWork += pluginThread_DoWork;
