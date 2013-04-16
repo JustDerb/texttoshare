@@ -22,8 +22,8 @@ namespace t2sBackend
             Message msg = new Message();
             foreach (PluginDAO d in message.Group.EnabledPlugins)
             {
-                if (d.Access == PluginAccess.STANDARD || (d.Access == PluginAccess.MODERATOR && 
-                    (message.Group.Moderators.Contains(message.Sender) || message.Group.Owner.Equals(message.Sender))))
+                if ((d.Access == PluginAccess.STANDARD || (d.Access == PluginAccess.MODERATOR && 
+                    (message.Group.Moderators.Contains(message.Sender) || message.Group.Owner.Equals(message.Sender)))) && !d.Name.Equals("Error"))
                 {
                     msg.FullMessage += d.Name + " ";
                 }
