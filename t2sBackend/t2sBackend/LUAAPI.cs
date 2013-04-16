@@ -78,9 +78,9 @@ namespace t2sBackend
             {
                 if (!first)
                     sb.Append(", ");
-                sb.Append("\"");
+                sb.Append("[\"");
                 sb.Append(keyValue.Key.Replace("\"", "\\\""));
-                sb.Append("\" = \"");
+                sb.Append("\"] = \"");
                 sb.Append(keyValue.Value.Replace("\"", "\\\""));
                 sb.Append("\"");
 
@@ -108,13 +108,16 @@ namespace t2sBackend
             {
                 if (!first)
                     sb.Append(", ");
+                sb.Append("[");
                 sb.Append(index);
-                sb.Append(" = \"");
+                sb.Append("] = \"");
                 sb.Append(value.Replace("\"", "\\\""));
-                sb.Append("\"");
+                sb.Append("\"\n ");
 
                 if (first)
                     first = false;
+
+                ++index;
             }
             sb.Append("} \n");
             LuaTable table = (LuaTable)lua.DoString(sb.ToString())[0];
@@ -129,16 +132,29 @@ namespace t2sBackend
             {"SendMessage", typeof(LUAAPI).GetMethod("__SendMessage")},
             {"GetUserIdList", typeof(LUAAPI).GetMethod("__GetUserIdList")},
             {"GetModeratorIdList", typeof(LUAAPI).GetMethod("__GetModeratorIdList")},
-            {"GetOwnerId", typeof(LUAAPI).GetMethod("__GetOwnerId")}
+            {"SetValue", typeof(LUAAPI).GetMethod("__SetValue")},
+            {"GetValue", typeof(LUAAPI).GetMethod("__GetValue")},
+            {"GetOwnerId", typeof(LUAAPI).GetMethod("__GetOwnerId")},
+            {"GetSenderId", typeof(LUAAPI).GetMethod("__GetSenderId")}
         };
 
         #endregion
 
-        public static void __SendMessage(String hash, String to, String message)
+        public static void __SendMessage(String hash, String toHash, String message)
         {
+            if (message == null || message.Equals(String.Empty))
+                return;
+
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
-            Message msg = new Message(new string[1] { to }, message);
-            container.service.SendMessage(msg);
+            UserDAO toUser = null;
+            if (toHash != null)
+                toUser = container.hashToUser[toHash];
+
+            if (toUser != null)
+            {
+                Message msg = new Message(new string[1] { toUser.PhoneEmail }, message);
+                container.service.SendMessage(msg);
+            }
         }
 
         public static LuaTable __GetUserIdList(String hash)
@@ -170,6 +186,37 @@ namespace t2sBackend
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
             String ownerHash = container.userToHash[container.message.Group.Owner];
             return ownerHash;
+        }
+
+        public static string __GetSenderId(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            String senderHash = container.userToHash[container.message.Sender];
+            return senderHash;
+        }
+
+        public static void __SetValue(String hash, String key, String value, String userhash)
+        {
+            if (key == null)
+                return;
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = null;
+            if (userhash != null)
+                user = container.hashToUser[userhash];
+            container.controller.UpdatePluginKeyValue(container.plugin.PluginDAO, key, value, user);
+        }
+
+        public static Object __GetValue(String hash, String key, String userhash)
+        {
+            if (key == null)
+                return null;
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            UserDAO user = null;
+            if (userhash != null)
+                user = container.hashToUser[userhash];
+            return container.controller.RetrievePluginValue(container.plugin.PluginDAO, key, user);
         }
 
         public static void __DebugPrint(String hash, String debugMessage)

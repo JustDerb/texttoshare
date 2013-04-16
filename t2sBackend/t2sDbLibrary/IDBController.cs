@@ -361,6 +361,26 @@ namespace t2sDbLibrary
         /// <returns>A list containing the plugins owned by the user. If the user does not own any plugins, the list will return empty.</returns>
         List<PluginDAO> GetPluginsOwnedByUser(UserDAO user);
 
+        #region "Plugin Key/Value Actions"
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="plugin"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        void UpdatePluginKeyValue(PluginDAO plugin, String key, String value, UserDAO forUser = null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="plugin"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        string RetrievePluginValue(PluginDAO plugin, String key, UserDAO forUser = null);
+
+        #endregion
+
         /// <summary>
         /// Gets the associated value for the given key entry.
         /// </summary>

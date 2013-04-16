@@ -86,18 +86,24 @@ namespace t2sBackend
             foreach (UserDAO user in message.Group.Users)
             {
                 String userHash = generateUniqueHash<UserDAO>(container.hashToUser);
-                container.hashToUser.Add(userHash, user);
-                container.userToHash.Add(user, userHash);
+                if (!container.hashToUser.ContainsKey(userHash))
+                    container.hashToUser.Add(userHash, user);
+                if (!container.userToHash.ContainsKey(user))
+                    container.userToHash.Add(user, userHash);
             }
             foreach (UserDAO user in message.Group.Moderators)
             {
                 String modHash = generateUniqueHash<UserDAO>(container.hashToUser);
-                container.hashToUser.Add(modHash, user);
-                container.userToHash.Add(user, modHash);
+                if (!container.hashToUser.ContainsKey(modHash))
+                    container.hashToUser.Add(modHash, user);
+                if (!container.userToHash.ContainsKey(user))
+                    container.userToHash.Add(user, modHash);
             }
             String ownerHash = generateUniqueHash<UserDAO>(container.hashToUser);
-            container.hashToUser.Add(ownerHash, message.Group.Owner);
-            container.userToHash.Add(message.Group.Owner, ownerHash);
+            if (!container.hashToUser.ContainsKey(ownerHash))
+                container.hashToUser.Add(ownerHash, message.Group.Owner);
+            if (!container.userToHash.ContainsKey(message.Group.Owner))
+                container.userToHash.Add(message.Group.Owner, ownerHash);
 
             lock (registerLock)
             {
@@ -163,7 +169,7 @@ namespace t2sBackend
             StringBuilder sb = new StringBuilder();
             // Yeah, I do appends here because it's easier to read... so sue me.
             sb.Append("function " + luaFunctionName + " (" + paramString + ") \n");
-            if (parameters.Length > 0)
+            if (parameters.Length > 1)
             {
                 sb.Append("    return " + name + "(" + hashVarName + ", " + paramString + ") \n");
             }

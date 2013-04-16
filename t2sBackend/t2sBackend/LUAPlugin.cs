@@ -263,12 +263,13 @@ namespace t2sBackend
 
         private void CreateExtras(ParsedMessage message)
         {
-            //StringBuilder sb = new StringBuilder();
-            //sb.Append("MESSAGE = { \n");
-            //sb.Append("    FULLARGS = '" + message.ContentMessage);
-            //sb.Append("    COMMAND = '" + message.Command);
+            StringBuilder sb = new StringBuilder();
+            sb.Append("MESSAGE = { \n");
+            sb.Append("    FULLARGS = \"" + message.ContentMessage.Replace("\"", "\\\"") + "\", ");
+            sb.Append("    COMMAND = \"" + message.Command.Replace("\"", "\\\"") + "\"");
             //sb.Append("    " + message.Arguments);
-            //this.LuaEngine.DoString(
+            sb.Append(" } \n");
+            this.LuaEngine.DoString(sb.ToString());
         }
 
         public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
@@ -291,9 +292,10 @@ namespace t2sBackend
                 // Run the script
                 this.LuaEngine.DoFile(this.ScriptFileLoc);
             }
-            catch (Exception ex)
+            catch (LuaException ex)
             {
                 Console.WriteLine(ex.ToString());
+                
             }
             finally
             {

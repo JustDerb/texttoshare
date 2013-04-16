@@ -1679,6 +1679,96 @@ namespace t2sDbLibrary
 
         #endregion
 
+        #region "Plugin Key/Value Actions"
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="plugin"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void UpdatePluginKeyValue(PluginDAO plugin, String key, String value, UserDAO forUser = null)
+        {
+            if (null == plugin
+                || null == key) 
+                throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                // Using SQL Server, so this isn't supported
+                //queryBuilder.Append("INSERT INTO pluginkeyvalue (plugin_id, key_string, value_object) ");
+                //queryBuilder.Append("VALUES ");
+                //queryBuilder.Append("(@pluginid, @keystring, @valueobj) ");
+                //queryBuilder.Append("ON DUPLICATE KEY UPDATE ");
+                //queryBuilder.Append(" value_object = @valueobj ");
+
+                queryBuilder.Append("begin tran \n");
+                queryBuilder.Append("if exists (select * from pluginkeyvalue with (updlock,serializable) where key_string = @keystring and plugin_id = @pluginid) \n");
+                queryBuilder.Append("   begin \n");
+                queryBuilder.Append("   update pluginkeyvalue set value_object = @valueobj \n");
+                queryBuilder.Append("   where key_string = @keystring and plugin_id = @pluginid \n");
+                queryBuilder.Append("end \n");
+                queryBuilder.Append("else \n");
+                queryBuilder.Append("begin \n");
+                queryBuilder.Append("   insert pluginkeyvalue (plugin_id, key_string, value_object) \n");
+                queryBuilder.Append("   values (@pluginid, @keystring, @valueobj) \n");
+                queryBuilder.Append("end \n");
+                queryBuilder.Append("commit tran \n");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@pluginid", plugin.PluginID.Value);
+                query.Parameters.AddWithValue("@keystring", key);
+                query.Parameters.AddWithValue("@valueobj", value);
+
+                conn.Open();
+                query.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="plugin"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string RetrievePluginValue(PluginDAO plugin, String key, UserDAO forUser = null)
+        {
+            if (null == plugin
+                || null == key)
+                throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT value_object ");
+                queryBuilder.Append("FROM pluginkeyvalue ");
+                queryBuilder.Append("WHERE plugin_id = @pluginid ");
+                queryBuilder.Append(" AND key_string = @keystring ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@pluginid", plugin.PluginID.Value);
+                query.Parameters.AddWithValue("@keystring", key);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                // If there are no records returned from the select statement, the DataReader will be empty
+                if (reader.Read())
+                {
+                    return (string)reader["value_object"];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        #endregion
+
         #region PairEntries Getter/Setter actions
 
         /// <summary>
