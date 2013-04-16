@@ -648,7 +648,7 @@ namespace t2sDbLibrary
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("SELECT id, name, description, owner_id ");
+                queryBuilder.Append("SELECT id, name, description, owner_id, grouptag ");
                 queryBuilder.Append("FROM groups ");
                 queryBuilder.Append("WHERE grouptag = @grouptag");
 
@@ -667,11 +667,13 @@ namespace t2sDbLibrary
                     string name = (string)reader["name"];
                     string description = (string)reader["description"];
                     int ownerID = (int)reader["owner_id"];
+                    string groupTagReader = (string)reader["grouptag"];
 
                     group = new GroupDAO(RetrieveUser(ownerID));
                     group.GroupID = groupID;
                     group.Name = name;
                     group.Description = description;
+                    group.GroupTag = groupTagReader;
 
                     return group;
                 }
