@@ -36,10 +36,6 @@ namespace t2sBackend
 
             // Add fake emails (For testing)
             List<Message> msgArray = new List<Message>();
-            Message mess = new Message();
-            mess.Sender = database.RetrieveUserByUserName("bruckna").PhoneEmail;
-            mess.FullMessage = "TextUser@KixAss bruckna what up homie?";
-            msgArray.Add(mess);
             //msgArray.Add(new Message(...));
 
             foreach (Message msg in msgArray)
