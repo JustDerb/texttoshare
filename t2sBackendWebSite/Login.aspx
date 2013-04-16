@@ -24,7 +24,7 @@
         </p>
         
         <p>
-            <a href="RegisterUser.aspx">Register Here</a>
+            <a class="tts-button" href="RegisterUser.aspx">Register Here</a>
         </p>  
     </form>
 </body>

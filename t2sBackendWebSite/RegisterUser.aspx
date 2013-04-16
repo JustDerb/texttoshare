@@ -38,7 +38,7 @@
             <asp:Button ID="register" placeholder="Register User" OnClick="Register_Click" runat="server" Text="Register" required></asp:Button>
         </p>
         <p>
-            <a href="Login.aspx">Login Here</a>
+            <a class="tts-button" href="Login.aspx">Login Here</a>
         </p>
     </form>
 </body>
