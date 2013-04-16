@@ -34,12 +34,19 @@ namespace ManageUsers
             String userName = Request["userNameBox"];
             String phoneNumber = Request["phoneNumberBox"];
             String carrier = Request["carrierBox"];
-            String password = Request["passwordBox"];
+            //String password = Request["passwordBox"];
             user= controller.RetrieveUserByUserName(userName);
             user.UserName = userName;
             user.PhoneNumber = phoneNumber;
             user.FirstName = firstName;
-            //user.Carrier = controller.carrier;
+            //user.Carrier = new PhoneCarrier(carrier);
+            try
+            {
+                controller.UpdateUser(user);
+
+            }catch(ArgumentNullException error){
+
+            }
 
             
         }
@@ -47,7 +54,26 @@ namespace ManageUsers
 
         public void popluatePluginList(Object sender, EventArgs e)
         {
+            try
+            {
 
+               SqlController controller = new SqlController();
+               // controller.
+              /*  List<PluginDAO> plugins = controller.ge;
+                String[] names = new String[plugins.Count];
+                ListItem[] list = new ListItem[plugins.Count];
+                for (int i = 0; i < plugins.Count; i++)
+                {
+                    ListItem item = new ListItem(plugins.ElementAt(i).Name);
+                    list[i] = item;
+                }
+                DropDownList groupPlugin = ((DropDownList)((DropDownList)sender).Parent.FindControl("groupPlugin"));
+                groupPlugin.Items.AddRange(list);*/
+            }
+            catch (SqlException error)
+            {
+                // Logger.LogMessage("SQL exception with Retrieve Enabled plugin");
+            }
 
         }
 

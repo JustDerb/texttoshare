@@ -30,15 +30,8 @@
             <label for="carrierBox">Carrier</label>
             <asp:TextBox ID="carrierBox" name="carrierBox" placeholder="Phone Carrier" runat="server" ></asp:TextBox>
         </p>
-        <p>
-            <label for="passwordBox">Password</label>
-            <asp:TextBox ID="passwordBox" name="passwordBox" TextMode="Password" placeholder="Password" runat="server" ></asp:TextBox>
-        </p>
         <asp:DropDownList id="AllPlugin" runat="server" onload="popluatePluginList" >
-            <asp:ListItem Text="<Select Plugin>" Value="0" />
-        </asp:DropDownList>
-        <asp:DropDownList id="enabledPlugins" runat="server" onload="retrieveEnabledPlugins" >
-            <asp:ListItem Text="<Currently Enabled Plugins>" Value="0" />
+            <asp:ListItem Text="<Plugins Made>" Value="0" />
         </asp:DropDownList>
 
 
