@@ -128,7 +128,7 @@ namespace t2sBackend
 
         public static readonly Dictionary<String, MethodBase> LuaCallbacks = new Dictionary<string, MethodBase>()
         {
-            {"DebugPrint", typeof(LUAAPI).GetMethod("__DebugPrint")},
+            //{"DebugPrint", typeof(LUAAPI).GetMethod("__DebugPrint")},
             {"SendMessage", typeof(LUAAPI).GetMethod("__SendMessage")},
             {"GetUserIdList", typeof(LUAAPI).GetMethod("__GetUserIdList")},
             {"GetModeratorIdList", typeof(LUAAPI).GetMethod("__GetModeratorIdList")},
@@ -139,6 +139,12 @@ namespace t2sBackend
         };
 
         #endregion
+
+        public static void __DebugPrint(String hash, String debugMessage)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            Console.Out.WriteLine(container.plugin.PluginDAO.Name + ": " + debugMessage);
+        }
 
         public static void __SendMessage(String hash, String toHash, String message)
         {
@@ -152,7 +158,7 @@ namespace t2sBackend
 
             if (toUser != null)
             {
-                Message msg = new Message(new string[1] { toUser.PhoneEmail }, message);
+                Message msg = new Message(new string[1] { toUser.PhoneEmail }, message.Substring(0, LUAAPI.MAX_TEXT_SIZE_8BIT));
                 container.service.SendMessage(msg);
             }
         }
@@ -207,7 +213,7 @@ namespace t2sBackend
             container.controller.UpdatePluginKeyValue(container.plugin.PluginDAO, key, value, user);
         }
 
-        public static Object __GetValue(String hash, String key, String userhash)
+        public static string __GetValue(String hash, String key, String userhash)
         {
             if (key == null)
                 return null;
