@@ -30,6 +30,30 @@ namespace t2sBackend
 
         private static String hashVarName = "TTSpluginHashIdentifier";
 
+        private static String generateUniqueHash<T>(Dictionary<String, T> dict)//, T value)
+        {
+            //if (dict.ContainsValue(value))
+            //    throw new EntryAlreadyExistsException();
+
+            // 64 byte hash
+            byte[] bytes = new byte[64];
+            String hash = "";
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                lock (registerLock)
+                {
+                    // Generate a random secure hash
+                    do
+                    {
+                        rng.GetBytes(bytes);
+                        hash = BitConverter.ToString(bytes);
+                    }
+                    while (dict.ContainsKey(hash));
+                }
+            }
+            return hash;
+        }
+
         /// <summary>
         /// Registers the plugin with the 
         /// </summary>
@@ -46,27 +70,13 @@ namespace t2sBackend
                 throw new ArgumentNullException();
             }
 
-            // 64 byte hash
-            byte[] bytes = new byte[64];
-            String hash = "";
-            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-            {
-                lock (registerLock)
-                {
-                    // Generate a random secure hash
-                    do
-                    {
-                        rng.GetBytes(bytes);
-                        hash = BitConverter.ToString(bytes);
-                    }
-                    while (LuaScriptingEngine.register.ContainsKey(hash));
-                }
-            }
-
             LUAPluginContainer container = new LUAPluginContainer();
+
+            String hash = generateUniqueHash<LUAPluginContainer>(LuaScriptingEngine.register);
             container.plugin = plugin;
             container.service = service;
             container.controller = controller;
+
             lock (registerLock)
             {
                 LuaScriptingEngine.register.Add(hash, container);
