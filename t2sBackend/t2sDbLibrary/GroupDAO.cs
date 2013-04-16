@@ -126,7 +126,7 @@ namespace t2sDbLibrary
         /// <returns>True if User is added as a Moderator successfully, false if otherwise</returns>
         public bool AddModerator(UserDAO user)
         {
-            if (!Users.Contains(user) || Moderators.Contains(user))
+            if (Users.Contains(user) || Moderators.Contains(user))
             {
                 return false;
             }
