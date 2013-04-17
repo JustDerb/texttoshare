@@ -1,4 +1,9 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="ManageUsers.manageUsers" src="manageUsers.cs" %>
+<% if (null == Session["Username"])
+   {
+       Response.Redirect("Login.aspx");
+   }
+%>
 
 <!DOCTYPE html>
 
@@ -12,7 +17,7 @@
         <h1>Manage User</h1>
         <p>
             <label for="firstNameBox">First Name</label>
-            <asp:TextBox ID="firstNameBox" name="firstNameBox" placeholder="First Name" runat="server" ></asp:TextBox>
+            <asp:TextBox ID="firstNameBox" name="firstNameBox"   runat="server"  placeholder="First Name"  ></asp:TextBox>
         </p>
         <p>
             <label for="lastNameBox">Last Name</label>
