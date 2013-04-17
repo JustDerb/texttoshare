@@ -83,7 +83,13 @@ namespace ManageUsers
 
         }
 
+        public void fillFirstNameBox(Object sender, EventArgs args)
+        {
+            TextBox firstName = ((TextBox)((TextBox)sender).Parent.FindControl("firstNameBox"));
+            firstName.Text = Session["firstName"].ToString();
+            //return Session["firstName"].ToString();
 
+        }
 
 
 
