@@ -342,11 +342,11 @@ namespace t2sDbLibrary
         }
 
         /// <summary>
-        /// Converts an integer to a corresponding PhoneCarrier
+        /// Converts an Int32 to a corresponding PhoneCarrier
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static explicit operator PhoneCarrier(int value)
+        public static explicit operator PhoneCarrier(Int32 value)
         {
             PhoneCarrier result;
             if (valueInstance.TryGetValue(value, out result))
@@ -356,11 +356,11 @@ namespace t2sDbLibrary
         }
 
         /// <summary>
-        /// Converts a PhoneCarrier to its integer representation
+        /// Converts a PhoneCarrier to its Int32 representation
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public static explicit operator int(PhoneCarrier p)
+        public static explicit operator Int32(PhoneCarrier p)
         {
             return p.value;
         }
