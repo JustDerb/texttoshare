@@ -200,6 +200,7 @@ namespace t2sDbLibrary
 
     /// <summary>
     /// Class used to mimic a type-safe enum
+    /// Reference: http://stackoverflow.com/a/424414
     /// </summary>
     public sealed class PhoneCarrier
     {
