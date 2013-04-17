@@ -37,34 +37,6 @@ namespace t2sBackend
         public static readonly int MAX_TEXT_SIZE_16BIT = 70;
 
         /// <summary>
-        /// Tries to find the user by username
-        /// </summary>
-        /// <param name="username">Username to fetch</param>
-        /// <returns>A UserDAO, not null</returns>
-        /// <exception cref="APIException">If user cannot be found</exception>
-        private static UserDAO grabUserByUsername(LuaScriptingEngine.LUAPluginContainer container, String username)
-        {
-            UserDAO user = container.controller.RetrieveUserByUserName(username);
-            if (user == null)
-                throw new APIException("'" + username + "' is not a valid user.");
-            return user;
-        }
-
-        /// <summary>
-        /// Tries to find the user by email
-        /// </summary>
-        /// <param name="username">Email to fetch</param>
-        /// <returns>A UserDAO, not null</returns>
-        /// <exception cref="APIException">If user cannot be found</exception>
-        private static UserDAO grabUserByEmail(LuaScriptingEngine.LUAPluginContainer container, String email)
-        {
-            UserDAO user = container.controller.RetrieveUserByUserName(email);
-            if (user == null)
-                throw new APIException("'" + email + "' is not a valid email.");
-            return user;
-        }
-
-        /// <summary>
         /// Doc: http://stackoverflow.com/questions/14299634/luainterface-a-function-which-will-return-a-luatable-value
         /// </summary>
         /// <param name="dict"></param>
@@ -130,6 +102,9 @@ namespace t2sBackend
         public static readonly Dictionary<String, MethodBase> LuaCallbacks = new Dictionary<string, MethodBase>()
         {
             //{"DebugPrint", typeof(LUAAPI).GetMethod("__DebugPrint")},
+            {"GetMessageCommand", typeof(LUAAPI).GetMethod("__GetMessageCommand")},
+            {"GetMessageArgumentString", typeof(LUAAPI).GetMethod("__GetMessageArgumentString")},
+            {"GetMessageArgumentList", typeof(LUAAPI).GetMethod("__GetMessageArgumentList")},
             {"SendMessage", typeof(LUAAPI).GetMethod("__SendMessage")},
             {"GetUserIdList", typeof(LUAAPI).GetMethod("__GetUserIdList")},
             {"GetModeratorIdList", typeof(LUAAPI).GetMethod("__GetModeratorIdList")},
@@ -155,6 +130,24 @@ namespace t2sBackend
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
             Console.Out.WriteLine(container.plugin.PluginDAO.Name + ": " + debugMessage);
+        }
+
+        public static string __GetMessageCommand(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            return container.message.Command;
+        }
+
+        public static string __GetMessageArgumentString(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            return container.message.ContentMessage;
+        }
+
+        public static LuaTable __GetMessageArgumentList(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            return ToLuaTable(container.message.Arguments, container.plugin.LuaEngine);
         }
 
         public static void __SendMessage(String hash, String toHash, String message)

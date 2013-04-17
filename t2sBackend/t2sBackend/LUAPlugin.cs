@@ -256,22 +256,6 @@ namespace t2sBackend
             this.LuaEngine.DoString(this.SandboxLuaCode);
         }
 
-        private void CreateDAOObjects(GroupDAO group, UserDAO sender)
-        {
-
-        }
-
-        private void CreateExtras(ParsedMessage message)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("MESSAGE = { \n");
-            sb.Append("    FULLARGS = \"" + message.ContentMessage.Replace("\"", "\\\"") + "\", ");
-            sb.Append("    COMMAND = \"" + message.Command.Replace("\"", "\\\"") + "\"");
-            //sb.Append("    " + message.Arguments);
-            sb.Append(" } \n");
-            this.LuaEngine.DoString(sb.ToString());
-        }
-
         public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
             String engineHash = null;
@@ -280,11 +264,6 @@ namespace t2sBackend
             {
                 // Get to a clean state
                 loadNewLuaEngine();
-
-                CreateExtras(message);
-
-                // Create our DAO for the plugin
-                CreateDAOObjects(message.Group, message.Sender);
 
                 // Register our plugin so we can call C# methods
                 engineHash = LuaScriptingEngine.registerPlugin(this, message, service, controller, this.LuaEngine);

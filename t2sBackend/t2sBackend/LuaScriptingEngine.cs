@@ -190,6 +190,11 @@ namespace t2sBackend
                     pluginEngine.RegisterFunction(entry.Value.Name, null, entry.Value);
                     pluginEngine.DoString(LuaScriptingEngine.generateLUAPluginCallbackWrapper(entry.Key, entry.Value));
                 }
+                else
+                {
+                    // This will get called a lot, so lets not log it, just print out to console
+                    Console.WriteLine(entry.Value + " is not a valid API call!");
+                }
             }
         }
     }
