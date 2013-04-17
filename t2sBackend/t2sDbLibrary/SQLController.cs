@@ -582,7 +582,7 @@ namespace t2sDbLibrary
             }
         }
 
-        private bool InsertGroupPlugins(int? groupID, List<PluginDAO> plugins)
+        private bool InsertGroupPlugins(int? groupID, HashSet<PluginDAO> plugins)
         {
             foreach (PluginDAO plugin in plugins)
             {
@@ -828,7 +828,7 @@ namespace t2sDbLibrary
             return true;
         }
 
-        private void CheckForPluginListModifications(int? groupID, List<PluginDAO> pluginList)
+        private void CheckForPluginListModifications(int? groupID, HashSet<PluginDAO> pluginList)
         {
             // Get the current list of all plugins for a group
             List<int?> pluginIDList = GetAllEnabledGroupPluginIDs(groupID);

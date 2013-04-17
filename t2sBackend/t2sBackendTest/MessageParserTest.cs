@@ -70,7 +70,7 @@ namespace t2sBackendTest
                 GroupTag = "TEST",
                 Moderators = new HashSet<UserDAO>(),
                 Name = "TEST GROUP",
-                EnabledPlugins = new List<PluginDAO>(),
+                EnabledPlugins = new HashSet<PluginDAO>(),
                 Users = new HashSet<UserDAO>()
             };
             this._group.Users.Add(this._user2);

@@ -12,7 +12,7 @@ namespace t2sDbLibrary
             this.Owner = Owner;
             this.Users = new HashSet<UserDAO>();
             this.Moderators = new HashSet<UserDAO>();
-            this.EnabledPlugins = new List<PluginDAO>();
+            this.EnabledPlugins = new HashSet<PluginDAO>();
         }
 
         public GroupDAO() { }
@@ -74,7 +74,7 @@ namespace t2sDbLibrary
         /// <summary>
         /// The List of Plugins that the Group's Moderators have chosen to enable for the Group
         /// </summary>
-        public List<PluginDAO> EnabledPlugins
+        public HashSet<PluginDAO> EnabledPlugins
         {
             get;
             set;
@@ -136,12 +136,7 @@ namespace t2sDbLibrary
         /// <returns>True if the Plugin is added successfully, false if otherwise</returns>
         public bool AddPlugin(PluginDAO plugin)
         {
-            if (EnabledPlugins.Contains(plugin))
-            {
-                return false;
-            }
-            EnabledPlugins.Add(plugin);
-            return true;
+            return EnabledPlugins.Add(plugin);
         }
 
         /// <summary>
