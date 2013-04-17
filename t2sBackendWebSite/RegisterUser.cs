@@ -31,23 +31,36 @@ namespace codebehind
         /// <param name="e"></param>
         public void Register_Click(Object sender, EventArgs e)
         {
-            // MyLabel.Text = FirstTextBox.Text.ToString();
-            SqlController controller = new SqlController();
-            UserDAO user = new UserDAO();
-            //grab input from textboxs
-            String firstName = Request["firstNameBox"];
-            String lastName = Request["lastNameBox"];
-            String phoneNumber = Request["PhoneNumberBox"];
-            String phoneCarrier = Request["CarrierBox"];
             String password = Request["passwordBox"];
             String verifyPassword = Request["verifyPasswordBox"];
-            String userName = Request["userNameBox"];
-
+            
             if (!password.Equals(verifyPassword))
             {
                 Response.Write("The passwords you entered do not match. Please try again.");
                 return;
             }
+
+            // MyLabel.Text = FirstTextBox.Text.ToString();
+            SqlController controller = new SqlController();
+            UserDAO user = new UserDAO()
+            {
+                FirstName = Request["firstNameBox"],
+                LastName = Request["lastNameBox"],
+                UserName = Request["userNameBox"],
+                PhoneNumber = Request["PhoneNumberBox"],
+                Carrier = (PhoneCarrier)Request["CarrierBox"],
+                PhoneEmail = Request["PhoneNumberBox"] + (PhoneCarrier)Request["CarrierBox"],
+                IsBanned = false,
+                IsSuppressed = false
+
+            };
+
+            //grab input from textboxs
+            String firstName = Request["firstNameBox"];
+            String lastName = Request["lastNameBox"];
+            String phoneNumber = Request["PhoneNumberBox"];
+            String phoneCarrier = Request["CarrierBox"];
+            String userName = Request["userNameBox"];
 
             //set fields of the userDAO
             user.UserName = userName;
@@ -56,9 +69,11 @@ namespace codebehind
             user.PhoneNumber = phoneNumber;
 
             // TODO: need to be able to retrieve from database correct carrier ending
-            user.PhoneEmail = phoneNumber + "@txt.att.com";
+            //user.PhoneEmail = phoneNumber + "@txt.att.com";
+            user.PhoneEmail = phoneNumber + (PhoneCarrier)phoneCarrier;
             user.IsBanned = false;
             user.IsSuppressed = false;
+
             //check to see is needs to be hashed before
             try
             {
@@ -80,6 +95,7 @@ namespace codebehind
             {
                 //logger.logMessage("SQLException when Registering User", 4);
             }
+
             Response.Write("You successfully registered!");
             return;
         }
