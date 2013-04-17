@@ -10,8 +10,8 @@ namespace t2sDbLibrary
         public GroupDAO(UserDAO Owner)
         {
             this.Owner = Owner;
-            this.Users = new List<UserDAO>();
-            this.Moderators = new List<UserDAO>();
+            this.Users = new HashSet<UserDAO>();
+            this.Moderators = new HashSet<UserDAO>();
             this.EnabledPlugins = new List<PluginDAO>();
         }
 
@@ -20,7 +20,7 @@ namespace t2sDbLibrary
         /// <summary>
         /// The List of Users in the Group. Managed by the Group Moderators
         /// </summary>
-        public List<UserDAO> Users
+        public HashSet<UserDAO> Users
         {
             get;
             set;
@@ -56,7 +56,7 @@ namespace t2sDbLibrary
         /// <summary>
         /// The List of Users that will have access to the Group's Users and PlugIns
         /// </summary>
-        public List<UserDAO> Moderators
+        public HashSet<UserDAO> Moderators
         {
             get;
             set;
@@ -96,12 +96,7 @@ namespace t2sDbLibrary
         /// <returns>True if User was added successfully, False if otherwise</returns>
         public bool AddUserToGroup(UserDAO user)
         {
-            if (user == null)
-            {
-                return false;
-            }
-            Users.Add(user);
-            return true;
+            return Users.Add(user);
         }
 
         /// <summary>
@@ -111,12 +106,7 @@ namespace t2sDbLibrary
         /// <returns>True if User was removed successfully, false if otherwise</returns>
         public bool RemoveUserFromGroup(UserDAO user)
         {
-            if (!Users.Contains(user))
-            {
-                return false;
-            }
-            Users.Remove(user);
-            return true;
+            return Users.Remove(user);
         }
 
         /// <summary>
@@ -126,12 +116,7 @@ namespace t2sDbLibrary
         /// <returns>True if User is added as a Moderator successfully, false if otherwise</returns>
         public bool AddModerator(UserDAO user)
         {
-            if (Users.Contains(user) || Moderators.Contains(user))
-            {
-                return false;
-            }
-            Moderators.Add(user);
-            return true;
+            return Moderators.Add(user);
         }
 
         /// <summary>

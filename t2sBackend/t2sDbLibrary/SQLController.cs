@@ -198,7 +198,7 @@ namespace t2sDbLibrary
             userDAO.LastName = (string)reader["last_name"];
             userDAO.PhoneNumber = (string)reader["phone"];
             userDAO.PhoneEmail = (string)reader["email_phone"];
-            userDAO.Carrier = (PhoneCarrier)reader["carrier"];
+            userDAO.Carrier = (PhoneCarrier)(Int32)reader["carrier"];
             userDAO.UserLevel = (UserLevel)reader["user_level"];
             userDAO.IsBanned = (bool)reader["banned"];
             userDAO.IsSuppressed = (bool)reader["suppressed"];
@@ -543,7 +543,7 @@ namespace t2sDbLibrary
         /// <param name="groupID">The associated group for a list of users.</param>
         /// <param name="users">The list of users in the group.</param>
         /// <param name="groupLevel">The group level of the users.</param>
-        private bool InsertGroupMembers(int? groupID, List<UserDAO> users, GroupLevel groupLevel)
+        private bool InsertGroupMembers(int? groupID, HashSet<UserDAO> users, GroupLevel groupLevel)
         {
             foreach(UserDAO user in users)
             {
@@ -801,7 +801,7 @@ namespace t2sDbLibrary
             return true;
         }
 
-        private void CheckForUserListModifications(int? groupID, List<UserDAO> userList, GroupLevel groupLevel)
+        private void CheckForUserListModifications(int? groupID, HashSet<UserDAO> userList, GroupLevel groupLevel)
         {
             // Get the current list of all users for a specific group level
             List<int?> userIDList = GetAllGroupMemberIDs(groupID, true, groupLevel);

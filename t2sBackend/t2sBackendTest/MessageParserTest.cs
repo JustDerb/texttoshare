@@ -68,10 +68,10 @@ namespace t2sBackendTest
                 Description = "Test description",
                 GroupID = 1,
                 GroupTag = "TEST",
-                Moderators = new List<UserDAO>(),
+                Moderators = new HashSet<UserDAO>(),
                 Name = "TEST GROUP",
                 EnabledPlugins = new List<PluginDAO>(),
-                Users = new List<UserDAO>()
+                Users = new HashSet<UserDAO>()
             };
             this._group.Users.Add(this._user2);
 
