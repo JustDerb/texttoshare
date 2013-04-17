@@ -27,6 +27,27 @@ namespace login
             if (controller.CheckLogin(userName, pasword))
             {
                 Response.Write("You're logged In");
+                Session["Username"] = userName;
+                try
+                {
+                    UserDAO user = controller.RetrieveUserByUserName(userName);
+                   //set session info
+                    Session["lastName"]=  user.LastName;
+                    Session["firstName"]=  user.FirstName;
+                    Session["carrier"] = user.Carrier;
+                    Session["phoneNumber"] = user.PhoneNumber;
+                    Session["id"] = user.UserID;
+                    Session["phoneEmail"] = user.PhoneEmail;
+                   // Session["plugins"] = controller.GetPluginsOwnedByUser(user);
+                }
+                catch (ArgumentNullException error)
+                {
+
+                }
+                catch (CouldNotFindException error)
+                {
+
+                }
                 return;
             }
             else
@@ -35,7 +56,11 @@ namespace login
                 return;
             }
 
-
         }
+
+
+
+
+        
     }
 }

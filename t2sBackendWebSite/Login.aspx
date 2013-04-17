@@ -7,7 +7,7 @@
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <form id="form1" class="tts-form" runat="server">
+        <form id="loginForm" class="tts-form" runat="server">
             <h1>Login</h1>
             <p>
                 <label for="userNameBox">Username</label>
