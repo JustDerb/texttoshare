@@ -41,6 +41,7 @@
 .tts-form h1 {
     font-size: 22px;
     padding-bottom: 20px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .tts-form input[type=text],
@@ -129,7 +130,7 @@
     display: block;
     margin: 10px 0;
     text-align: center;
-    text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 -1px rgba(255, 255, 255, 0.3);
     text-decoration: none;
 }
 
