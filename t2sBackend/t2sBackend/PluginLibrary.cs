@@ -207,8 +207,15 @@ namespace t2sBackend
             }
             catch (Exception ex)
             {
-                // Add logic to increment LUA Plugin Error count
-                // And disable, if necessary
+
+                int id = (int) plugin.PluginDAO.PluginID;
+                // Keeping track how many times this plugin has thrown an exception
+                idbController.IncrementPluginFailedAttemptCount(id);
+                // if it's throw more than we want/allow, just disable it
+                if (idbController.GetPluginFailedAttemptCount(id) >= MAX_PLUGIN_FAILURES)
+                {
+                    idbController.DisableGlobalPlugin(plugin.PluginDAO.PluginID);
+                }
                 Logger.LogMessage(plugin.GetType().ToString() + " - " + ex.Message, LoggerLevel.SEVERE);
             }
         }
@@ -231,6 +238,9 @@ namespace t2sBackend
             {"REMOVEUSER".ToUpperInvariant(), new RemoveUserPlugin()}, {"TEXTMODS".ToUpperInvariant(), new TextModsPlugin()},
             {"SUPPRESS".ToUpperInvariant(), new SuppressPlugin()}, {"STOP".ToUpperInvariant(), new StopPlugin()}
         });
+
+        // Maximum amount of times we will let a plugin throw an exception before disabling it until it has been reviewed
+        private int MAX_PLUGIN_FAILURES = 5;
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
         private static string INVALID_GROUP_MESSAGE = "Invalid group. Please check your message and try again.";
