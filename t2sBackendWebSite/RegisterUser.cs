@@ -83,7 +83,7 @@ namespace codebehind
             Session["userid"] = user.UserID;
             Session["phoneEmail"] = user.PhoneEmail;
 
-            Response.Redirect("");
+            Response.Redirect("Index.apsx");
 
             return;
         }

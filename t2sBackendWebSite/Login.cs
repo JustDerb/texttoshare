@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -51,7 +51,7 @@ namespace login
                 }
 
                 //session information was set no problem, redirect user to home page
-                Response.Redirect("");
+                Response.Redirect("Index.aspx");
                 return;
             }
 
