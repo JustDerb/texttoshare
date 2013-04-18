@@ -82,6 +82,7 @@ namespace codebehind
             Session["phoneNumber"] = user.PhoneNumber;
             Session["userid"] = user.UserID;
             Session["phoneEmail"] = user.PhoneEmail;
+            Session["userDAO"] = user;
 
             Response.Redirect("Index.apsx");
 

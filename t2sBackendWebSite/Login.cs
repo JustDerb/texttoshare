@@ -37,6 +37,7 @@ namespace login
                     Session["phoneNumber"] = user.PhoneNumber;
                     Session["userid"] = user.UserID;
                     Session["phoneEmail"] = user.PhoneEmail;
+                    Session["userDAO"] = user;
                     // Session["plugins"] = controller.GetPluginsOwnedByUser(user);
                 }
                 catch (ArgumentNullException)
