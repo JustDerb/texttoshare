@@ -26,41 +26,37 @@ namespace login
 
             if (controller.CheckLogin(userName, pasword))
             {
-                Response.Write("You're logged In");
-                Session["Username"] = userName;
                 try
                 {
                     UserDAO user = controller.RetrieveUserByUserName(userName);
-                   //set session info
-                    Session["lastName"]=  user.LastName;
-                    Session["firstName"]=  user.FirstName;
+                    //set session info
+                    Session["username"] = user.UserName;
+                    Session["lastName"] = user.LastName;
+                    Session["firstName"] = user.FirstName;
                     Session["carrier"] = user.Carrier;
                     Session["phoneNumber"] = user.PhoneNumber;
-                    Session["id"] = user.UserID;
+                    Session["userid"] = user.UserID;
                     Session["phoneEmail"] = user.PhoneEmail;
-                   // Session["plugins"] = controller.GetPluginsOwnedByUser(user);
+                    // Session["plugins"] = controller.GetPluginsOwnedByUser(user);
                 }
-                catch (ArgumentNullException error)
+                catch (ArgumentNullException)
                 {
-
+                    Response.Write("Incorrect user name or password!");
+                    return;
                 }
-                catch (CouldNotFindException error)
+                catch (CouldNotFindException)
                 {
-
+                    Response.Write("Incorrect user name or password!");
+                    return;
                 }
+
+                //session information was set no problem, redirect user to home page
+                Response.Redirect("");
                 return;
             }
-            else
-            {
-                Response.Write("Incorrect user name or password!");
-                return;
-            }
 
+            Response.Write("Incorrect user name or password!");
+            return;
         }
-
-
-
-
-        
     }
 }

@@ -19,7 +19,6 @@ namespace codebehind
         {
         }
 
-
         protected System.Web.UI.WebControls.Label MyLabel;
         protected System.Web.UI.WebControls.Button MyButton;
         protected System.Web.UI.WebControls.TextBox MyTextBox;
@@ -33,14 +32,13 @@ namespace codebehind
         {
             String password = Request["passwordBox"];
             String verifyPassword = Request["verifyPasswordBox"];
-            
+
             if (!password.Equals(verifyPassword))
             {
                 Response.Write("The passwords you entered do not match. Please try again.");
                 return;
             }
 
-            // MyLabel.Text = FirstTextBox.Text.ToString();
             SqlController controller = new SqlController();
             UserDAO user = new UserDAO()
             {
@@ -52,27 +50,7 @@ namespace codebehind
                 PhoneEmail = Request["PhoneNumberBox"] + (PhoneCarrier)Request["CarrierBox"],
                 IsBanned = false,
                 IsSuppressed = false
-
             };
-
-            //grab input from textboxs
-            String firstName = Request["firstNameBox"];
-            String lastName = Request["lastNameBox"];
-            String phoneNumber = Request["PhoneNumberBox"];
-            String phoneCarrier = Request["CarrierBox"];
-            String userName = Request["userNameBox"];
-
-            //set fields of the userDAO
-            user.UserName = userName;
-            user.FirstName = firstName;
-            user.LastName = lastName;
-            user.PhoneNumber = phoneNumber;
-
-            // TODO: need to be able to retrieve from database correct carrier ending
-            //user.PhoneEmail = phoneNumber + "@txt.att.com";
-            user.PhoneEmail = phoneNumber + (PhoneCarrier)phoneCarrier;
-            user.IsBanned = false;
-            user.IsSuppressed = false;
 
             //check to see is needs to be hashed before
             try
@@ -82,21 +60,31 @@ namespace codebehind
             }
             catch (EntryAlreadyExistsException)
             {
-                Response.Write("User Already Exists");
+                Response.Write("A user with that name already exists.");
                 return;
-
             }
             catch (ArgumentNullException)
             {
-                Response.Write("A Field was left blank");
+                Response.Write("A field was left blank");
                 return;
             }
-            catch (SqlException error)
+            catch (SqlException)
             {
                 //logger.logMessage("SQLException when Registering User", 4);
             }
 
-            Response.Write("You successfully registered!");
+            //Response.Write("You successfully registered!");
+            //set the session the same as user login
+            Session["username"] = user.UserName;
+            Session["lastName"] = user.LastName;
+            Session["firstName"] = user.FirstName;
+            Session["carrier"] = user.Carrier;
+            Session["phoneNumber"] = user.PhoneNumber;
+            Session["userid"] = user.UserID;
+            Session["phoneEmail"] = user.PhoneEmail;
+
+            Response.Redirect("");
+
             return;
         }
 
@@ -109,6 +97,7 @@ namespace codebehind
         {
             SqlController controller = new SqlController();
             UserDAO user = new UserDAO();
+
             //grab input from textboxs
             String firstName = Request["rfirstNameBox"];
             String lastName = Request["rlastNameBox"];
@@ -116,18 +105,6 @@ namespace codebehind
             String phoneCarrier = Request["rCarrierBox"];
             String password = Request["rPasswordBox"];
             String userName = Request["rUserNameBox"];
-
-
         }
-
-
-
-
-
     }
-
-
-
-
-
 }
