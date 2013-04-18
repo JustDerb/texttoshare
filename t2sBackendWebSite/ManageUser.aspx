@@ -3,7 +3,17 @@
    {
        Response.Redirect("Login.aspx");
    }
+   else
+   {
+       userNameBox.Text = Session["Username"].ToString();
+       firstNameBox.Text = Session["firstName"].ToString();
+       lastNameBox.Text =  Session["lastName"].ToString();
+       carrierBox.Text =  Session["carrier"].ToString();
+       phoneNumberBox.Text =  Session["phoneNumber"].ToString();
+   }
 %>
+
+
 
 <!DOCTYPE html>
 
@@ -17,7 +27,7 @@
         <h1>Manage User</h1>
         <p>
             <label for="firstNameBox">First Name</label>
-            <asp:TextBox ID="firstNameBox" name="firstNameBox"   runat="server"  placeholder="First Name"  ></asp:TextBox>
+            <asp:TextBox ID="firstNameBox" name="firstNameBox"   runat="server"   ></asp:TextBox>
         </p>
         <p>
             <label for="lastNameBox">Last Name</label>

@@ -51,7 +51,11 @@ namespace ManageUsers
             
         }
 
-
+        /// <summary>
+        /// dont use
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void popluatePluginList(Object sender, EventArgs e)
         {
             try
@@ -78,15 +82,18 @@ namespace ManageUsers
         }
 
 
-        public void retrieveEnabledPlugins(Object sender, EventArgs e)
-        {
 
-        }
-
-        public void fillFirstNameBox(Object sender, EventArgs args)
+        /// <summary>
+        /// don't use
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public String fillFirstNameBox(Object sender, EventArgs args)
         {
             TextBox firstName = ((TextBox)((TextBox)sender).Parent.FindControl("firstNameBox"));
-            firstName.Text = Session["firstName"].ToString();
+            firstName.Text = HttpContext.Current.Session["firstName"].ToString();
+            return HttpContext.Current.Session["firstName"].ToString();
             //return Session["firstName"].ToString();
 
         }

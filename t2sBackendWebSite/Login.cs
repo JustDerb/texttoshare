@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -33,7 +33,7 @@ namespace login
                     Session["username"] = user.UserName;
                     Session["lastName"] = user.LastName;
                     Session["firstName"] = user.FirstName;
-                    Session["carrier"] = user.Carrier;
+                    Session["carrier"] = user.Carrier.GetName();
                     Session["phoneNumber"] = user.PhoneNumber;
                     Session["userid"] = user.UserID;
                     Session["phoneEmail"] = user.PhoneEmail;
