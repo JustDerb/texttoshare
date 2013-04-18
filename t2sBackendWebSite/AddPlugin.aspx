@@ -3,6 +3,10 @@
    {
        Response.Redirect("Login.aspx");
    }
+   else
+   {
+       pluginOwner.Text = Session["username"].ToString();
+   }
 %>
 
 <!DOCTYPE html>
@@ -17,6 +21,10 @@
             <p>
                 <label for="pluginNameBox">Plugin Name</label>
                 <asp:TextBox ID="pluginNameBox" name="pluginNameBox" placeholder="Plugin Name" runat="server" required></asp:TextBox>
+            </p>
+            <p>
+                <label for="pluginOwner">Plugin Owner</label>
+                <asp:TextBox ID="pluginOwner" Font-Names="pluginOwner" runat="server" required><</asp:TextBox>
             </p>
             <p>
                 <label for="pluginDescriptionBox">Plugin Description</label>

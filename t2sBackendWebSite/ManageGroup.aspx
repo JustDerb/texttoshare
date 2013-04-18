@@ -3,6 +3,11 @@
    {
        Response.Redirect("Login.aspx");
    }
+   else
+   {
+       Session["groupTag"] = "test";
+       groupTagBox.Text = Session["groupTag"].ToString();
+   }
 %>
 
 <!DOCTYPE html>
@@ -14,7 +19,7 @@
 <body>
     <form id="updateform" runat="server">
         <asp:textbox id="groupNameBox" placeholder="Group Name" runat="server"></asp:textbox>
-        <asp:textbox id="groupTagBox" placeholder="Group Tag" runat="server"></asp:textbox>
+        <asp:textbox id="groupTagBox"  runat="server"></asp:textbox>
         <asp:textbox id="groupDescripationBox" placeholder="Descripation of Group" runat="server"></asp:textbox>
         <asp:DropDownList id="groupPlugin" runat="server" onload="popluateGroupList" >
             <asp:ListItem Text="<Select Plugin>" Value="0" />
