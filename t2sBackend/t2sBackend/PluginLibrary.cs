@@ -94,6 +94,11 @@ namespace t2sBackend
 
                 switch (message.Type)
                 {
+                    // User is suppressed
+                    case ParsedMessage.ContentMessageType.SUPPRESS:
+                        doMessage = true;
+                        plugin = new SuppressPlugin();
+                        break;
                     // Not a valid group ID
                     case ParsedMessage.ContentMessageType.NO_GROUP:
                         message.ContentMessage = INVALID_GROUP_MESSAGE;
@@ -101,10 +106,6 @@ namespace t2sBackend
                     // User is banned
                     case ParsedMessage.ContentMessageType.BAN:
                         doMessage = false;
-                        break;
-                    // User is suppressed
-                    case ParsedMessage.ContentMessageType.SUPPRESS:
-                        message.ContentMessage = SUPPRESSED_USER_MESSAGE;
                         break;
                     case ParsedMessage.ContentMessageType.NO_COMMAND:
                         message.ContentMessage = INVALID_COMMAND_MESSAGE;
@@ -234,7 +235,6 @@ namespace t2sBackend
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
         private static string INVALID_GROUP_MESSAGE = "Invalid group. Please check your message and try again.";
         private static string INVALID_USER_MESSAGE = "You are not a valid member of this group. Please check your message and try again.";
-        private static string SUPPRESSED_USER_MESSAGE = "You have currently suppressed recieving messages. To disable, please reply, \"SUPPRESS OFF\"";
         private static string INVALID_PLUGIN_MESSAGE = "Invalid command. Please check your message and try again.";
         private static string RESTRICTED_ACCESS_MESSAGE = "You are not authorized to use this command. Please check with your group's owner and try again.";
         private static string INVALID_COMMAND_MESSAGE = "Invalid command. Please check your message and try again.";
