@@ -19,14 +19,16 @@ namespace t2sBackend
         public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
             Message msgSender = new Message();
-            Message msgRemovedUser = new Message();
-            try
+
+            if (message.Arguments.Count > 0 && message.Arguments[0].Substring(0, 3).ToUpper().Equals("YES"))
             {
-                
+                controller.DeleteUser(message.Sender);
+                msgSender.FullMessage = "You have been removed from our system. Thank you for using our services.";
             }
-            catch (Exception)
+            else 
             {
-                msgSender.FullMessage = "Failed to remove.";
+                controller.SuppressUser(message.Sender);
+                msgSender.FullMessage = "To remove yourself from Text2Share, please respond with STOP YES. Please keep in mind that this also deletes any groups you own and any plugins you have developed.";
             }
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
             service.SendMessage(msgSender);
