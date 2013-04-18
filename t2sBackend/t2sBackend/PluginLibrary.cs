@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading;
 using System.Linq;
 using System.Text;
 using t2sDbLibrary;
@@ -19,6 +20,11 @@ namespace t2sBackend
         private IDBController idbController;
 
         private BackgroundWorker libraryThread;
+
+        struct PluginState{
+            public IPlugin plug;
+            public ParsedMessage mess;
+        }
 
         /// <summary>
         /// Constructs a list of plug-ins and initializes the library
@@ -175,19 +181,23 @@ namespace t2sBackend
                     }
 
                     // NOTE: Make sure thread is not disposed after running because it lost scope
-                    BackgroundWorker pluginThread = new BackgroundWorker();
-                    pluginThread.DoWork += pluginThread_DoWork;
                     Object[] parameters = new Object[] { plugin, message };
-                    pluginThread.RunWorkerAsync(parameters);
+                    PluginState state = new PluginState();
+                    state.plug = plugin;
+                    state.mess = message;
+
+
+
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(pluginThread_DoWork), state);
                 }
             }
         }
 
-        void pluginThread_DoWork(object sender, DoWorkEventArgs e)
+        void pluginThread_DoWork(Object e)
         {
-            Object[] parameters = (Object[])e.Argument;
-            IPlugin plugin = (IPlugin)parameters[0];
-            ParsedMessage message = (ParsedMessage)parameters[1];
+            PluginState parameters = (PluginState)e;
+            IPlugin plugin = (IPlugin)parameters.plug;
+            ParsedMessage message = (ParsedMessage)parameters.mess;
 
             // Do plugin work
             try
@@ -218,7 +228,7 @@ namespace t2sBackend
             {"ERROR".ToUpperInvariant(), new ErrorPlugin()}, {"TEXTUSER".ToUpperInvariant(), new TextUserPlugin()},
             {"TEXTGROUP".ToUpperInvariant(), new TextGroupPlugin()}, {"LISTPLUGINS".ToUpperInvariant(), new ListEnabledPlugins()},
             {"REMOVEUSER".ToUpperInvariant(), new RemoveUserPlugin()}, {"TEXTMODS".ToUpperInvariant(), new TextModsPlugin()},
-            {"SUPPRESS".ToUpperInvariant(), new SuppressPlugin()}
+            {"SUPPRESS".ToUpperInvariant(), new SuppressPlugin()}, {"STOP".ToUpperInvariant(), new StopPlugin()}
         });
         
         // Messages to be sent back to sender when system throws an error or the commands are invalid.
