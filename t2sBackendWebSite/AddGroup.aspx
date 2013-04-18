@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="users.AddGroup" Src="AddGroup.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AddGroup.aspx.cs" Inherits="GetUser" %>
 <% if (null == Session["username"])
    {
        Response.Redirect("Login.aspx");

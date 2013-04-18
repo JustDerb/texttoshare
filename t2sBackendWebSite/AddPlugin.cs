@@ -13,7 +13,7 @@ namespace plugin
     /// <summary>
     /// Summary description for AddPlugin
     /// </summary>
-    public class AddPlugin : Page
+    public class AddPlugin2 : Page
     {
         public AddPlugin()
         {

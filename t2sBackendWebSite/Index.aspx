@@ -3,6 +3,10 @@
    {
        Response.Redirect("Login.aspx");
    }
+   else
+   {
+       Response.Write(Session["username"].ToString());
+   }
 %>
 
 <!DOCTYPE html>
@@ -23,9 +27,20 @@
                 </ul>
                 <form class="navbar-form pull-right" runat="server">
                     <button class="btn" runat="server" onclick="logoutButton_Click">Logout</button>
+                    <asp:DropDownList ID="PluginsOwned" runat="server" onload="retrievePlugins" >
+                    <asp:ListItem Text="<Currently Enabled Plugins>" Value="0" />
+             </asp:DropDownList>
                 </form>
             </div>
         </div>
+
+
+       
+             
+
+
+
+
     </body>
 
     <script src="Scripts/jquery-1.7.1.min.js"></script>

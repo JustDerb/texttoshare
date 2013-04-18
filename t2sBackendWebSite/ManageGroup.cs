@@ -100,9 +100,12 @@ namespace manageGroup
         {
             try
             {
+
+               
                 //TODO
                 //need to get groupid from session
                 SqlController controller = new SqlController();
+               
                 GroupDAO group = controller.RetrieveGroup(Session["groupTag"].ToString());
                // GroupDAO group = controller.RetrieveGroup(Request["groupTagBox"]);
                 List<PluginDAO> plugins = controller.GetAllEnabledGroupPlugins(group.GroupID);

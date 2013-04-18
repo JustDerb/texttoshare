@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="ManageUsers.manageUsers" src="manageUsers.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManageUser.aspx.cs" Inherits="manageUser" %>
 <% if (null == Session["Username"])
    {
        Response.Redirect("Login.aspx");

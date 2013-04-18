@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Codebehind.RegisterUser" Src="RegisterUser.cs" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="RegisterUser.aspx.cs" Inherits="_Default" %>
 
 
 <!DOCTYPE html>
