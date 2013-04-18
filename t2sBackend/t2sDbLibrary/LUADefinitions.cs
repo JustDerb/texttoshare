@@ -82,6 +82,13 @@ namespace t2sDbLibrary
         /// <returns></returns>
         public static String getLuaScriptLocation(String name)
         {
+            // Make sure we are using the file extension
+            name = name.Trim();
+            if (!name.EndsWith(LUADefinitions.LuaExtension))
+            {
+                name += LUADefinitions.LuaExtension;
+            }
+
             // TODO - Make this more elegant and use a File object
             String basePath = LUADefinitions.LuaScriptLocation.Trim().TrimEnd('\\');
             if (name == null)

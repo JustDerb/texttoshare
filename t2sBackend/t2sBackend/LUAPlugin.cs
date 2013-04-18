@@ -187,14 +187,6 @@ namespace t2sBackend
                 throw new ArgumentNullException();
             }
 
-
-            // Make sure we are using the file extension
-            script = script.Trim();
-            if (!script.EndsWith(LUADefinitions.LuaExtension))
-            {
-                script += LUADefinitions.LuaExtension;
-            }
-
             this.ScriptFileLoc = LUADefinitions.getLuaScriptLocation(script);
 
             // See if it's there
