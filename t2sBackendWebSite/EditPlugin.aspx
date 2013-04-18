@@ -10,7 +10,7 @@
         #editor { 
             position: relative;
             width: 100%;
-            height: 1000px;
+            height: 600px;
         }
         #t2sluaapi {
             height:600px;
@@ -44,23 +44,13 @@
             <div class="span7 well well-small">
                 <h5 style="margin-top:0">Lua Editor</h5>
                 <div id="editor"></div>
-            </div>
-          <div class="span5">
-              <h3>Plugin Name</h3>
-              <form method="post">
-                  <label for="versionInput">Version</label>
-                  <input class="input-small" id="versionInput" name="versionInput" type="text" placeholder="Version" />
-                  <textarea class="input-block-level" id="descriptionInput" name="descriptionInput" rows="3" placeholder="Description..."></textarea>
-                  <label for="helpInput">Help</label>
-                  <input class="input-large" id="helpInput" name="helpInput" type="text" placeholder="Help text..." />
-                  <label for="levelInput">Access</label>
-                  <select name="levelInput" id="levelInput">
-                      <option>Users &amp; Moderators</option>
-                      <option>Moderators</option>
-                  </select>
+                <form method="post">
                   <textarea style="display:none" id="editorText" name="editorText" rows="3" runat="server"></textarea>
                   <input type="submit" class="tts-button" value="Save changes" />
               </form>
+            </div>
+          <div class="span5">
+              <h3>Editing Plugin: <asp:Literal ID="PluginName" runat="server"></asp:Literal></h3>
               <h4>Text2Share Lua API</h4>
               <div id="t2sluaapi" class="well">
                   <h5>Messages</h5>
