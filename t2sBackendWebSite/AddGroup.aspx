@@ -13,13 +13,13 @@
     </head>
     <body>
         <form id="AddGroup" class="tts-form" method="post" runat="server">
-            <!--<asp:textbox id="ownerNamebox" placeholder="Owner" runat="server"></asp:textbox>-->
+            <h1>Add a New Group</h1>
             <p>
                 <label for="groupNameBox">Group Name</label>
                 <asp:TextBox ID="groupNameBox" name="groupNameBox" placeholder="Group Name" runat="server" required></asp:TextBox>
             </p>
             <p>
-                <label for="groupTagBox">Group Name</label>
+                <label for="groupTagBox">Group Tag</label>
                 <asp:TextBox ID="groupTagBox" name="groupTagBox" placeholder="Group Tag" runat="server" required></asp:TextBox>
             </p>
              <p>
