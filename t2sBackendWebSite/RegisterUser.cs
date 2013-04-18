@@ -84,7 +84,7 @@ namespace codebehind
             Session["phoneEmail"] = user.PhoneEmail;
             Session["userDAO"] = user;
 
-            Response.Redirect("Index.apsx");
+            Response.Redirect("Index.aspx");
 
             return;
         }
