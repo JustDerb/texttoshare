@@ -12,8 +12,6 @@
         LocalDatabase = LocalDatabase.Substring(0, LocalDatabase.IndexOf(@"\t2sBackendWebSite"));
         LocalDatabase += @"\t2sBackend\t2sBackend\bin\Debug\MainDatabase.mdf";
         SqlController.CONNECTION_STRING = @"Data Source=(LocalDB)\v11.0;Integrated Security=True;AttachDbFilename="+LocalDatabase;
-            
-         
     }
     
     void Application_End(object sender, EventArgs e) 

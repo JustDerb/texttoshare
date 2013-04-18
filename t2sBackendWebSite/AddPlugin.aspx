@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="plugin.AddPlugin" Src="AddPlugin.cs" %>
-<% if (null == Session["Username"])
+<% if (null == Session["username"])
    {
        Response.Redirect("Login.aspx");
    }

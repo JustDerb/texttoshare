@@ -1,4 +1,11 @@
 ﻿@{
+    if (null == Session["Username"])
+    {
+        Response.Redirect("Login.aspx");
+    }
+}
+
+@{
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Register Page";
 }
