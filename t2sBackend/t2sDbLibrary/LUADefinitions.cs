@@ -74,5 +74,25 @@ namespace t2sDbLibrary
         /// Extension for Lua scripts
         /// </summary>
         public static readonly String LuaExtension;
+
+        /// <summary>
+        /// gets the default location of where a Lua Script will be loaded from
+        /// </summary>
+        /// <param name="name">Name of script</param>
+        /// <returns></returns>
+        public static String getLuaScriptLocation(String name)
+        {
+            // TODO - Make this more elegant and use a File object
+            String basePath = LUADefinitions.LuaScriptLocation.Trim().TrimEnd('\\');
+            if (name == null)
+                return basePath;
+            name = name.Trim();
+            if (name.Equals(String.Empty))
+                return basePath;
+            else if (name.StartsWith(@"/") || name.StartsWith(@"\"))
+                return basePath + name;
+            else
+                return basePath + @"\" + name;
+        }
     }
 }
