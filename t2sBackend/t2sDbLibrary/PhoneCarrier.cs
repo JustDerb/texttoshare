@@ -335,7 +335,7 @@ namespace t2sDbLibrary
         public static explicit operator PhoneCarrier(string name)
         {
             PhoneCarrier result;
-            if (nameInstance.TryGetValue(name, out result))
+            if (nameInstance.TryGetValue(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(name.ToLower()), out result))
                 return result;
             else
                 throw new InvalidCastException();
