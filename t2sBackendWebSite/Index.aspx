@@ -3,10 +3,6 @@
    {
        Response.Redirect("Login.aspx");
    }
-   else
-   {
-       Response.Write(Session["username"].ToString());
-   }
 %>
 
 <!DOCTYPE html>
@@ -19,30 +15,38 @@
     <body>
         <div class="navbar">
             <div class="navbar-inner">
-                <a class="brand" href="#">TextToShare</a>
-                <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                </ul>
-                <form class="navbar-form pull-right" runat="server">
-                    <button class="btn" runat="server" onclick="logoutButton_Click">Logout</button>
-                    <asp:DropDownList ID="PluginsOwned" runat="server" onload="retrievePlugins" >
-                    <asp:ListItem Text="<Currently Enabled Plugins>" Value="0" />
-             </asp:DropDownList>
-                </form>
+                <div class="container">
+                    <a class="brand" href="#">TextToShare</a>
+                    <ul class="nav" role="navigation">
+                        <li class="dropdown">
+                            <a id="groupDrop" class="dropdown-toggle" data-toggle="dropdown" href="#">Groups<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="groupDrop">
+                                <li><a role="menuitem" href="AddGroup.aspx">Add Group</a></li>
+                                <li><a role="menuitem" href="ManageGroup.aspx">Manage Groups</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a id="pluginDrop" class="dropdown-toggle" data-toggle="dropdown" href="#">Plugins<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="pluginDrop">
+                                <li><a role="menuitem" href="AddPlugin.aspx">Add Plugin</a></li>
+                                <li><a role="menuitem" href="ManagePlugin.aspx">Manage Plugins</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a id="userDrop" class="dropdown-toggle" data-toggle="dropdown" href="#">Settings<b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="userDrop">
+                                <li><a role="menuitem" href="ManageUser.aspx">Edit User Information</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="navbar-form pull-right" runat="server">
+                        <button class="btn" runat="server" onclick="logoutButton_Click">Logout</button>
+                    </form>
+                </div>
             </div>
         </div>
-
-
-       
-             
-
-
-
-
     </body>
 
     <script src="Scripts/jquery-1.7.1.min.js"></script>
-    <script src="Scripts/boostrap.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
 </html>
