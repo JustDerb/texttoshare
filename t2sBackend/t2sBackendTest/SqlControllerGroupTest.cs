@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using t2sBackend;
 using t2sDbLibrary;
@@ -114,6 +115,27 @@ namespace t2sBackendTest
         public void CreateGroupWithNoOwnerThrowsException()
         {
             _controller.CreateGroup(new GroupDAO());
+        }
+
+        [TestCategory("SqlController.Group")]
+        [TestMethod]
+        public void GettingListOfGroupsWhenGroupHasNoModeratorsShouldBeEmpty()
+        {
+            _controller.CreateGroup(_group);
+            List<GroupDAO> groups = _controller.GetGroupsUserIsModeratorOf(_moderator.UserID);
+
+            Assert.AreEqual(0, groups.Count);
+        }
+
+        [TestCategory("SqlController.Group")]
+        [TestMethod]
+        public void GettingListOfGroupsWhenGroupHasOneModeratorsShouldHaveOriginalGroup()
+        {
+            _group.AddModerator(_moderator);
+            _controller.CreateGroup(_group);
+            List<GroupDAO> groups = _controller.GetGroupsUserIsModeratorOf(_moderator.UserID);
+
+            Assert.AreEqual(1, groups.Count);
         }
 
         [TestCleanup]

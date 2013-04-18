@@ -119,6 +119,13 @@ namespace t2sDbLibrary
         bool UnbanUser(UserDAO user);
 
         /// <summary>
+        /// Gets a list of groups that the given user is a moderator for
+        /// </summary>
+        /// <param name="userid">The id of the user to search for</param>
+        /// <returns>A list containing all groups the user is a moderator of</returns>
+        List<GroupDAO> GetGroupsUserIsModeratorOf(int? userid);
+
+        /// <summary>
         /// Inserts the given GroupDAO object into the database, along with the different relations
         /// between users, permissions, and plugins.
         /// </summary>

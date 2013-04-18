@@ -469,6 +469,39 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Gets a list of groups that the given user is a moderator for
+        /// </summary>
+        /// <param name="userid">The id of the user to search for</param>
+        /// <returns>A list containing all groups the user is a moderator of</returns>
+        public List<GroupDAO> GetGroupsUserIsModeratorOf(int? userid)
+        {
+            if (null == userid) throw new ArgumentNullException("Cannot get information for null user.");
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT grouptag FROM groups g ");
+                queryBuilder.Append("INNER JOIN groupmembers gm ON g.id = gm.group_id ");
+                queryBuilder.Append("WHERE gm.user_id = @userid AND gm.group_level = 1 ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@userid", userid);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<GroupDAO> groups = new List<GroupDAO>();
+                while (reader.Read())
+                {
+                    groups.Add(RetrieveGroup((string)reader["grouptag"]));
+                }
+
+                return groups;
+            }
+        }
+
         #endregion
 
         #region GroupDAO "CRUD" actions
@@ -711,7 +744,9 @@ namespace t2sDbLibrary
                             group.AddModerator(userDAO);
                             break;
                         // Owner
-                        //case 2:
+                        case 2:
+                            // The owner should have been added in RetrieveGroupMetadata(groupTag)
+                            break;
                             //group.Owner = userDAO; // This needs to be addressed, since the GroupDAO.Owner setter is private
                             //break;
                         // User
