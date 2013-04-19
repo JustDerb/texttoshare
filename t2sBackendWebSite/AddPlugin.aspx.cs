@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.IO;
 using System.Web.UI.WebControls;
+using System.Data.SqlClient;
 using t2sDbLibrary;
 
 
@@ -35,6 +36,34 @@ public partial class AddPlugin : System.Web.UI.Page
         try
         {
             owner = controller.RetrieveUserByUserName(ownerUserName);
+            if (owner != null)
+            {
+                plugin.OwnerID = owner.UserID;
+            }
+            //fill upload
+            if (filMyFile.PostedFile != null)
+            {
+                // File was sent
+                // Get a reference to PostedFile object
+                HttpPostedFile myFile = filMyFile.PostedFile;
+                // Get size of uploaded file
+                int nFileLen = myFile.ContentLength;
+                // Allocate a buffer for reading of the file
+                byte[] myData = new byte[nFileLen];
+                // Read uploaded file from the Stream
+                myFile.InputStream.Read(myData, 0, nFileLen);
+                string strFilename = Path.GetFileName(myFile.FileName);
+                string path = LUADefinitions.LuaScriptLocation + strFilename;
+
+                WriteToFile(path, myData);
+                controller.CreatePlugin(plugin);
+                Response.Write(" Plugin " + strFilename + " has been added successfully");
+            }
+            else
+            {
+                // No file
+                Response.Write("NO file attached. Plugin couldn't be added");
+            }
         }
         catch (ArgumentNullException)
         {
@@ -44,33 +73,15 @@ public partial class AddPlugin : System.Web.UI.Page
         {
             Response.Write("Could not find the owner ");
         }
-        if (owner != null)
+        catch (EntryAlreadyExistsException)
         {
-            plugin.OwnerID = owner.UserID;
+            Response.Write("Plugin Already Exists");
         }
-        //fill upload
-        if (filMyFile.PostedFile != null)
+        /**catch (SqlException)
         {
-            // File was sent
-            // Get a reference to PostedFile object
-            HttpPostedFile myFile = filMyFile.PostedFile;
-            // Get size of uploaded file
-            int nFileLen = myFile.ContentLength;
-            // Allocate a buffer for reading of the file
-            byte[] myData = new byte[nFileLen];
-            // Read uploaded file from the Stream
-            myFile.InputStream.Read(myData, 0, nFileLen);
-            string strFilename = Path.GetFileName(myFile.FileName);
-            string path = LUADefinitions.LuaScriptLocation + strFilename;
-
-            WriteToFile(path, myData);
-            Response.Write(" Plugin " + strFilename + " has been added successfully");
-        }
-        else
-        {
-            // No file
-            Response.Write("NO file attached. Plugin couldn't be added");
-        }
+            Response.Write("SQL Exception: Error adding plugin");
+        }*/
+       
 
     }
 

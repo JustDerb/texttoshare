@@ -17,6 +17,11 @@
 <body>
     <form id="managePlugin" runat="server">
         <p>
+            <asp:DropDownList id="Plugins" runat="server" >
+                <asp:ListItem Text="<Select Plugin>" Value="0" />
+            </asp:DropDownList>
+        </p>
+        <p>
             <label for="pluginNameBox">Plugin Name</label>
             <asp:textbox id="pluginNameBox" name="pluginNameBox" placeholder="Plugin Name" runat="server"></asp:textbox>
         </p>
@@ -39,11 +44,6 @@
         <p>
             <asp:button id="updatePluginButton" name="updatePluginButton" text="Update Plugin" Onclick="updatePlugin_Click" runat="server"></asp:button>
         </p>
-
-        <!--<asp:DropDownList-->
-        <!--<asp:DropDownList id="ddlPlugin" runat="server" onload="popluateList" >
-            <asp:ListItem Text="<Select Plugin>" Value="0" />
-        </asp:DropDownList>-->
 
     <div>
     
