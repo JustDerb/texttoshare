@@ -1697,7 +1697,7 @@ namespace t2sDbLibrary
                 queryBuilder.Append("SELECT id, name, description, disabled, version_num, owner_id, plugin_access, help_text ");
                 queryBuilder.Append("FROM plugins ");
                 queryBuilder.Append("WHERE owner_id = @ownerid ");
-                query.CommandText = "";
+                query.CommandText = queryBuilder.ToString();
 
                 query.Parameters.AddWithValue("@ownerid", user.UserID);
 
