@@ -9,8 +9,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title>TextToShare - Home</title>
-        <link href="Content/style.css" rel="stylesheet" type="text/css" />
         <link href="Content/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="Content/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <div class="navbar">

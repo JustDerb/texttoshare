@@ -9,6 +9,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title>TextToShare - Add Group</title>
+        <link href="Content/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
@@ -28,7 +29,7 @@
             </p>
             <p>
                 <label for="groupDescriptionBox">Group Description</label>
-                <asp:TextBox ID="groupDescripationBox" name="groupDescriptionBox" placeholder="Descripation of Group" runat="server" required></asp:TextBox>
+                <asp:TextBox ID="groupDescriptionBox" name="groupDescriptionBox" placeholder="Descripation of Group" runat="server" required></asp:TextBox>
             </p>
             <p>
                 <asp:Button ID="addGroupButton" Text="Add Group" OnClick="addGroup_Click" runat="server"></asp:Button>

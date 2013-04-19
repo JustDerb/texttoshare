@@ -29,7 +29,6 @@ public partial class GetUser : System.Web.UI.Page
         String ownerUsername = Request["groupOwner"];
         try
         {
-
             owner = controller.RetrieveUserByUserName(ownerUsername);
         }
         catch (ArgumentNullException)
@@ -46,7 +45,7 @@ public partial class GetUser : System.Web.UI.Page
             group = new GroupDAO(owner);
             group.Name = Request["groupNameBox"];
             group.GroupTag = Request["groupTagBox"];
-            group.Description = Request["groupDescripationBox"];
+            group.Description = Request["groupDescriptionBox"];
         }
         bool added = false;
         try
@@ -61,6 +60,7 @@ public partial class GetUser : System.Web.UI.Page
         {
             Response.Write("This group already exists! ");
         }
+
         if (added)
         {
             Response.Write("Your group was created successfully! ");
