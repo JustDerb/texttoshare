@@ -1,12 +1,9 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Index.aspx.cs" Inherits="Index" %>
-<%
-    
-%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
-        <title>TextToShare - Home</title>
+        <title><asp:Literal ID="PageTitle" runat="server"></asp:Literal></title>
         <link href="Content/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
         <style type="text/css">

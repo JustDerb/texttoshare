@@ -11,7 +11,7 @@ public partial class Login : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        PageTitle.Text = "Text2Share - Login";
     }
 
     public void Login_Click(Object sender, EventArgs e)

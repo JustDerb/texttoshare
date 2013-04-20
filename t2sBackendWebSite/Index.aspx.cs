@@ -12,6 +12,7 @@ public partial class Index : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        PageTitle.Text = "Text2Share - Home";
     }
 
     public void retrievePlugins(Object sender, EventArgs e)

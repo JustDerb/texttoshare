@@ -11,7 +11,7 @@ public partial class _Default : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        PageTitle.Text = "Text2Share - Register";
     }
 
     protected System.Web.UI.WebControls.Label MyLabel;
