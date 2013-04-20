@@ -14,6 +14,7 @@ public partial class AddPlugin : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        PageTitle.Text = "Text2Share - Add Plugin";
     }
 
     public void AddPlugin_Click(Object sender, EventArgs e)

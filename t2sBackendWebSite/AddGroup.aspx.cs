@@ -11,6 +11,7 @@ public partial class GetUser : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        PageTitle.Text = "TextToShare - Add Group";
     }
 
     public void addGroup_Click(Object sender, EventArgs e)

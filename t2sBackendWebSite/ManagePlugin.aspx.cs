@@ -11,6 +11,7 @@ public partial class ManagePlugin : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        PageTitle.Text = "Text2Share - Manage Plugin";
         popluateList(sender, e);
     }
 

@@ -13,6 +13,7 @@ public partial class ManageGroup : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        PageTitle.Text = "Text2Share - Manage Group";
     }
 
     public void updateGroup_Click(Object sender, EventArgs e)

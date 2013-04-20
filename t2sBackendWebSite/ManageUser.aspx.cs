@@ -12,6 +12,7 @@ public partial class manageUser : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        PageTitle.Text = "Text2Share - Manage User";
     }
 
     public void update_Click(Object sender, EventArgs e)
