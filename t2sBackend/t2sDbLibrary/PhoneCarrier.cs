@@ -310,7 +310,7 @@ namespace t2sDbLibrary
         private PhoneCarrier(int value, string name, string email)
         {
             this.value = value;
-            this.name = name;
+            this.name = name.ToLower();
             this.email = email;
 
             nameInstance[name] = this;
@@ -335,7 +335,7 @@ namespace t2sDbLibrary
         public static explicit operator PhoneCarrier(string name)
         {
             PhoneCarrier result;
-            if (nameInstance.TryGetValue(System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(name.ToLower()), out result))
+            if (nameInstance.TryGetValue(name.ToLower(), out result))
                 return result;
             else
                 throw new InvalidCastException();
