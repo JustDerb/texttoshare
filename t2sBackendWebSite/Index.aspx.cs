@@ -14,13 +14,6 @@ public partial class Index : BasePage
         base.CheckLoginSession();
     }
 
-    public void logoutButton_Click(Object sender, EventArgs e)
-    {
-        Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        Session.Abandon();
-        Response.Redirect("Login.aspx");
-    }
-
     public void retrievePlugins(Object sender, EventArgs e)
     {
         SqlController control = new SqlController();
