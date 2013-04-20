@@ -30,7 +30,7 @@ public partial class _Default : BasePage
 
             if (!password.Equals(verifyPassword))
             {
-                Response.Write("The passwords you entered do not match. Please try again.");
+                invalidCredentials.Text = "The passwords you entered do not match. Please try again.";
                 return;
             }
 
@@ -55,12 +55,13 @@ public partial class _Default : BasePage
             }
             catch (EntryAlreadyExistsException)
             {
-                Response.Write("A user with that name already exists.");
+                invalidCredentials.Text = "A user with that name already exists. Please try again";
+                userNameBox.Focus();
                 return;
             }
             catch (ArgumentNullException)
             {
-                Response.Write("A field was left blank");
+                invalidCredentials.Text = "A field was left blank. Please make sure the form is fully completed.";
                 return;
             }
             catch (SqlException)
@@ -68,19 +69,17 @@ public partial class _Default : BasePage
                 //logger.logMessage("SQLException when Registering User", 4);
             }
 
-            //Response.Write("You successfully registered!");
             //set the session the same as user login
             Session["username"] = user.UserName;
             Session["lastName"] = user.LastName;
             Session["firstName"] = user.FirstName;
-            Session["carrier"] = user.Carrier;
+            Session["carrier"] = user.Carrier.GetName();
             Session["phoneNumber"] = user.PhoneNumber;
             Session["userid"] = user.UserID;
             Session["phoneEmail"] = user.PhoneEmail;
+            Session["userDAO"] = user;
 
             Response.Redirect("Index.apsx");
-
-            return;
         }
 
         /// <summary>

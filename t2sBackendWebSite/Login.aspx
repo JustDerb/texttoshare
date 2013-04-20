@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title>TextToShare - Login</title>
-        <link href="Content/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="Content/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
         <style type="text/css">
 			body {
@@ -13,6 +13,7 @@
 				background-color: #f5f5f5;
 			}
         </style>
+        <link href="Content/bootstrap/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <form id="loginForm" class="tts-form" runat="server">
@@ -32,6 +33,9 @@
                     <asp:Button id="login" class="btn btn-large btn-primary" OnClick="Login_Click" runat="server" Text="Login"></asp:Button>
                     <a href="RegisterUser.aspx" class="btn btn-large pull-right">Register</a>
                 </div>
+            </div>
+            <div class="control-group">
+                <asp:Label id="invalidCredentials" class="control-label text-error" runat="server"></asp:Label>
             </div>
         </form>
     </body>

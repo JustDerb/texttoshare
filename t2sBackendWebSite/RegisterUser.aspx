@@ -13,6 +13,7 @@
 				background-color: #f5f5f5;
 			}
         </style>
+        <link href="Content/bootstrap/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
         <form id="RegisterForm" class="tts-form" runat="server">
@@ -34,7 +35,7 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (555-555-5555)" runat="server" required></asp:TextBox>
+                    <asp:TextBox type="tel" pattern="\d{3}[\-]\d{3}[\-]\d{4}" id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (555-555-5555)" runat="server" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
@@ -57,6 +58,9 @@
                     <asp:Button id="register" class="btn btn-large btn-primary" placeholder="Register User" OnClick="Register_Click" runat="server" Text="Register" required></asp:Button>
                     <a class="btn btn-large pull-right" href="Login.aspx">Login</a>
                 </div>
+            </div>
+            <div class="control-group">
+                <asp:Label id="invalidCredentials" class="control-label text-error" runat="server"></asp:Label>
             </div>
         </form>
     </body>
