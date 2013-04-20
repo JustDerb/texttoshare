@@ -313,7 +313,7 @@ namespace t2sDbLibrary
             this.name = name.ToLower();
             this.email = email;
 
-            nameInstance[name] = this;
+            nameInstance[name.ToLower()] = this;
             valueInstance[value] = this;
         }
 
@@ -346,7 +346,7 @@ namespace t2sDbLibrary
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static explicit operator PhoneCarrier(Int32 value)
+        public static explicit operator PhoneCarrier(int value)
         {
             PhoneCarrier result;
             if (valueInstance.TryGetValue(value, out result))

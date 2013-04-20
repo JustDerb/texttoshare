@@ -198,7 +198,7 @@ namespace t2sDbLibrary
             userDAO.LastName = (string)reader["last_name"];
             userDAO.PhoneNumber = (string)reader["phone"];
             userDAO.PhoneEmail = (string)reader["email_phone"];
-            userDAO.Carrier = (PhoneCarrier)(Int32)reader["carrier"];
+            userDAO.Carrier = (PhoneCarrier)(int)reader["carrier"];
             userDAO.UserLevel = (UserLevel)reader["user_level"];
             userDAO.IsBanned = (bool)reader["banned"];
             userDAO.IsSuppressed = (bool)reader["suppressed"];
