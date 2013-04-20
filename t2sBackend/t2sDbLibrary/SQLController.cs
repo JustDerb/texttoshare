@@ -476,6 +476,37 @@ namespace t2sDbLibrary
         /// <returns>A list containing all groups the user is a moderator of</returns>
         public List<GroupDAO> GetGroupsUserIsModeratorOf(int? userid)
         {
+            return GetGroupsForUserWithGroupLevel(userid, GroupLevel.Moderator);
+        }
+
+        /// <summary>
+        /// Gets a list of groups that the given user is the owner of
+        /// </summary>
+        /// <param name="userid">The id of the user to search for</param>
+        /// <returns>A list containing all groups the user is the owner of</returns>
+        public List<GroupDAO> GetGroupsUserIsOwnerOf(int? userid)
+        {
+            return GetGroupsForUserWithGroupLevel(userid, GroupLevel.Owner);
+        }
+
+        /// <summary>
+        /// Gets a list of groups that the given user is a user for
+        /// </summary>
+        /// <param name="userid">The id of the user to search for</param>
+        /// <returns>A list containing all groups the user is a user of</returns>
+        public List<GroupDAO> GetGroupsUserIsMemberOf(int? userid)
+        {
+            return GetGroupsForUserWithGroupLevel(userid, GroupLevel.User);
+        }
+
+        /// <summary>
+        /// Gets a list of groups for a particular user based on a specific GroupLevel the user might be.
+        /// </summary>
+        /// <param name="userid">The id of the user to search for.</param>
+        /// <param name="level">The GroupLevel the user is at within each group.</param>
+        /// <returns>A list containing all groups with the user at the given level.</returns>
+        private List<GroupDAO> GetGroupsForUserWithGroupLevel(int? userid, GroupLevel level)
+        {
             if (null == userid) throw new ArgumentNullException("Cannot get information for null user.");
 
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
@@ -484,10 +515,11 @@ namespace t2sDbLibrary
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT grouptag FROM groups g ");
                 queryBuilder.Append("INNER JOIN groupmembers gm ON g.id = gm.group_id ");
-                queryBuilder.Append("WHERE gm.user_id = @userid AND gm.group_level = 1 ");
+                queryBuilder.Append("WHERE gm.user_id = @userid AND gm.group_level = @grouplevel ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@userid", userid);
+                query.Parameters.AddWithValue("@grouplevel", level);
 
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();

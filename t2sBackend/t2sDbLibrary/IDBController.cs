@@ -126,6 +126,20 @@ namespace t2sDbLibrary
         List<GroupDAO> GetGroupsUserIsModeratorOf(int? userid);
 
         /// <summary>
+        /// Gets a list of groups that the given user is the owner of
+        /// </summary>
+        /// <param name="userid">The id of the user to search for</param>
+        /// <returns>A list containing all groups the user is the owner of</returns>
+        List<GroupDAO> GetGroupsUserIsOwnerOf(int? userid);
+
+        /// <summary>
+        /// Gets a list of groups that the given user is a user for
+        /// </summary>
+        /// <param name="userid">The id of the user to search for</param>
+        /// <returns>A list containing all groups the user is a user of</returns>
+        List<GroupDAO> GetGroupsUserIsMemberOf(int? userid);
+
+        /// <summary>
         /// Inserts the given GroupDAO object into the database, along with the different relations
         /// between users, permissions, and plugins.
         /// </summary>
