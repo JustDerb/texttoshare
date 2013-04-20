@@ -7,15 +7,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title>TextToServe - Add a Plugin</title>
-        <link href="Content/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="Content/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
         <style type="text/css">
-			body {
-				padding-top: 40px;
+            body {
+				padding-top: 60px;
 				padding-bottom: 40px;
-				background-color: #f5f5f5;
 			}
+
+            @media (max-width: 980px) {
+                .navbar-text .pull-right {
+                    float: none;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+            }
         </style>
+        <link href="Content/bootstrap/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
 
