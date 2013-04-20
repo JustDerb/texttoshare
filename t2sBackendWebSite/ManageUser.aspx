@@ -1,16 +1,10 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManageUser.aspx.cs" Inherits="manageUser" %>
-<% if (null == Session["Username"])
-   {
-       Response.Redirect("Login.aspx");
-   }
-   else
-   {
-       userNameBox.Text = Session["Username"].ToString();
-       firstNameBox.Text = Session["firstName"].ToString();
-       lastNameBox.Text =  Session["lastName"].ToString();
-       carrierBox.Text =  Session["carrier"].ToString();
-       phoneNumberBox.Text =  Session["phoneNumber"].ToString();
-   }
+<% 
+    userNameBox.Text = Session["Username"].ToString();
+    firstNameBox.Text = Session["firstName"].ToString();
+    lastNameBox.Text =  Session["lastName"].ToString();
+    carrierBox.Text =  Session["carrier"].ToString();
+    phoneNumberBox.Text =  Session["phoneNumber"].ToString();
 %>
 
 <!DOCTYPE html>

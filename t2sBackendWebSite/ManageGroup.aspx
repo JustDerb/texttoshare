@@ -1,13 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManageGroup.aspx.cs" Inherits="ManageGroup" %>
-<% if (null == Session["Username"])
-   {
-       Response.Redirect("Login.aspx");
-   }
-   else
-   {
-       Session["groupTag"] = "test";
-       groupTagBox.Text = Session["groupTag"].ToString();
-   }
+<%
+    Session["groupTag"] = "test";
+    groupTagBox.Text = Session["groupTag"].ToString();
 %>
 
 <!DOCTYPE html>

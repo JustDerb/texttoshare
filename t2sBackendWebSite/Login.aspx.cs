@@ -7,11 +7,11 @@ using System.Web.UI.WebControls;
 using t2sDbLibrary;
 using System.Data.SqlClient;
 
-public partial class Login : System.Web.UI.Page
+public partial class Login : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        
     }
 
     public void Login_Click(Object sender, EventArgs e)

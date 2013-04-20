@@ -1,9 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AddGroup.aspx.cs" Inherits="GetUser" %>
-<% if (null == Session["username"])
-   {
-       Response.Redirect("Login.aspx");
-   }
-%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

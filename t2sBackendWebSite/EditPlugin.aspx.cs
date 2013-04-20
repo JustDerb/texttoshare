@@ -8,40 +8,34 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using t2sDbLibrary;
 
-public partial class EditPlugin : System.Web.UI.Page
+public partial class EditPlugin : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (null == Session["username"])
-        {
-            Response.Redirect("Login.aspx");
-            return;
-        }
-        else
-        {
-            StringBuilder title = new StringBuilder();
-            title.Append("Edit Plugin");
-            if (Request.HttpMethod.Equals("post", StringComparison.OrdinalIgnoreCase))
-            {
-                if (!doPOST())
-                    return;
-            }
-            else if (Request.HttpMethod.Equals("get", StringComparison.OrdinalIgnoreCase))
-            {
-                if (!doGET())
-                    return;
-            }
+        base.CheckLoginSession();
 
-            String pluginName = Request.QueryString["p"];
-            if (pluginName != null)
-            {
-                title.Append(" (");
-                title.Append(pluginName);
-                title.Append(")");
-            }
-
-            PageTitle.Text = title.ToString();
+        StringBuilder title = new StringBuilder();
+        title.Append("Edit Plugin");
+        if (Request.HttpMethod.Equals("post", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!doPOST())
+                return;
         }
+        else if (Request.HttpMethod.Equals("get", StringComparison.OrdinalIgnoreCase))
+        {
+            if (!doGET())
+                return;
+        }
+
+        String pluginName = Request.QueryString["p"];
+        if (pluginName != null)
+        {
+            title.Append(" (");
+            title.Append(pluginName);
+            title.Append(")");
+        }
+
+        PageTitle.Text = title.ToString();
     }
 
     private bool doPOST()

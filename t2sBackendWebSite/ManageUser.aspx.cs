@@ -7,16 +7,12 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using t2sDbLibrary;
 
-public partial class manageUser : System.Web.UI.Page
+public partial class manageUser : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        base.CheckLoginSession();
     }
-
-    protected System.Web.UI.WebControls.Label MyLabel;
-    protected System.Web.UI.WebControls.Button MyButton;
-    protected System.Web.UI.WebControls.TextBox MyTextBox;
 
     public void update_Click(Object sender, EventArgs e)
     {

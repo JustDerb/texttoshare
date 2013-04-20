@@ -1,29 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using t2sDbLibrary;
 
-public partial class Index : System.Web.UI.Page
+public partial class Index : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        base.CheckLoginSession();
     }
 
     public void logoutButton_Click(Object sender, EventArgs e)
     {
         Response.Cache.SetCacheability(HttpCacheability.NoCache);
         Session.Abandon();
-        Response.Redirect("Index.aspx");
+        Response.Redirect("Login.aspx");
     }
-
 
     public void retrievePlugins(Object sender, EventArgs e)
     {

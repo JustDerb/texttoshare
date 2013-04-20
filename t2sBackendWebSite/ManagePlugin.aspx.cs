@@ -11,10 +11,11 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using t2sDbLibrary;
 
-public partial class ManagePlugin : System.Web.UI.Page
+public partial class ManagePlugin : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        base.CheckLoginSession();
         popluateList(sender, e);
     }
 

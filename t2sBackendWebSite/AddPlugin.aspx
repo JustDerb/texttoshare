@@ -1,12 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AddPlugin.aspx.cs" Inherits="AddPlugin" %>
-<% if (null == Session["username"])
-   {
-       Response.Redirect("Login.aspx");
-   }
-   else
-   {
-       pluginOwner.Text = Session["username"].ToString();
-   }
+<% 
+    pluginOwner.Text = Session["username"].ToString();
 %>
 
 <!DOCTYPE html>

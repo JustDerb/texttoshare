@@ -8,18 +8,12 @@ using System.Data.SqlClient;
 using t2sDbLibrary;
 
 
-public partial class ManageGroup : System.Web.UI.Page
+public partial class ManageGroup : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        base.CheckLoginSession();
     }
-
-
-    protected System.Web.UI.WebControls.Label MyLabel;
-    protected System.Web.UI.WebControls.Button MyButton;
-    protected System.Web.UI.WebControls.TextBox MyTextBox;
-
 
     public void updateGroup_Click(Object sender, EventArgs e)
     {

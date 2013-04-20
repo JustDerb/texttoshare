@@ -6,18 +6,12 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using t2sDbLibrary;
 
-public partial class GetUser : System.Web.UI.Page
+public partial class GetUser : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        base.CheckLoginSession();
     }
-
-
-    protected System.Web.UI.WebControls.Label MyLabel;
-    protected System.Web.UI.WebControls.Button MyButton;
-    protected System.Web.UI.WebControls.TextBox MyTextBox;
-
 
     public void addGroup_Click(Object sender, EventArgs e)
     {
