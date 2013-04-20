@@ -18,6 +18,31 @@
         </style>
     </head>
     <body>
+
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="#">Text2Share</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right" role="navigation">
+                            <li>
+                                <a href="ManageUser.aspx">Settings</a>
+                            </li>
+                            <li class="divider-vertical"></li>
+                            <li>
+                                <asp:HyperLink id="logoutButton" runat="server" href="Logout.aspx">Logout</asp:HyperLink>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <form id="formAddPlugin" class="tts-form" method="post" runat="server" enctype="multipart/form-data">
             <h2 class="tts-form-heading">Add Plugin</h2>
             <div class="control-group">

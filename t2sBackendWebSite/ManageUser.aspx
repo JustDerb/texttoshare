@@ -4,7 +4,7 @@
     firstNameBox.Text = Session["firstName"].ToString();
     lastNameBox.Text =  Session["lastName"].ToString();
     carrierBox.Text =  Session["carrier"].ToString();
-    phoneNumberBox.Text =  Session["phoneNumber"].ToString();
+    phoneNumberBox.Text = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Session["phoneNumber"].ToString().ToLower());
 %>
 
 <!DOCTYPE html>
@@ -16,12 +16,37 @@
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
+
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="#">Text2Share</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right" role="navigation">
+                            <li>
+                                <a href="ManageUser.aspx">Settings</a>
+                            </li>
+                            <li class="divider-vertical"></li>
+                            <li>
+                                <asp:HyperLink id="logoutButton" runat="server" href="Logout.aspx">Logout</asp:HyperLink>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <form id="manageUserForm" runat="server">
    
             <h1>Manage User</h1>
             <p>
                 <label for="firstNameBox">First Name</label>
-                <asp:TextBox ID="firstNameBox" name="firstNameBox"   runat="server"   ></asp:TextBox>
+                <asp:TextBox ID="firstNameBox" name="firstNameBox" runat="server"></asp:TextBox>
             </p>
             <p>
                 <label for="lastNameBox">Last Name</label>
