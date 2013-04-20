@@ -36,7 +36,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="brand" href="#">Text2Share</a>
+                    <a class="brand" href="Index.aspx">Text2Share</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right" role="navigation">
                             <li>
