@@ -1,42 +1,66 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Index.aspx.cs" Inherits="Index" %>
+<%
+    
+%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title>TextToShare - Home</title>
-        <link href="Content/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="Content/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            body {
+				padding-top: 60px;
+				padding-bottom: 40px;
+			}
+
+            @media (max-width: 980px) {
+                .navbar-text .pull-right {
+                    float: none;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+            }
+        </style>
+        <link href="Content/bootstrap/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-        <div class="navbar">
+
+        <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="#">TextToShare</a>
-                    <ul class="nav" role="navigation">
-                        <li class="dropdown">
-                            <a id="groupDrop" class="dropdown-toggle" data-toggle="dropdown" href="#">Groups<b class="caret"></b></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="groupDrop">
-                                <li><a role="menuitem" href="AddGroup.aspx">Add Group</a></li>
-                                <li><a role="menuitem" href="ManageGroup.aspx">Manage Groups</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a id="pluginDrop" class="dropdown-toggle" data-toggle="dropdown" href="#">Plugins<b class="caret"></b></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="pluginDrop">
-                                <li><a role="menuitem" href="AddPlugin.aspx">Add Plugin</a></li>
-                                <li><a role="menuitem" href="ManagePlugin.aspx">Manage Plugins</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a id="userDrop" class="dropdown-toggle" data-toggle="dropdown" href="#">Settings<b class="caret"></b></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="userDrop">
-                                <li><a role="menuitem" href="ManageUser.aspx">Edit User Information</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="navbar-form pull-right" runat="server">
-                        <button class="btn" runat="server" onclick="logoutButton_Click">Logout</button>
-                    </form>
+                <div class="container-fluid">
+                    <button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="#">Text2Share</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right" role="navigation">
+                            <li>
+                                <a href="ManageUser.aspx">Settings</a>
+                            </li>
+                            <li class="divider-vertical"></li>
+                            <li>
+                                <asp:HyperLink id="logoutButton" runat="server" href="Logout.aspx">Logout</asp:HyperLink>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span6">
+                    <h2>Groups</h2>
+                    <div class="nav nav-list">
+
+                    </div>
+                </div>
+                <div class="span6">
+                    <h2>Plugins</h2>
                 </div>
             </div>
         </div>
