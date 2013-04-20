@@ -1,50 +1,63 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="RegisterUser.aspx.cs" Inherits="_Default" %>
 
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title>TextToShare - Register</title>
         <link href="Content/bootstrap/bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+			body {
+				padding-top: 40px;
+				padding-bottom: 40px;
+				background-color: #f5f5f5;
+			}
+        </style>
     </head>
     <body>
         <form id="RegisterForm" class="tts-form" runat="server">
-            <h1>Register</h1>
-            <p>
-                <label for="firstNameBox">First Name</label>
-                <asp:TextBox ID="firstNameBox" name="firstNameBox" placeholder="First Name" runat="server" required></asp:TextBox>
-            </p>
-            <p>
-                <label for="lastNameBox">Last Name</label>
-                <asp:TextBox ID="lastNameBox" name="lastNameBox" placeholder="Last Name" runat="server" required></asp:TextBox>
-            </p>
-            <p>
-                <label for="userNameBox">Username</label>
-                <asp:TextBox ID="userNameBox" name="userNameBox" placeholder="Username" runat="server" required></asp:TextBox>
-            </p>
-            <p>
-                <label for="userNameBox">Phone Number</label>
-                <asp:TextBox ID="phoneNumberBox" name="phoneNumberBox" placeholder="Phone Number" runat="server" required></asp:TextBox>
-            </p>
-            <p>
-                <label for="carrierBox">Carrier</label>
-                <asp:TextBox ID="carrierBox" name="carrierBox" placeholder="Phone Carrier" runat="server" required></asp:TextBox>
-            </p>
-            <p>
-                <label for="passwordBox">Password</label>
-                <asp:TextBox ID="passwordBox" name="passwordBox" TextMode="Password" placeholder="Password" runat="server" required></asp:TextBox>
-            </p>
-            <p>
-                <label for="verifyPasswordBox">Verify Password</label>
-                <asp:TextBox ID="verifyPasswordBox" name="verifyPasswordBox" TextMode="Password" placeholder="Verify Password" runat="server" required></asp:TextBox>
-            </p>
-            <p>
-                <asp:Button ID="register" placeholder="Register User" OnClick="Register_Click" runat="server" Text="Register" required></asp:Button>
-            </p>
-            <p>
-                <a class="tts-button" href="Login.aspx">Login</a>
-            </p>
+            <h2 class="tts-form-heading">Register</h2>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:TextBox id="firstNameBox" class="input-block-level" name="firstNameBox" placeholder="First Name" runat="server" required></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:TextBox id="lastNameBox" class="input-block-level" name="lastNameBox" placeholder="Last Name" runat="server" required></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:TextBox id="userNameBox" class="input-block-level" name="userNameBox" placeholder="Username" runat="server" required></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:TextBox id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (555-555-5555)" runat="server" required></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:TextBox id="carrierBox" class="input-block-level" name="carrierBox" placeholder="Phone Carrier (Verizon, AT&T, ...)" runat="server" required></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:TextBox id="passwordBox" class="input-block-level" name="passwordBox" TextMode="Password" placeholder="Password" runat="server" required></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:TextBox id="verifyPasswordBox" class="input-block-level" name="verifyPasswordBox" TextMode="Password" placeholder="Verify Password" runat="server" required></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:Button id="register" class="btn btn-large btn-primary" placeholder="Register User" OnClick="Register_Click" runat="server" Text="Register" required></asp:Button>
+                    <a class="btn btn-large pull-right" href="Login.aspx">Login</a>
+                </div>
+            </div>
         </form>
     </body>
 </html>
