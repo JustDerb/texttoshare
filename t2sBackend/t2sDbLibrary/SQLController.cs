@@ -832,8 +832,15 @@ namespace t2sDbLibrary
                 UpdateGroupPlugins(group));
         }
 
-        private bool UpdateGroupMetadata(GroupDAO group)
+        /// <summary>
+        /// Updates the metadata (in the groups table) only for the given group.
+        /// </summary>
+        /// <param name="group">The group to update</param>
+        /// <returns>true if successful</returns>
+        public bool UpdateGroupMetadata(GroupDAO group)
         {
+            if (null == group || null == group.GroupID) throw new ArgumentNullException();
+
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
@@ -944,20 +951,52 @@ namespace t2sDbLibrary
         }
 
         /// <summary>
-        /// Checks to see if a group with the given name exists in the database.
+        /// Checks to see if a group with the given grouptag exists in the database.
         /// </summary>
-        /// <param name="name">The name of the group to check in the database.</param>
+        /// <param name="name">The grouptag of the group to check in the database.</param>
         /// <returns>true if the group already exists.</returns>
-        /// <exception cref="ArgumentNullException">If the given name is null.</exception>
-        public virtual bool GroupExists(string name)
+        /// <exception cref="ArgumentNullException">If the given grouptag is null.</exception>
+        public virtual bool GroupExists(string grouptag)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException();
+            if (string.IsNullOrWhiteSpace(grouptag)) throw new ArgumentNullException();
 
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
-                query.CommandText = "SELECT * FROM groups WHERE name = @name";
-                query.Parameters.AddWithValue("@name", name);
+                query.CommandText = "SELECT * FROM groups WHERE grouptag = @grouptag";
+                query.Parameters.AddWithValue("@grouptag", grouptag);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                // Returns true if there is something to read
+                return reader.Read();
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if a group with the given grouptag that isn't related to the
+        /// given group id exists.
+        /// 
+        /// This method is useful when updating an existing group's metadata and verifying
+        /// initially if there is a group that already exists with the same grouptag. If
+        /// GroupExists(grouptag) were simply run when trying to update a group with the given
+        /// grouptag, then the method would return true and the group would not be able to be
+        /// updated correctly.
+        /// </summary>
+        /// <param name="grouptag">The grouptag to check for.</param>
+        /// <param name="groupid">The groupid to check against.</param>
+        /// <returns>true if a grouptag that doesn't correspond with the given groupid exists.</returns>
+        public bool GroupExists(string grouptag, int? groupid)
+        {
+            if (string.IsNullOrWhiteSpace(grouptag)) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                query.CommandText = "SELECT * FROM groups WHERE grouptag = @grouptag AND id <> @groupid";
+                query.Parameters.AddWithValue("@grouptag", grouptag);
+                query.Parameters.AddWithValue("@groupid", groupid);
 
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();

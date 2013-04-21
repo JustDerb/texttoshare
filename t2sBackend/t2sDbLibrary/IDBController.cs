@@ -7,6 +7,8 @@ namespace t2sDbLibrary
 {
     public interface IDBController
     {
+        #region UserDAO Actions
+
         /// <summary>
         /// Creates a new user entry in the database with the given UserDAO.
         /// </summary>
@@ -139,6 +141,10 @@ namespace t2sDbLibrary
         /// <returns>A list containing all groups the user is a user of</returns>
         List<GroupDAO> GetGroupsUserIsMemberOf(int? userid);
 
+        #endregion
+
+        #region GroupDAO Actions
+
         /// <summary>
         /// Inserts the given GroupDAO object into the database, along with the different relations
         /// between users, permissions, and plugins.
@@ -172,6 +178,14 @@ namespace t2sDbLibrary
         bool UpdateGroup(GroupDAO group);
 
         /// <summary>
+        /// Updates the metadata (in the groups table) only for the given group.
+        /// </summary>
+        /// <param name="group">The group to update.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the given group or its groupID are null.</exception>
+        bool UpdateGroupMetadata(GroupDAO group);
+
+        /// <summary>
         /// Deletes an existing group that matches the given GroupDAO. All users and plugin assocations with the given
         /// GroupDAO will be deleted, however the users and plugins will not be.
         /// </summary>
@@ -187,6 +201,21 @@ namespace t2sDbLibrary
         /// <returns>true if the group already exists.</returns>
         /// <exception cref="ArgumentNullException">If the given name is null.</exception>
         bool GroupExists(string name);
+
+        /// <summary>
+        /// Checks to see if a group with the given grouptag that isn't related to the
+        /// given group id exists.
+        /// 
+        /// This method is useful when updating an existing group's metadata and verifying
+        /// initially if there is a group that already exists with the same grouptag. If
+        /// GroupExists(grouptag) were simply run when trying to update a group with the given
+        /// grouptag, then the method would return true and the group would not be able to be
+        /// updated correctly.
+        /// </summary>
+        /// <param name="grouptag">The grouptag to check for.</param>
+        /// <param name="groupid">The groupid to check against.</param>
+        /// <returns>true if a grouptag that doesn't correspond with the given groupid exists.</returns>
+        bool GroupExists(string grouptag, int? groupid);
 
         /// <summary>
         /// Adds a user with a specified administrative level to a group.
@@ -269,6 +298,10 @@ namespace t2sDbLibrary
         /// <param name="groupID">The ID of the group.</param>
         /// <returns>A list of PluginDAOs.</returns>
         List<PluginDAO> GetAllEnabledGroupPlugins(int? groupID);
+
+        #endregion
+
+        #region PluginDAO Actions
 
         /// <summary>
         /// Creates a new plugin entry in the database with the given PluginDAO. The PluginID of the given
@@ -382,6 +415,8 @@ namespace t2sDbLibrary
         /// <returns>A list containing the plugins owned by the user. If the user does not own any plugins, the list will return empty.</returns>
         List<PluginDAO> GetPluginsOwnedByUser(UserDAO user);
 
+        #endregion
+
         #region "Plugin Key/Value Actions"
 
         /// <summary>
@@ -402,6 +437,8 @@ namespace t2sDbLibrary
 
         #endregion
 
+        #region PairEntry Actions
+
         /// <summary>
         /// Gets the associated value for the given key entry.
         /// </summary>
@@ -421,6 +458,10 @@ namespace t2sDbLibrary
         /// <exception cref="ArgumentNullException">If the given key or value is null.</exception>
         bool SetPairEntryValue(string keyEntry, string valueEntry);
 
+        #endregion
+
+        #region Miscellaneous Actions
+
         /// <summary>
         /// Inserts a message into the database with the given message and level of importance.
         /// </summary>
@@ -438,6 +479,8 @@ namespace t2sDbLibrary
         /// <param name="password">The password to check.</param>
         /// <returns>true if the user exists.</returns>
         bool CheckLogin(string username, string password);
+
+        #endregion
     }
 
     /// <summary>
