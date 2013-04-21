@@ -10,15 +10,98 @@ using t2sDbLibrary;
 
 public partial class ManageGroup : BasePage
 {
+    private GroupDAO _currentGroup;
+    private IDBController controller = new SqlController();
+
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
         PageTitle.Text = "Text2Share - Manage Group";
+
+        GetGroupAndSetData();
+    }
+
+    /// <summary>
+    /// Uses the grouptag GET parameter and retrieves the group metadata.
+    /// Populates the "Group Information" section as well.
+    /// </summary>
+    private void GetGroupAndSetData()
+    {
+        try
+        {
+            _currentGroup = controller.RetrieveGroup(Request["grouptag"]);
+        }
+        catch (ArgumentNullException)
+        {
+
+        }
+        catch (SqlException)
+        {
+
+        }
+
+        groupNameBox.Text = _currentGroup.Name;
+        groupTagBox.Text = _currentGroup.GroupTag;
+        groupDescriptionBox.Text = _currentGroup.Description;
+    }
+
+    /// <summary>
+    /// Updates the group's metadata in the database 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void UpdateGroupMetadata_Click(Object sender, EventArgs e)
+    {
+        // Check that they are not updating to empty values
+        if (string.IsNullOrWhiteSpace(groupNameBox.Text))
+        {
+            invalidEntries.Text = "Cannot update group name to be empty or whitespace.";
+            groupNameBox.Focus();
+        }
+        else if (string.IsNullOrWhiteSpace(groupTagBox.Text))
+        {
+            invalidEntries.Text = "Cannot update group tag to be empty or whitespace.";
+            groupTagBox.Focus();
+        }
+        else if (string.IsNullOrWhiteSpace(groupDescriptionBox.Text))
+        {
+            invalidEntries.Text = "Cannot update group description to be empty or whitespace.";
+            groupDescriptionBox.Focus();
+        }
+
+        try
+        {
+            // Check first that the group tag isn't already being used in the database by a different group
+            if (!controller.GroupExists(groupTagBox.Text, _currentGroup.GroupID))
+            {
+                // If ok, set the current groupDAO reference to the group tag and update the database
+                _currentGroup.Name = groupNameBox.Text;
+                _currentGroup.GroupTag = groupTagBox.Text;
+                _currentGroup.Description = groupDescriptionBox.Text;
+                controller.UpdateGroupMetadata(_currentGroup);
+            }
+            else
+            {
+                // Tell the user they can't use the group tag
+                invalidEntries.Text = string.Format(@"A group with grouptag ""{0}"" already exists.", groupTagBox.Text);
+                return;
+            }
+        }
+        catch (ArgumentNullException)
+        {
+            // Shouldn't happen
+        }
+        catch (SqlException)
+        {
+            invalidEntries.Text = "An error occurred connecting to the server. Please try again soon.";
+            return;
+        }
+
+
     }
 
     public void updateGroup_Click(Object sender, EventArgs e)
     {
-
         SqlController controller = new SqlController();
         GroupDAO group;
         String groupName = Request["groupNameBox"];
@@ -48,11 +131,6 @@ public partial class ManageGroup : BasePage
         {
 
         }
-
-
-
-
-
     }
 
     /// <summary>
@@ -97,7 +175,7 @@ public partial class ManageGroup : BasePage
             //need to get groupid from session
             SqlController controller = new SqlController();
 
-            GroupDAO group = controller.RetrieveGroup(Session["groupTag"].ToString());
+            GroupDAO group = controller.RetrieveGroup(Request["grouptag"].ToString());
             // GroupDAO group = controller.RetrieveGroup(Request["groupTagBox"]);
             List<PluginDAO> plugins = controller.GetAllEnabledGroupPlugins(group.GroupID);
             String[] names = new String[plugins.Count];
