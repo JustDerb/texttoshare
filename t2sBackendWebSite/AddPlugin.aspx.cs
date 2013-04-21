@@ -22,7 +22,7 @@ public partial class AddPlugin : BasePage
         SqlController controller = new SqlController();
         PluginDAO plugin = new PluginDAO();
         UserDAO owner = new UserDAO();
-        plugin.Description = Request["pluginDescripationBox"];
+        plugin.Description = Request["pluginDescriptionBox"];
         plugin.HelpText = Request["helpTextBox"];
         plugin.IsDisabled = false;
         plugin.VersionNum = Request["versionBox"];
