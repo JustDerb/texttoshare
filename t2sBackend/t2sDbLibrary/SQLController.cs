@@ -25,8 +25,8 @@ namespace t2sDbLibrary
         #region UserDAO "CRUD" actions
 
         /// <summary>
-        /// Creates a new user entry in the database with the given UserDAO. The UserID of the given
-        /// UserDAO will also be set after calling this method.
+        /// Creates a new user entry in the database with the given UserDAO.
+        /// The UserID of the given UserDAO will also be set after calling this method.
         /// </summary>
         /// <param name="user">The UserDAO to insert into the database.</param>
         /// <param name="password">The password for the user.</param>

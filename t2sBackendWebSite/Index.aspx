@@ -1,4 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Index.aspx.cs" Inherits="Index" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+
+<% IDBController controller = new SqlController(); %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -52,8 +55,19 @@
             <div class="row-fluid">
                 <div class="span6">
                     <h2>Groups</h2>
-                    <div class="nav nav-list">
-
+                    <div class="well" style="padding: 8px 0;">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Groups I Own</li>
+                            <asp:Literal id="groupsUserOwns" runat="server"></asp:Literal>
+                        </ul>
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Groups I Moderate</li>
+                            <asp:Literal id="groupsUserModerates" runat="server"></asp:Literal>
+                        </ul>
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Groups I'm In</li>
+                            <asp:Literal id="groupsUserIsIn" runat="server"></asp:Literal>
+                        </ul>
                     </div>
                 </div>
                 <div class="span6">
