@@ -10,7 +10,7 @@ public class BasePage : System.Web.UI.Page
 {
     public void CheckLoginSession()
     {
-        if (null == Session["username"])
+        if (null == HttpContext.Current.Session["username"])
         {
             Response.Redirect("Login.aspx");
         }
@@ -18,11 +18,16 @@ public class BasePage : System.Web.UI.Page
 
     public void LogoutUser()
     {
+        ClearCache();
+        HttpContext.Current.Session.Abandon();
+        Response.Redirect("Login.aspx");
+    }
+
+    public void ClearCache()
+    {
         Response.Cache.SetCacheability(HttpCacheability.NoCache);
         Response.Cache.SetNoServerCaching();
         Response.Cache.SetNoStore();
         Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-        Session.Abandon();
-        Response.Redirect("Login.aspx");
     }
 }
