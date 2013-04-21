@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Web.UI.WebControls;
 using t2sDbLibrary;
 
@@ -10,6 +11,7 @@ public partial class Index : BasePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        base.ClearCache();
         base.CheckLoginSession();
         PageTitle.Text = "Text2Share - Home";
         retrieveGroups();
@@ -20,11 +22,8 @@ public partial class Index : BasePage
     /// </summary>
     private void retrieveGroups()
     {
-        Response.Write("Outside the if statement");
-
-        if (null != Session["userid"])
+        if (null != HttpContext.Current.Session["userid"])
         {
-            Response.Write("Made it in the if statement");
             List<GroupDAO> ownedGroups = new List<GroupDAO>();
             List<GroupDAO> moderatedGroups = new List<GroupDAO>();
             List<GroupDAO> userIsInGroups = new List<GroupDAO>();
@@ -65,7 +64,7 @@ public partial class Index : BasePage
         {
             foreach (GroupDAO group in groups)
             {
-                groupBuilder.Append(string.Format(@"<li><a href=""ManageGroup.aspx"">{0} ({1})</a></li>", group.Name, group.GroupTag));
+                groupBuilder.Append(string.Format(@"<li><a href=""ManageGroup.aspx?grouptag={1}"">{0} ({1})</a></li>", group.Name, group.GroupTag));
             }
         }
 

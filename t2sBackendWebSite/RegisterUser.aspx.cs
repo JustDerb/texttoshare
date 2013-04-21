@@ -38,8 +38,8 @@ public partial class _Default : BasePage
             LastName = Request["lastNameBox"],
             UserName = Request["userNameBox"],
             PhoneNumber = Request["phoneNumberBox"],
-            Carrier = (PhoneCarrier)(Request["carrierBox"].ToLower()),
-            PhoneEmail = Request["phoneNumberBox"] + (PhoneCarrier)(Request["carrierBox"].ToLower()),
+            Carrier = (PhoneCarrier)(Request["carrierBox"]),
+            PhoneEmail = Request["phoneNumberBox"] + (PhoneCarrier)(Request["carrierBox"]),
             IsBanned = false,
             IsSuppressed = false
         };
@@ -54,7 +54,7 @@ public partial class _Default : BasePage
         }
         catch (EntryAlreadyExistsException)
         {
-            invalidCredentials.Text = "A user with that name already exists. Please try again";
+            invalidCredentials.Text = "A user with that name already exists. Please try again.";
             userNameBox.Focus();
             return;
         }
@@ -69,14 +69,14 @@ public partial class _Default : BasePage
         }
 
         //set the session the same as user login
-        Session["username"] = user.UserName;
-        Session["lastName"] = user.LastName;
-        Session["firstName"] = user.FirstName;
-        Session["carrier"] = user.Carrier.GetName();
-        Session["phoneNumber"] = user.PhoneNumber;
-        Session["userid"] = user.UserID;
-        Session["phoneEmail"] = user.PhoneEmail;
-        Session["userDAO"] = user;
+        HttpContext.Current.Session["username"] = user.UserName;
+        HttpContext.Current.Session["lastName"] = user.LastName;
+        HttpContext.Current.Session["firstName"] = user.FirstName;
+        HttpContext.Current.Session["carrier"] = user.Carrier.GetName();
+        HttpContext.Current.Session["phoneNumber"] = user.PhoneNumber;
+        HttpContext.Current.Session["userid"] = user.UserID;
+        HttpContext.Current.Session["phoneEmail"] = user.PhoneEmail;
+        HttpContext.Current.Session["userDAO"] = user;
 
         Response.Redirect("Index.aspx");
     }
