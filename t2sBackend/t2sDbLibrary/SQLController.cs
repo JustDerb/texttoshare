@@ -1963,18 +1963,6 @@ namespace t2sDbLibrary
             }
         }
 
-        /// <summary>
-        /// Registers a new user in the database.
-        /// </summary>
-        /// <param name="user">The user to be added to the database.</param>
-        /// <param name="password">The login password of the user.</param>
-        /// <returns>true if the user was successfully added.</returns>
-        /// <seealso cref="SqlController#CreateUser"/>
-        public bool RegisterUser(UserDAO user, string password)
-        {
-            return CreateUser(user, password);
-        }
-
         public bool SetVerificationCodeForUser(string verificationCode, UserDAO user)
         {
             return false;

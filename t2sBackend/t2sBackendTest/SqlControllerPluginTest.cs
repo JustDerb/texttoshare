@@ -34,7 +34,7 @@ namespace t2sBackendTest
                 IsBanned = false,
                 IsSuppressed = false
             };
-            _controller.RegisterUser(_owner, "password");
+            _controller.CreateUser(_owner, "password");
 
             _plugin1 = new PluginDAO()
             {

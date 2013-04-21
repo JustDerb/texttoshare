@@ -58,7 +58,7 @@ namespace t2sBackendTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void RegisterNullUserThrowsException()
         {
-            _controller.RegisterUser(null, "password");
+            _controller.CreateUser(null, "password");
         }
 
         [TestCategory("LoginRegister")]
@@ -66,14 +66,14 @@ namespace t2sBackendTest
         [ExpectedException(typeof(ArgumentNullException))]
         public void RegisterNullPasswordThrowsException()
         {
-            _controller.RegisterUser(_userDAO1, null);
+            _controller.CreateUser(_userDAO1, null);
         }
 
         [TestCategory("LoginRegister")]
         [TestMethod]
         public void RegisterNewUserReturnsTrue()
         {
-            Assert.IsTrue(_controller.RegisterUser(_userDAO1, "password"));
+            Assert.IsTrue(_controller.CreateUser(_userDAO1, "password"));
         }
 
         [TestCategory("LoginRegister")]
@@ -81,8 +81,8 @@ namespace t2sBackendTest
         [ExpectedException(typeof(EntryAlreadyExistsException))]
         public void RegisterDuplicateUsersThrowsException()
         {
-            _controller.RegisterUser(_userDAO1, "password");
-            _controller.RegisterUser(_userDAO1, "password");
+            _controller.CreateUser(_userDAO1, "password");
+            _controller.CreateUser(_userDAO1, "password");
         }
 
         [TestCategory("LoginRegister")]
@@ -94,15 +94,15 @@ namespace t2sBackendTest
 
             stubbedController.Stub(x => x.UserExists(_userDAO1.UserName, _userDAO1.PhoneEmail)).Return(false);
 
-            stubbedController.RegisterUser(_userDAO1, "password");
-            stubbedController.RegisterUser(_userDAO1, "password");
+            stubbedController.CreateUser(_userDAO1, "password");
+            stubbedController.CreateUser(_userDAO1, "password");
         }
 
         [TestCategory("LoginRegister")]
         [TestMethod]
         public void CheckBadLoginOnExistingUserReturnsFalse()
         {
-            _controller.RegisterUser(_userDAO1, "password");
+            _controller.CreateUser(_userDAO1, "password");
             Assert.IsFalse(_controller.CheckLogin("TESTUSER1", "passowrd"));
         }
 
@@ -110,7 +110,7 @@ namespace t2sBackendTest
         [TestMethod]
         public void CheckGoodLoginOnExistingUserReturnsTrue()
         {
-            _controller.RegisterUser(_userDAO1, "password");
+            _controller.CreateUser(_userDAO1, "password");
             Assert.IsTrue(_controller.CheckLogin("TESTUSER1", "password"));
         }
 

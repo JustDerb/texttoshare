@@ -64,9 +64,9 @@ namespace t2sBackendTest
                 IsSuppressed = false
             };
 
-            _controller.RegisterUser(_owner, "password");
-            _controller.RegisterUser(_moderator, "password");
-            _controller.RegisterUser(_user, "password");
+            _controller.CreateUser(_owner, "password");
+            _controller.CreateUser(_moderator, "password");
+            _controller.CreateUser(_user, "password");
 
             _enabledPlugin = new PluginDAO()
             {
