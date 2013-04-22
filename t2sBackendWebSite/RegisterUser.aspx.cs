@@ -32,14 +32,15 @@ public partial class _Default : BasePage
 
         SqlController controller = new SqlController();
 
+        String phoneNumber = Request["phoneNumberBox"].Replace("-", String.Empty);
         UserDAO user = new UserDAO()
         {
             FirstName = Request["firstNameBox"],
             LastName = Request["lastNameBox"],
             UserName = Request["userNameBox"],
-            PhoneNumber = Request["phoneNumberBox"],
+            PhoneNumber = phoneNumber,
             Carrier = (PhoneCarrier)(Request["carrierBox"]),
-            PhoneEmail = Request["phoneNumberBox"] + (PhoneCarrier)(Request["carrierBox"]),
+            PhoneEmail = phoneNumber + ((PhoneCarrier)(Request["carrierBox"])).GetEmail(),
             IsBanned = false,
             IsSuppressed = false
         };
@@ -63,9 +64,11 @@ public partial class _Default : BasePage
             invalidCredentials.Text = "A field was left blank. Please make sure the form is fully completed.";
             return;
         }
-        catch (SqlException)
+        catch (SqlException ex)
         {
-            //logger.logMessage("SQLException when Registering User", 4);
+            Logger.LogMessage("Register.aspx: " + ex.Message, LoggerLevel.SEVERE);
+            invalidCredentials.Text = "An unknown error occured.  Please try again.";
+            return;
         }
 
         //set the session the same as user login
