@@ -95,9 +95,16 @@ namespace t2sBackendTest
             builder.Append(command);
             if (space)
                 builder.Append(" ");
-            builder.Append(MessageParser.delimiter);
-            builder.Append(group);
-            builder.Append(MessageParser.secondDelimiter);
+            if (!group.Equals(String.Empty))
+            {
+                builder.Append(MessageParser.delimiter);
+                builder.Append(group);
+                builder.Append(MessageParser.secondDelimiter);
+            }
+            else
+            {
+                builder.Append(" ");
+            }
             if (space)
                 builder.Append(" ");
             builder.Append(args);

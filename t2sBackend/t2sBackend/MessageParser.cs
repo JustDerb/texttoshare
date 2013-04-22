@@ -136,7 +136,17 @@ namespace t2sBackend
             int delimiter1Index = message.IndexOf(MessageParser.delimiter);
             if (delimiter1Index < 0)
             {
-                return "";
+                // No group specified, so take up until second delimeter
+                int delimiter2Index = message.IndexOf(MessageParser.secondDelimiter);
+                if (delimiter2Index < 0)
+                {
+                    // No group stuff so just return the whole message
+                    return message;
+                }
+                else
+                {
+                    return message.Substring(0, delimiter2Index).Trim();
+                }
             }
             else
             {
@@ -207,7 +217,23 @@ namespace t2sBackend
             Tuple<int, int> indexes = MessageParser.FindGroupRange(message, controller);
             if (indexes == null)
             {
-                return "";
+                // Try and find the second delimeter
+                int secondIndex = message.IndexOf(MessageParser.secondDelimiter);
+                if (secondIndex < 0)
+                {
+                    return "";
+                }
+                else
+                {
+                    if (secondIndex + 1 < message.Length)
+                    {
+                        return message.Substring(secondIndex + 1, message.Length - (secondIndex + 1));
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
             }
             else
             {
