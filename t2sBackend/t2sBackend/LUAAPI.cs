@@ -110,7 +110,7 @@ namespace t2sBackend
             {"GetModeratorIdList", typeof(LUAAPI).GetMethod("__GetModeratorIdList")},
             {"SetValue", typeof(LUAAPI).GetMethod("__SetValue")},
             {"GetValue", typeof(LUAAPI).GetMethod("__GetValue")},
-            {"GetOwnerId", typeof(LUAAPI).GetMethod("__GetOwnerId")},
+            {"GetGroupOwnerId", typeof(LUAAPI).GetMethod("__GetGroupOwnerId")},
             {"GetSenderId", typeof(LUAAPI).GetMethod("__GetSenderId")},
             {"GetUserFirstName", typeof(LUAAPI).GetMethod("__GetUserFirstName")},
             {"GetUserLastName", typeof(LUAAPI).GetMethod("__GetUserLastName")},
@@ -121,6 +121,7 @@ namespace t2sBackend
             {"GetGroupDescription", typeof(LUAAPI).GetMethod("__GetGroupDescription")},
             {"GetGroupName", typeof(LUAAPI).GetMethod("__GetGroupName")},
             {"GetGroupTag", typeof(LUAAPI).GetMethod("__GetGroupTag")},
+            {"MessageHasGroup", typeof(LUAAPI).GetMethod("__MessageHasGroup")},
             {"HTTPDownloadText", typeof(LUAAPI).GetMethod("__HTTPDownloadText")}
         };
 
@@ -130,6 +131,12 @@ namespace t2sBackend
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
             Console.Out.WriteLine(container.plugin.PluginDAO.Name + ": " + debugMessage);
+        }
+
+        public static bool __MessageHasGroup(String hash)
+        {
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            return (container.message.Group != null);
         }
 
         public static string __GetMessageCommand(String hash)
@@ -171,9 +178,12 @@ namespace t2sBackend
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
             List<string> userIds = new List<string>();
-            foreach (UserDAO user in container.message.Group.Users)
+            if (container.message.Group != null)
             {
-                userIds.Add(container.userToHash[user]);
+                foreach (UserDAO user in container.message.Group.Users)
+                {
+                    userIds.Add(container.userToHash[user]);
+                }
             }
 
             return ToLuaTable(userIds, container.plugin.LuaEngine);
@@ -183,9 +193,12 @@ namespace t2sBackend
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
             List<string> userIds = new List<string>();
-            foreach (UserDAO user in container.message.Group.Moderators)
+            if (container.message.Group != null)
             {
-                userIds.Add(container.userToHash[user]);
+                foreach (UserDAO user in container.message.Group.Moderators)
+                {
+                    userIds.Add(container.userToHash[user]);
+                }
             }
 
             return ToLuaTable(userIds, container.plugin.LuaEngine);
@@ -194,19 +207,40 @@ namespace t2sBackend
         public static string __GetGroupTag(String hash)
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
-            return container.message.Group.GroupTag;
+            if (container.message.Group != null)
+            {
+                return container.message.Group.GroupTag;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public static string __GetGroupName(String hash)
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
-            return container.message.Group.Name;
+            if (container.message.Group != null)
+            {
+                return container.message.Group.Name;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public static string __GetGroupDescription(String hash)
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
-            return container.message.Group.Description;
+            if (container.message.Group != null)
+            {
+                return container.message.Group.Description;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public static string __GetUsername(String hash, String userhash)
@@ -293,11 +327,18 @@ namespace t2sBackend
             return retValue;
         }
 
-        public static string __GetOwnerId(String hash)
+        public static string __GetGroupOwnerId(String hash)
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
-            String ownerHash = container.userToHash[container.message.Group.Owner];
-            return ownerHash;
+            if (container.message.Group != null)
+            {
+                String ownerHash = container.userToHash[container.message.Group.Owner];
+                return ownerHash;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public static string __GetSenderId(String hash)
