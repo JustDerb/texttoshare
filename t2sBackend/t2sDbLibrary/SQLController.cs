@@ -2002,9 +2002,66 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Sets the verification code for the given user
+        /// </summary>
+        /// <param name="verificationCode">The 6-character verification code.</param>
+        /// <param name="user">The user to set the verification code for.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the verification is null or empty, or the userDAO or UserDAO.UserID are null.</exception>
         public bool SetVerificationCodeForUser(string verificationCode, UserDAO user)
         {
-            return false;
+            if (string.IsNullOrWhiteSpace(verificationCode) || null == user || null == user.UserID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("INSERT INTO users ");
+                queryBuilder.Append("SET verification_code = @verificationCode ");
+                queryBuilder.Append("WHERE id = @userid ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@verificationcode", verificationCode);
+                query.Parameters.AddWithValue("@userid", user.UserID);
+
+                conn.Open();
+                int effectedRows = query.ExecuteNonQuery();
+
+                // Only one record should have been affected
+                return 1 == effectedRows;
+            }
+        }
+
+        /// <summary>
+        /// Returns a UserDAO that corresponds to the given verification code.
+        /// </summary>
+        /// <param name="verificationCode">The verification code to query the database for.</param>
+        /// <returns>The UserDAO that matches the given verification code.</returns>
+        /// <exception cref="ArgumentNullException">If the given verification code is null or empty.</exception>
+        /// <exception cref="CouldNotFindException">If no user could be found for the given code.</exception>
+        public UserDAO GetUserByVerificationCode(string verificationCode)
+        {
+            if (string.IsNullOrWhiteSpace(verificationCode)) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT id, username, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed ");
+                queryBuilder.Append("FROM users ");
+                queryBuilder.Append("WHERE verification_code = @verificationcode ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@verificationcode", verificationCode);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                // If there are no records returned from the select statement, the DataReader will be empty
+                if (reader.Read()) return BuildUserDAO(reader);
+                else throw new CouldNotFindException("Could not find user with verification code: " + verificationCode);
+            }
         }
 
         #endregion

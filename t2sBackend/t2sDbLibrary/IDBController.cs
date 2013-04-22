@@ -480,6 +480,24 @@ namespace t2sDbLibrary
         /// <returns>true if the user exists.</returns>
         bool CheckLogin(string username, string password);
 
+        /// <summary>
+        /// Sets the verification code for the given user
+        /// </summary>
+        /// <param name="verificationCode">The 6-character verification code.</param>
+        /// <param name="user">The user to set the verification code for.</param>
+        /// <returns>true if successful.</returns>
+        /// <exception cref="ArgumentNullException">If the verification is null or empty, or the userDAO or UserDAO.UserID are null.</exception>
+        bool SetVerificationCodeForUser(string verificationCode, UserDAO user);
+
+        /// <summary>
+        /// Returns a UserDAO that corresponds to the given verification code.
+        /// </summary>
+        /// <param name="verificationCode">The verification code to query the database for.</param>
+        /// <returns>The UserDAO that matches the given verification code.</returns>
+        /// <exception cref="ArgumentNullException">If the given verification code is null or empty.</exception>
+        /// <exception cref="CouldNotFindException">If no user could be found for the given code.</exception>
+        UserDAO GetUserByVerificationCode(string verificationCode);
+
         #endregion
     }
 
