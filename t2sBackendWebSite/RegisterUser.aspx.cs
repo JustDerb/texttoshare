@@ -55,8 +55,7 @@ public partial class _Default : BasePage
         }
         catch (EntryAlreadyExistsException)
         {
-            invalidCredentials.Text = "A user with that name already exists. Please try again.";
-            userNameBox.Focus();
+            invalidCredentials.Text = "A user with that name or phone number already exists. Please try again.";
             return;
         }
         catch (ArgumentNullException)
@@ -72,13 +71,6 @@ public partial class _Default : BasePage
         }
 
         //set the session the same as user login
-        HttpContext.Current.Session["username"] = user.UserName;
-        HttpContext.Current.Session["lastName"] = user.LastName;
-        HttpContext.Current.Session["firstName"] = user.FirstName;
-        HttpContext.Current.Session["carrier"] = user.Carrier.GetName();
-        HttpContext.Current.Session["phoneNumber"] = user.PhoneNumber;
-        HttpContext.Current.Session["userid"] = user.UserID;
-        HttpContext.Current.Session["phoneEmail"] = user.PhoneEmail;
         HttpContext.Current.Session["userDAO"] = user;
 
         Response.Redirect("Index.aspx");
