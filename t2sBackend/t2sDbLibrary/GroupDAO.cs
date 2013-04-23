@@ -17,6 +17,10 @@ namespace t2sDbLibrary
 
         public GroupDAO() { }
 
+        public static readonly int NameMaxLength = 64;
+        public static readonly int DescriptionMaxLength = 1500;
+        public static readonly int GroupTagMaxLength = 6;
+
         /// <summary>
         /// The List of Users in the Group. Managed by the Group Moderators
         /// </summary>

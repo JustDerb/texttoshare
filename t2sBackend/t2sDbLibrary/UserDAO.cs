@@ -10,6 +10,13 @@ namespace t2sDbLibrary
     /// </summary>
     public class UserDAO
     {
+        // Database max lengths for fields
+        public static readonly int UserNameMaxLength = 64;
+        public static readonly int FirstNameMaxLength = 1500;
+        public static readonly int LastNameMaxLength = 1500;
+        public static readonly int PhoneEmailMaxLength = 64;
+        public static readonly int PhoneNumberMaxLength = 16;
+
         /// <summary>
         /// The web username for the User
         /// </summary>

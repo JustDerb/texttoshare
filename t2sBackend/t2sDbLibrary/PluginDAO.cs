@@ -8,6 +8,12 @@ namespace t2sDbLibrary
 {
     public class PluginDAO
     {
+        // Database max lengths for fields
+        public static readonly int NameMaxLength = 64;
+        public static readonly int DescriptionMaxLength = 1500;
+        public static readonly int VersionNumberMaxLength = 32;
+        public static readonly int HelpTextMaxLength = 160;
+
         public int? PluginID
         {
             get;
