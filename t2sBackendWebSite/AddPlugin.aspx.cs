@@ -36,7 +36,7 @@ public partial class AddPlugin : BasePage
         // Do some form validation
         if (plugin.Name == null || plugin.Name.Length >= PluginDAO.NameMaxLength)
         {
-            ShowError(string.Format("Plugin name is invalid. Please enter a name less than {0} characters long.", PluginDAO.NameMaxLength);
+            ShowError(string.Format("Plugin name is invalid. Please enter a name less than {0} characters long.", PluginDAO.NameMaxLength));
             pluginNameBox.Focus();
             return;
         }
@@ -54,7 +54,7 @@ public partial class AddPlugin : BasePage
         }
         else if (plugin.VersionNum == null || plugin.VersionNum.Length >= PluginDAO.VersionNumberMaxLength)
         {
-            ShowError(string.Format("Plugin version is invalid. Please enter a version that is less than {0} characters long.", PluginDAO.VersionNumberMaxLength);
+            ShowError(string.Format("Plugin version is invalid. Please enter a version that is less than {0} characters long.", PluginDAO.VersionNumberMaxLength));
             versionBox.Focus();
             return;
         }
