@@ -20,6 +20,7 @@ public partial class Index : BasePage
 
         PageTitle.Text = "Text2Share - Home";
         retrieveGroups();
+        retrievePlugins();
     }
 
     /// <summary>
@@ -76,7 +77,7 @@ public partial class Index : BasePage
         pageLiteral.Text = groupBuilder.ToString();
     }
 
-    public void retrievePlugins(Object sender, EventArgs e)
+    public void retrievePlugins()
     {
         List<PluginDAO> plugins = new List<PluginDAO>();
 
