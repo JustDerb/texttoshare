@@ -53,6 +53,10 @@ namespace t2sBackend
             {
                 parsed.Type = ParsedMessage.ContentMessageType.BAN;
             }
+            else if (parsed.Command.Equals("register", StringComparison.OrdinalIgnoreCase))
+            {
+                parsed.Type = ParsedMessage.ContentMessageType.REGISTER;
+            }
             else if (parsed.Sender != null &&
                 parsed.Sender.IsSuppressed)
             {

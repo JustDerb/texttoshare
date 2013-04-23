@@ -25,6 +25,10 @@ namespace t2sBackend
             /// </summary>
             BAN,
             /// <summary>
+            /// User is trying to register
+            /// </summary>
+            REGISTER,
+            /// <summary>
             /// User is suppressed from the system (Send note back to user about it)
             /// </summary>
             SUPPRESS,
