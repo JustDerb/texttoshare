@@ -6,19 +6,35 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using t2sDbLibrary;
-
+/// <summary>
+/// class which contains the code behind for AddGroup.aspx
+/// </summary>
 public partial class GetUser : BasePage
 {
+    /// <summary>
+    /// functions which are excueted on page load
+    /// checks to make sure user is login and sets the page title
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
         PageTitle.Text = "TextToShare - Add Group";
     }
 
+    /// <summary>
+    /// adds a new group to the database
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <exception cref="ArgumentNullException">If the given string is null.</exception>
+    /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
+    /// <exception cref="EntryAlreadyExistsException">If the group already exists in the database.</exception>
+    /// <exception cref="CouldNotFindException">If the user could be found in the database.</exception>
     public void addGroup_Click(Object sender, EventArgs e)
     {
 
-        //TODO
         SqlController controller = new SqlController();
         GroupDAO group = null;
         UserDAO owner = new UserDAO();
@@ -75,28 +91,7 @@ public partial class GetUser : BasePage
             Response.Write("Your group was not created successfully. Please try again!");
         }
 
-        //get moderators
-        //  List<UserDAO> userList = new List<UserDAO>();
-        /*  String[] usersArray = users.Split(',');
-          foreach (String i in usersArray)
-          {
-              try
-              {
-                  UserDAO newGroupMember =  controller.RetrieveUserByUserName(i);
-                  userList.Add(newGroupMember);
-              }
-              catch (CouldNotFindException)
-              {
-                  Response.Write("The user " + i + " could not be found in the database!");
-                  return;
-              }
-              catch (ArgumentNullException)
-              {
-                  //shouldn't happen i think
-                  Response.Write("Null ArgumentException");
-                  return;
-              }
-          }*/
+
     }
 
 }
