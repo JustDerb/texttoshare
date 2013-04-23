@@ -10,7 +10,7 @@ public class BasePage : System.Web.UI.Page
 {
     public void CheckLoginSession()
     {
-        if (null == HttpContext.Current.Session["username"])
+        if (null == HttpContext.Current.Session["userDAO"])
         {
             Response.Redirect("Login.aspx");
         }
