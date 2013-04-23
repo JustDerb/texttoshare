@@ -72,17 +72,12 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <input id="filMyFile" class="input-block-level" name="filMyFile" type="file" accept=".lua" runat="server" title="Select the .lua script file that this plugin will use." required/>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
                     <asp:Button ID="addPluginButton" class="btn btn-primary" Text="Add Plugin" OnClick="AddPlugin_Click" runat="server"></asp:Button>
                     <a href="Index.aspx" id="cancelButton" class="btn">Cancel</a>
                 </div>
             </div>
             <div class="control-group">
-                <asp:Label id="invalidPlugin" class="control-label text-error" runat="server"></asp:Label>
+                <asp:Label id="errorMessage" class="control-label text-error" runat="server"></asp:Label>
             </div>
         </form>
     </body>

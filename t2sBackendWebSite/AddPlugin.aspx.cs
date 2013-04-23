@@ -33,77 +33,76 @@ public partial class AddPlugin : BasePage
             OwnerID = _currentUser.UserID
         };
 
-        if (!System.IO.Path.GetExtension(filMyFile.PostedFile.FileName).EndsWith(".lua"))
+        // Plugin name length - 64 char
+        // Plugin description - MAX
+        // Plugin help text - 160
+        // Version - 10 char
+        if (plugin.Name == null || plugin.Name.Length >= PluginDAO.NameMaxLength)
         {
-            invalidPlugin.Text = @"The selected file must be a file with extension "".lua"" to upload.";
-            filMyFile.Focus();
-            return;
-        }
-
-        IDBController controller = new SqlController();
-
-        // Request.fil
-        try
-        {
-            //fill upload
-            if (filMyFile.PostedFile != null)
-            {
-                // File was sent
-                // Get a reference to PostedFile object
-                HttpPostedFile myFile = filMyFile.PostedFile;
-                // Get size of uploaded file
-                int nFileLen = myFile.ContentLength;
-                // Allocate a buffer for reading of the file
-                byte[] myData = new byte[nFileLen];
-                // Read uploaded file from the Stream
-                myFile.InputStream.Read(myData, 0, nFileLen);
-                string strFilename = Path.GetFileName(myFile.FileName);
-                string path = LUADefinitions.LuaScriptLocation + strFilename;
-
-                WriteToFile(path, myData);
-                controller.CreatePlugin(plugin);
-                Response.Write(" Plugin " + strFilename + " has been added successfully");
-            }
-            else
-            {
-                // No file
-                invalidPlugin.Text = "No file attached. Plugin couldn't be added";
-                return;
-            }
-        }
-        catch (ArgumentNullException)
-        {
-            // Shouldn't happen
-        }
-        catch (CouldNotFindException)
-        {
-            // Shouldn't happen
-        }
-        catch (EntryAlreadyExistsException)
-        {
-            invalidPlugin.Text = "A plugin with that name already exists. Please try again.";
+            ShowError("Plugin name is invalid.");
             pluginNameBox.Focus();
             return;
         }
-        /**catch (SqlException)
+        else if (plugin.Description == null || plugin.Description.Length >= PluginDAO.DescriptionMaxLength)
         {
-            Response.Write("SQL Exception: Error adding plugin");
-        }*/
+            ShowError("Plugin description is invalid.");
+            pluginDescriptionBox.Focus();
+            return;
+        }
+        else if (plugin.HelpText == null || plugin.HelpText.Length >= PluginDAO.HelpTextMaxLength)
+        {
+            ShowError("Plugin help text is invalid.");
+            helpTextBox.Focus();
+            return;
+        }
+        else if (plugin.VersionNum == null || plugin.VersionNum.Length >= PluginDAO.VersionNumberMaxLength)
+        {
+            ShowError("Plugin version is invalid.");
+            versionBox.Focus();
+            return;
+        }
+        else
+        {
+            IDBController controller = new SqlController();
+            try
+            {
+                if (controller.CreatePlugin(plugin))
+                {
+                    // Create a blank file
+                    string path = LUADefinitions.getLuaScriptLocation(Request["pluginNameBox"]);
+                    try
+                    {
+                        using (File.Create(path)) { }
+                    }
+                    catch (Exception)
+                    {
+                        // Clean up
+                        controller.DeletePlugin(plugin);
+                        ShowError("Error creating plugin.  Please try again later.");
+                        return;
+                    }
 
-        Response.Redirect(string.Format("ManagePlugin.aspx?pluginname={0}", plugin.Name));
+                    // Shoot them to the editor
+                    Response.Redirect(string.Format("EditPlugin.aspx?p={0}", HttpUtility.UrlEncode(plugin.Name)));
+                }
+            }
+            catch (EntryAlreadyExistsException)
+            {
+                // Error
+                ShowError("That plugin name already exists.");
+                return;
+            }
+            catch (SqlException ex)
+            {
+                // Error
+                Logger.LogMessage("AddPlugin.aspx: " + ex.Message, LoggerLevel.SEVERE);
+                return;
+            }
+        }
     }
 
-
-    // Writes file to current folder
-    private void WriteToFile(string strPath, byte[] Buffer)
+    public void ShowError(string error)
     {
-        // Create a file
-        FileStream newFile = new FileStream(strPath, FileMode.Create);
-        // Write data to the file
-        newFile.Write(Buffer, 0, Buffer.Length);
-        // Close file
-        newFile.Close();
+        errorMessage.Text = error;
     }
-
-
 }
