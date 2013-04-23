@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -13,7 +14,10 @@ using t2sDbLibrary;
 public partial class ManageGroup : BasePage
 {
     private GroupDAO _currentGroup;
-    private IDBController controller = new SqlController();
+    private UserDAO _currentUser;
+
+    public bool showErrorMessage = false;
+    public bool showSuccessMessage = false;
 
     /// <summary>
     /// functions which are run on page load.
@@ -25,9 +29,62 @@ public partial class ManageGroup : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        _currentUser = Session["userDAO"] as UserDAO;
+
+        if (null == Request.QueryString["grouptag"])
+        {
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred loading group data. Please try again soon.")));
+            return;
+        }
+
         PageTitle.Text = "Text2Share - Manage Group";
 
-        GetGroupAndSetData();
+        string errorMessageHTML = Request.QueryString["error"];
+        if (errorMessageHTML != null)
+        {
+            showErrorMessage = true;
+            errorMessage.Text = errorMessageHTML;
+        }
+
+        string successMessageHTML = Request.QueryString["success"];
+        if (successMessageHTML != null)
+        {
+            showSuccessMessage = true;
+            successMessage.Text = successMessageHTML;
+        }
+
+        GetGroupData();
+        RetrieveUsers();
+        RetrievePlugins();
+
+        if (!Page.IsPostBack)
+        {
+            SetGroupData();
+        }
+    }
+
+    private void GetGroupData()
+    {
+        try
+        {
+            IDBController controller = new SqlController();
+            _currentGroup = controller.RetrieveGroup(Request["grouptag"]);
+        }
+        catch (ArgumentNullException)
+        {
+            // Shouldn't happen
+        }
+        catch (CouldNotFindException)
+        {
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred loading group data. Please try again soon.")));
+            return;
+        }
+        catch (SqlException err)
+        {
+            Response.Write("An unknown error has occured.");
+            Logger.LogMessage("ManageGroup.aspx " + err.Message, LoggerLevel.SEVERE);
+            return;
+        }
     }
 
     /// <summary>
@@ -37,24 +94,8 @@ public partial class ManageGroup : BasePage
     /// <exception cref="ArgumentNullException">If the given string is null.</exception>
     /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
     /// <exception cref="SQL exception">For an unknown SQL error.</exception>
-    private void GetGroupAndSetData()
+    private void SetGroupData()
     {
-        try
-        {
-            _currentGroup = controller.RetrieveGroup(Request["grouptag"]);
-        }
-        catch (ArgumentNullException)
-        {
-            Response.Write("Grouptag field is null!");
-        }catch(CouldNotFindException){
-            Response.Write("Group could not be found!");
-        }
-        catch (SqlException err)
-        {
-            Response.Write("An unknown error has happened");
-            Logger.LogMessage("ManageGroup.aspx " + err.Message, LoggerLevel.SEVERE);       
-        }
-
         groupNameBox.Text = _currentGroup.Name;
         groupTagBox.Text = _currentGroup.GroupTag;
         groupDescriptionBox.Text = _currentGroup.Description;
@@ -65,27 +106,43 @@ public partial class ManageGroup : BasePage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void UpdateGroupMetadata_Click(Object sender, EventArgs e)
+    protected void UpdateGroupMetadata_Click(object sender, EventArgs e)
     {
+        if (_currentGroup.Owner.UserID != _currentUser.UserID)
+        {
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"You cannot edit groups you do not own.")));
+            return;
+        }
+
         // Check that they are not updating to empty values
         if (string.IsNullOrWhiteSpace(groupNameBox.Text))
         {
-            invalidEntries.Text = "Cannot update group name to be empty or whitespace.";
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("Cannot update group name to be empty or whitespace.")));
             groupNameBox.Focus();
+            return;
         }
         else if (string.IsNullOrWhiteSpace(groupTagBox.Text))
         {
-            invalidEntries.Text = "Cannot update group tag to be empty or whitespace.";
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("Cannot update group tag to be empty or whitespace.")));
             groupTagBox.Focus();
+            return;
         }
         else if (string.IsNullOrWhiteSpace(groupDescriptionBox.Text))
         {
-            invalidEntries.Text = "Cannot update group description to be empty or whitespace.";
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("Cannot update group description to be empty or whitespace.")));
             groupDescriptionBox.Focus();
+            return;
         }
 
         try
         {
+            IDBController controller = new SqlController();
             // Check first that the group tag isn't already being used in the database by a different group
             if (!controller.GroupExists(groupTagBox.Text, _currentGroup.GroupID))
             {
@@ -98,7 +155,9 @@ public partial class ManageGroup : BasePage
             else
             {
                 // Tell the user they can't use the group tag
-                invalidEntries.Text = string.Format(@"A group with grouptag ""{0}"" already exists.", HttpUtility.HtmlEncode(groupTagBox.Text));
+                Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                    HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                    HttpUtility.UrlEncode(string.Format(@"A group with grouptag ""{0}"" already exists.", HttpUtility.HtmlEncode(groupTagBox.Text)))));
                 return;
             }
         }
@@ -108,70 +167,116 @@ public partial class ManageGroup : BasePage
         }
         catch (CouldNotFindException)
         {
-            //Shouldn't happen
-            Response.Write("Could find group!");
+            // Shouldn't happen
         }
-        catch (SqlException)
+        catch (SqlException ex)
         {
-            invalidEntries.Text = "An error occurred connecting to the server. Please try again soon.";
+            Logger.LogMessage("ManageGroup.aspx: " + ex.Message, LoggerLevel.SEVERE);
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}", 
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("An error occurred connecting to the server. Please try again soon.")));
             return;
         }
+    }
 
-
+    /// Retrieves groups from the database associated with the current user in session.
+    /// </summary>
+    private void RetrieveUsers()
+    {
+        if (null != _currentGroup)
+        {
+            PrintUsersToPage(_currentGroup.Users, groupUserList, @"<li>The group currently has no members.</li>");
+            PrintUsersToPage(_currentGroup.Moderators, groupModeratorList, "<li>This group currently has no moderators.</li>");
+            PrintUsersToPage(new HashSet<UserDAO> { _currentGroup.Owner }, groupOwnerList, "<li>The owner could not be found. Please try again soon.</li>");
+        }
     }
 
     /// <summary>
-    /// updates the group information
+    /// Prints the basic group information to the 
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    /// <exception cref="ArgumentNullException">If the given string is null.</exception>
-    /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
-    /// <exception cref="SQLException">If an unknown databasae exception happends.</exception>
-    public void updateGroup_Click(Object sender, EventArgs e)
+    /// <param name="groups"></param>
+    /// <param name="pageLiteral"></param>
+    /// <param name="zeroGroupCountMessage"></param>
+    private void PrintUsersToPage(HashSet<UserDAO> users, Literal pageLiteral, string zeroGroupCountMessage)
     {
-        SqlController controller = new SqlController();
-        GroupDAO group;
-        String groupName = Request["groupNameBox"];
-        String groupTag = Request["groupTagBox"];
-        String groupDescription = Request["groupDescripationBox"];
-        try
+        StringBuilder userBuilder = new StringBuilder();
+        if (0 == users.Count)
         {
-            group = controller.RetrieveGroup(groupTag);
-            group.Name = groupName;
-            group.GroupTag = groupTag;
-            group.Description = groupDescription;
-            //update the group  
-            controller.UpdateGroup(group);
+            userBuilder.Append(zeroGroupCountMessage);
+        }
+        else
+        {
+            foreach (UserDAO user in users)
+            {
+                userBuilder.Append(string.Format(@"<li>{0} ({1})</a></li>",
+                    user.FirstName + " " + user.LastName,
+                    user.UserName));
+            }
+        }
 
-        }
-        catch (ArgumentNullException)
+        pageLiteral.Text = userBuilder.ToString();
+    }
+
+    public void RetrievePlugins()
+    {
+        if (null != _currentGroup)
         {
-            Response.Write("Argument is null!");
-        }
-        catch (CouldNotFindException)
-        {
-            Response.Write("Could not find Group");
-        }
-        catch (SqlException err)
-        {
-            Response.Write("An unknown error has happened");
-            Logger.LogMessage("ManageGroup.aspx " + err.Message, LoggerLevel.SEVERE);
+            PrintPluginsToPage(_currentGroup.EnabledPlugins, groupPluginList, @"<li>This group has no specific plugins enabled for it.</li>");
         }
     }
 
+    public void PrintPluginsToPage(HashSet<PluginDAO> plugins, Literal pageLiteral, string zeroPluginCountMessage)
+    {
+        StringBuilder pluginBuilder = new StringBuilder();
+        if (0 == plugins.Count)
+        {
+            pluginBuilder.Append(zeroPluginCountMessage);
+        }
+        else
+        {
+            foreach (PluginDAO plugin in plugins)
+            {
+                pluginBuilder.Append(string.Format(@"<li>{0}</li>", plugin.Name));
+            }
+        }
 
+        pageLiteral.Text = pluginBuilder.ToString();
+    }
 
+    protected void deleteGroupButton_Click(object sender, EventArgs e)
+    {
+        if (null != _currentGroup)
+        {
+            if (_currentGroup.Owner.UserID != _currentUser.UserID)
+            {
+                Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"You cannot edit groups you do not own.")));
+                return;
+            }
 
+            try
+            {
+                IDBController controller = new SqlController();
+                if (controller.DeleteGroup(_currentGroup))
+                {
+                    Response.Redirect(string.Format(@"Index.aspx?success={0}", HttpUtility.UrlEncode(@"The group has been deleted.")));
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                // Shouldn't happen
+            }
+            catch (SqlException ex)
+            {
+                Logger.LogMessage("ManageGroup.aspx: " + ex.Message, LoggerLevel.SEVERE);
+                Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                    HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                    HttpUtility.UrlEncode("An error occurred connecting to the server. Please try again soon.")));
+                return;
+            }
+        }
 
-
-
-
-
-
-
-
-
-    
-
+        SetGroupData();
+        RetrieveUsers();
+        RetrievePlugins();
+    }
 }

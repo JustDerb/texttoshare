@@ -48,43 +48,92 @@
             </div>
         </div>
 
-        <div class="container-fluid">
+        <div class="container">
+            <% if (showErrorMessage)
+               { %>
             <div class="row-fluid">
-                <div class="span6">
-                    <form id="updateform" class="form-horizontal" runat="server">
+                <div class="span12">
+                    <div class="alert alert-error">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Error!</strong> <asp:Literal ID="errorMessage" runat="server"></asp:Literal>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+            <% if (showSuccessMessage)
+               { %>
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Success!</strong> <asp:Literal ID="successMessage" runat="server"></asp:Literal>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+            <form id="updateform" class="form-horizontal" runat="server">
+                <div class="row-fluid">
+                    <div class="span6">
                         <h2 class="tts-form-heading">Group Information</h2>
                         <div class="control-group">
                             <label class="control-label" for="groupNameBox">Group Name</label>
                             <div class="controls">
-                                <asp:textbox id="groupNameBox" name="groupNameBox" class="input-block-level" placeholder="Group Name" runat="server" required></asp:textbox>
+                                <asp:TextBox id="groupNameBox" name="groupNameBox" class="input-block-level" placeholder="Group Name" runat="server" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="groupTagBox">Group Tag</label>
                             <div class="controls">
-                                <asp:textbox id="groupTagBox" class="input-block-level" runat="server" required></asp:textbox>
+                                <asp:TextBox id="groupTagBox" class="input-block-level" runat="server" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="groupDescriptionBox">Group Description</label>
                             <div class="controls">
-                                <asp:textbox id="groupDescriptionBox" name="groupDescriptionBox" class="input-block-level" placeholder="Description of Group" runat="server" required></asp:textbox>
+                                <asp:TextBox id="groupDescriptionBox" name="groupDescriptionBox" class="input-block-level" placeholder="Description of Group" runat="server" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="controls">
-                                <asp:button id="updateGroupButton" name="updateGroupButton" class="input-block-level" text="Update Group Information" Onclick="updateGroup_Click" runat="server" required></asp:button>
+                                <asp:Button id="updateGroupButton" name="updateGroupButton" class="btn btn-primary" text="Update Group Information" Onclick="UpdateGroupMetadata_Click" runat="server" />
+                                <asp:Button ID="deleteGroupButton" name="deleteGroupButton" class="btn btn-danger pull-right" Text="Delete Group" OnClick="deleteGroupButton_Click" runat="server" />
                             </div>
                         </div>
-                        <div class="control-group">
-                            <asp:Label id="invalidEntries" class="control-label text-error" runat="server"></asp:Label>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <div class="row-fluid">
+                    <div class="span6">
+                        <div class="well" style="padding: 8px 0;">
+                            <ul class="nav nav-list">
+                                <li class="nav-header">Owner</li>
+                                <asp:Literal ID="groupOwnerList" runat="server"></asp:Literal>
+                            </ul>
+                            <ul class="nav nav-list">
+                                <li class="nav-header">Moderators</li>
+                                <asp:Literal ID="groupModeratorList" runat="server"></asp:Literal>
+                            </ul>
+                            <ul class="nav nav-list">
+                                <li class="nav-header">Users</li>
+                                <asp:Literal ID="groupUserList" runat="server"></asp:Literal>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="well" style="padding: 8px 0;">
+                            <ul class="nav nav-list">
+                                <li class="nav-header">Plugins</li>
+                                <asp:Literal ID="groupPluginList" runat="server"></asp:Literal>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+             </form>
         </div>
-
-
-
     </body>
+
+    <script src="Scripts/jquery-1.7.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
 </html>
