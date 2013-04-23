@@ -11,32 +11,40 @@ using t2sDbLibrary;
 
 public partial class AddPlugin : BasePage
 {
+    private UserDAO _currentUser;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        _currentUser = Session["userDAO"] as UserDAO;
+
         PageTitle.Text = "Text2Share - Add Plugin";
     }
 
     public void AddPlugin_Click(Object sender, EventArgs e)
     {
-        SqlController controller = new SqlController();
-        PluginDAO plugin = new PluginDAO();
-        UserDAO owner = new UserDAO();
-        plugin.Description = Request["pluginDescriptionBox"];
-       
-        plugin.HelpText = Request["helpTextBox"];
-        plugin.IsDisabled = false;
-        plugin.VersionNum = Request["versionBox"];
-        plugin.Name = Request["pluginNameBox"];
-        //   Request.fil
-        String ownerUserName = Request["pluginOwner"];
+        PluginDAO plugin = new PluginDAO()
+        {
+            Name = Request["pluginNameBox"],
+            Description = Request["pluginDescriptionBox"],
+            HelpText = Request["helpTextBox"],
+            IsDisabled = false,
+            VersionNum = Request["versionBox"],
+            OwnerID = _currentUser.UserID
+        };
+
+        if (!System.IO.Path.GetExtension(filMyFile.PostedFile.FileName).EndsWith(".lua"))
+        {
+            invalidPlugin.Text = @"The selected file must be a file with extension "".lua"" to upload.";
+            filMyFile.Focus();
+            return;
+        }
+
+        IDBController controller = new SqlController();
+
+        // Request.fil
         try
         {
-            owner = controller.RetrieveUserByUserName(ownerUserName);
-            if (owner != null)
-            {
-                plugin.OwnerID = owner.UserID;
-            }
             //fill upload
             if (filMyFile.PostedFile != null)
             {
@@ -59,20 +67,23 @@ public partial class AddPlugin : BasePage
             else
             {
                 // No file
-                Response.Write("NO file attached. Plugin couldn't be added");
+                invalidPlugin.Text = "No file attached. Plugin couldn't be added";
+                return;
             }
         }
         catch (ArgumentNullException)
         {
-            Response.Write("Owner username is Null");
+            // Shouldn't happen
         }
         catch (CouldNotFindException)
         {
-            Response.Write("Could not find the owner ");
+            // Shouldn't happen
         }
         catch (EntryAlreadyExistsException)
         {
-            Response.Write("Plugin Already Exists");
+            invalidPlugin.Text = "A plugin with that name already exists. Please try again.";
+            pluginNameBox.Focus();
+            return;
         }
         /**catch (SqlException)
         {

@@ -1,7 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="AddPlugin.aspx.cs" Inherits="AddPlugin" %>
-<% 
-    pluginOwner.Text = Session["username"].ToString();
-%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -60,11 +57,6 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox ID="pluginOwner" class="input-block-level" name="pluginOwner" runat="server" required></asp:TextBox>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
                     <asp:TextBox ID="pluginDescriptionBox" class="input-block-level" name="pluginDescription" placeholder="Description of Plugin" runat="server" required></asp:TextBox>
                 </div>
             </div>
@@ -85,8 +77,12 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:Button ID="addPluginButton" class="input-block-level" Text="Add Plugin" OnClick="AddPlugin_Click" runat="server"></asp:Button>
+                    <asp:Button ID="addPluginButton" class="btn btn-primary" Text="Add Plugin" OnClick="AddPlugin_Click" runat="server"></asp:Button>
+                    <a href="Index.aspx" id="cancelButton" class="btn">Cancel</a>
                 </div>
+            </div>
+            <div class="control-group">
+                <asp:Label id="invalidPlugin" class="control-label text-error" runat="server"></asp:Label>
             </div>
         </form>
     </body>
