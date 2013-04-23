@@ -23,7 +23,9 @@ namespace t2sBackend
             StringBuilder fullMsg = new StringBuilder();
 
             // Only reply to the user if it is valid.  Else, they can abuse the system
-            if (message.Arguments.Count > 0)
+            if (message.Arguments.Count > 0
+                // Also make sure they are not trying to bypass us by not going to the verification page
+                && !message.Arguments[0].Equals("-1"))
             {
                 try
                 {
