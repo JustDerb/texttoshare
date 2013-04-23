@@ -1,11 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManageUser.aspx.cs" Inherits="manageUser" %>
-<% 
-    userNameBox.Text = Session["Username"].ToString();
-    firstNameBox.Text = Session["firstName"].ToString();
-    lastNameBox.Text =  Session["lastName"].ToString();
-    carrierBox.Text =  Session["carrier"].ToString();
-    phoneNumberBox.Text = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Session["phoneNumber"].ToString().ToLower());
-%>
+
 
 <!DOCTYPE html>
 
@@ -79,11 +73,6 @@
                 <label for="carrierBox">Carrier</label>
                 <asp:TextBox ID="carrierBox" name="carrierBox" placeholder="Phone Carrier" runat="server" ></asp:TextBox>
             </p>
-            <asp:DropDownList id="AllPlugin" runat="server" onload="popluatePluginList" >
-                <asp:ListItem Text="<Plugins Made>" Value="0" />
-            </asp:DropDownList>
-
-
             <p>
                 <asp:Button ID="register" placeholder="Update User" OnClick="update_Click" runat="server" Text="Update" ></asp:Button>
             </p>
