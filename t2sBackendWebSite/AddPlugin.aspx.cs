@@ -34,9 +34,9 @@ public partial class AddPlugin : BasePage
         };
 
         // Do some form validation
-        if (plugin.Name == null || plugin.Name.Length >= PluginDAO.NameMaxLength)
+        if (plugin.Name == null || plugin.Name.Length > PluginDAO.NameMaxLength || plugin.Name.Length < 4)
         {
-            ShowError(string.Format("Plugin name is invalid. Please enter a name less than {0} characters long.", PluginDAO.NameMaxLength));
+            ShowError(string.Format("Plugin name is invalid. Please enter a name between {0} and {1} characters.", 4, PluginDAO.NameMaxLength));
             pluginNameBox.Focus();
             return;
         }
