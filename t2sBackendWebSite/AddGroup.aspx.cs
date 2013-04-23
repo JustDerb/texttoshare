@@ -31,7 +31,7 @@ public partial class GetUser : BasePage
     /// <exception cref="ArgumentNullException">If the given string is null.</exception>
     /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
     /// <exception cref="EntryAlreadyExistsException">If the group already exists in the database.</exception>
-    /// <exception cref="CouldNotFindException">If the user could be found in the database.</exception>
+    /// <exception cref="SQLException">An unknown SQL happened.</exception>
     public void addGroup_Click(Object sender, EventArgs e)
     {
 
