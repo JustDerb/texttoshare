@@ -69,6 +69,8 @@
   <ItemGroup>
     <Compile Include="AddUserPlugin.cs" />
     <Compile Include="BlockingQueue.cs" />
+    <Compile Include="DefaultPlugins\HelpPlugin.cs" />
+    <Compile Include="DefaultPlugins\RegisterPlugin.cs" />
     <Compile Include="DefaultPlugins\StopPlugin.cs" />
     <Compile Include="GMailWatcherService.cs" />
     <Compile Include="IPlugin.cs" />
@@ -104,10 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MainDatabase.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MainDatabase_log.ldf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>MainDatabase.mdf</DependentUpon>
     </Content>
     <Content Include="StoredProcedures\sp_upsertPairEntry.sql" />
