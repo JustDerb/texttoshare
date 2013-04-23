@@ -236,7 +236,8 @@ namespace t2sBackend
             {"ERROR".ToUpperInvariant(), new ErrorPlugin()}, {"TEXTUSER".ToUpperInvariant(), new TextUserPlugin()},
             {"TEXTGROUP".ToUpperInvariant(), new TextGroupPlugin()}, {"LISTPLUGINS".ToUpperInvariant(), new ListEnabledPlugins()},
             {"REMOVEUSER".ToUpperInvariant(), new RemoveUserPlugin()}, {"TEXTMODS".ToUpperInvariant(), new TextModsPlugin()},
-            {"SUPPRESS".ToUpperInvariant(), new SuppressPlugin()}, {"STOP".ToUpperInvariant(), new StopPlugin()}
+            {"SUPPRESS".ToUpperInvariant(), new SuppressPlugin()}, {"STOP".ToUpperInvariant(), new StopPlugin()},
+            {"HELP".ToUpperInvariant(), new HelpPlugin()}
         });
 
         // Maximum amount of times we will let a plugin throw an exception before disabling it until it has been reviewed
