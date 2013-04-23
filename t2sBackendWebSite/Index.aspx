@@ -52,6 +52,17 @@
         </div>
 
         <div class="container-fluid">
+            <% if (showErrorMessage)
+               { %>
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="alert alert-error">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Error!</strong> <asp:Literal ID="errorMessage" runat="server"></asp:Literal>
+                    </div>
+                </div>
+            </div>
+            <% } %>
             <div class="row-fluid">
                 <div class="span6">
                     <h2>Groups</h2>

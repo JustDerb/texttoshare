@@ -11,6 +11,8 @@ public partial class Index : BasePage
 {
     private UserDAO _currentUser;
 
+    public bool showErrorMessage = false;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         base.ClearCache();
@@ -21,6 +23,14 @@ public partial class Index : BasePage
         PageTitle.Text = "Text2Share - Home";
         retrieveGroups();
         retrievePlugins();
+
+        string errorMessageHTML = Request.QueryString["error"];
+        if (errorMessageHTML != null)
+        {
+            showErrorMessage = true;
+            errorMessage.Text = errorMessageHTML;
+        }
+        
     }
 
     /// <summary>
