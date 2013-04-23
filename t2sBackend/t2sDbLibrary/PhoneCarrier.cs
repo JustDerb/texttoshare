@@ -317,6 +317,12 @@ namespace t2sDbLibrary
             valueInstance[value] = this;
         }
 
+
+        public static  Dictionary<string, PhoneCarrier> getNameInstanceDictionary()
+        {
+            return nameInstance;
+        }
+
         public string GetName()
         {
             return name;

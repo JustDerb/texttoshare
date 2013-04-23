@@ -38,10 +38,18 @@
                     <asp:TextBox type="tel" pattern="\d{3}[\-]\d{3}[\-]\d{4}" id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (555-555-5555)" runat="server" required></asp:TextBox>
                 </div>
             </div>
-            <div class="control-group">
+
+            <!--<div class="control-group">
                 <div class="controls">
                     <asp:TextBox id="carrierBox" class="input-block-level" name="carrierBox" placeholder="Phone Carrier (Verizon, AT&T, ...)" runat="server" required></asp:TextBox>
                 </div>
+            </div>-->
+
+            <div class="control-group">
+                <div class="controls">
+                    <asp:DropDownList id="carrierDropdown" class="input-block-level" name="carrierDropdown"  runat="server" required></asp:DropDownList>
+               
+               </div>
             </div>
             <div class="control-group">
                 <div class="controls">

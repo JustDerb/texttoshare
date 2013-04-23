@@ -12,6 +12,7 @@ public partial class _Default : BasePage
     protected void Page_Load(object sender, EventArgs e)
     {
         PageTitle.Text = "Text2Share - Register";
+        getPhoneCarrierDropDown();
     }
 
     /// <summary>
@@ -39,8 +40,8 @@ public partial class _Default : BasePage
             LastName = Request["lastNameBox"],
             UserName = Request["userNameBox"],
             PhoneNumber = phoneNumber,
-            Carrier = (PhoneCarrier)(Request["carrierBox"]),
-            PhoneEmail = phoneNumber + ((PhoneCarrier)(Request["carrierBox"])).GetEmail(),
+            Carrier = (PhoneCarrier)(Request["carrierDropdown"]),
+            PhoneEmail = phoneNumber + ((PhoneCarrier)(Request["carrierDropdown"])).GetEmail(),
             IsBanned = false,
             IsSuppressed = false
         };
@@ -76,7 +77,7 @@ public partial class _Default : BasePage
         Response.Redirect("Index.aspx");
     }
 
-    /// <summary>
+   /* /// <summary>
     /// returns the query user
     /// </summary>
     /// <param name="sender"></param>
@@ -90,11 +91,26 @@ public partial class _Default : BasePage
         String firstName = Request["rfirstNameBox"];
         String lastName = Request["rlastNameBox"];
         String phoneNumber = Request["rPhoneNumberBox"];
-        String phoneCarrier = Request["rCarrierBox"];
+        //String phoneCarrier = Request["rCarrierBox"];
+        String phoneCarrier = Request["carrierDropdown"];
+        Response.Write(phoneCarrier);
         String password = Request["rPasswordBox"];
         String userName = Request["rUserNameBox"];
-    }
+    }*/
 
+    public void getPhoneCarrierDropDown(){
+        Dictionary<string, PhoneCarrier> dic = t2sDbLibrary.PhoneCarrier.getNameInstanceDictionary();
+        String[] names = new String[dic.Count];
+        ListItem[] list = new ListItem[dic.Count];
+        for (int i = 0; i < dic.Count; i++)
+        {
+            ListItem item = new ListItem(dic.ElementAt(i).Value.GetName());
+            list[i] = item;
+        }
+        Control con = FindControl("carrierDropdown");
+        DropDownList Plugins = (DropDownList)con;
+        Plugins.Items.AddRange(list);
+    }
 
 
 }
