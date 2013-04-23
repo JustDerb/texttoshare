@@ -57,14 +57,21 @@
                 <div class="span7 well well-small">
                     <h5 style="margin-top: 0">Lua Editor</h5>
                     <div id="editor"></div>
-                    <form method="post">
+                    <div style="height:20px"></div>
+                    <form method="post" class="pull-right" style="margin-bottom:0">
                         <textarea style="display: none" id="editorText" name="editorText" rows="3" runat="server"></textarea>
-                        <input type="submit" class="tts-button" value="Save changes" />
+                        <input type="hidden" name="pluginName" value="<%= formPluginName %>" />
+                        <input type="submit" class="btn btn-primary" value="Save changes" />
                     </form>
+                    <p class="text-success pull-right" style="margin-right: 20px" id="pluginFeedback" runat="server"></p>
                 </div>
                 <div class="span5">
-                    <h3>Editing Plugin:
-                        <asp:Literal ID="PluginName" runat="server"></asp:Literal></h3>
+                    <h3>Plugin:
+                        <em id="PluginNameEditor" runat="server"></em>
+                    </h3>
+                    <blockquote>
+                        <p class="muted" id="PluginDescriptionEditor" runat="server"></p>
+                    </blockquote>
                     <h4>Text2Share Lua API</h4>
                     <div id="t2sluaapi" class="well">
                         <h5>Messages</h5>
@@ -149,6 +156,7 @@
             editor.getSession().on('change', function () {
                 textarea.val(editor.getSession().getValue());
             });
+            <%= extraJavascript %>
         </script>
     </body>
 </html>

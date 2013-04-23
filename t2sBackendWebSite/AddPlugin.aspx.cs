@@ -83,7 +83,7 @@ public partial class AddPlugin : BasePage
                     }
 
                     // Shoot them to the editor
-                    Response.Redirect(string.Format("EditPlugin.aspx?p={0}", HttpUtility.UrlEncode(plugin.Name)));
+                    Response.Redirect(string.Format("EditPlugin.aspx?pluginname={0}", HttpUtility.UrlEncode(plugin.Name)));
                 }
             }
             catch (EntryAlreadyExistsException)
