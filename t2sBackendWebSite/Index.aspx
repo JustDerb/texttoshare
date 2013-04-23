@@ -69,6 +69,7 @@
                             <asp:Literal id="groupsUserIsIn" runat="server"></asp:Literal>
                         </ul>
                     </div>
+                    <asp:Hyperlink href="AddGroup.aspx" id="createGroup" class="btn btn-primary pull-right" runat="server">Create Group</asp:Hyperlink>
                 </div>
                 <div class="span6">
                     <h2>Plugins</h2>
@@ -78,6 +79,7 @@
                             <asp:Literal id="pluginsUserOwns" runat="server"></asp:Literal>
                         </ul>
                     </div>
+                    <asp:Hyperlink href="AddPlugin.aspx" id="createPlugin" class="btn btn-primary pull-right" runat="server">Create Plugin</asp:Hyperlink>
                 </div>
             </div>
         </div>

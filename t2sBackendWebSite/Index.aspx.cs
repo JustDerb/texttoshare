@@ -47,7 +47,7 @@ public partial class Index : BasePage
                 return;
             }
 
-            printGroupsToPage(ownedGroups, groupsUserOwns, "<li>You do not own any groups. Press the \"+\" button to create a new one.</li>");
+            printGroupsToPage(ownedGroups, groupsUserOwns, @"<li>You do not own any groups. Press ""Create Group"" to make a new one!</li>");
             printGroupsToPage(moderatedGroups, groupsUserModerates, "<li>You are not the moderator of any groups.</li>");
             printGroupsToPage(userIsInGroups, groupsUserIsIn, "<li>You are not a user of any groups.</li>");
         }
@@ -91,7 +91,7 @@ public partial class Index : BasePage
             // Should not happen
         }
 
-        printPluginsToPage(plugins, pluginsUserOwns, "<li>You do not own any plugins. Press the \"+\" button to create a new one.</li>");
+        printPluginsToPage(plugins, pluginsUserOwns, @"<li>You do not own any plugins. Press ""Create Plugin"" to make a new one!</li>");
     }
 
     public void printPluginsToPage(List<PluginDAO> plugins, Literal pageLiteral, string zeroPluginCountMessage)
