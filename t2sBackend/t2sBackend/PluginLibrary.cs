@@ -121,6 +121,7 @@ namespace t2sBackend
                     case ParsedMessage.ContentMessageType.REGISTER:
                         doMessage = true;
                         plugin = new RegisterPlugin();
+                        break;
                     case ParsedMessage.ContentMessageType.VALID:
                         break;
                 }
