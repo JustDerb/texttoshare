@@ -33,39 +33,38 @@ public partial class AddPlugin : BasePage
             OwnerID = _currentUser.UserID
         };
 
-        // Plugin name length - 64 char
-        // Plugin description - MAX
-        // Plugin help text - 160
-        // Version - 10 char
+        // Do some form validation
         if (plugin.Name == null || plugin.Name.Length >= PluginDAO.NameMaxLength)
         {
-            ShowError("Plugin name is invalid.");
+            ShowError(string.Format("Plugin name is invalid. Please enter a name less than {0} characters long.", PluginDAO.NameMaxLength);
             pluginNameBox.Focus();
             return;
         }
         else if (plugin.Description == null || plugin.Description.Length >= PluginDAO.DescriptionMaxLength)
         {
-            ShowError("Plugin description is invalid.");
+            ShowError(string.Format("Plugin description is invalid. Please enter a description less than {0} characters long.", PluginDAO.DescriptionMaxLength));
             pluginDescriptionBox.Focus();
             return;
         }
         else if (plugin.HelpText == null || plugin.HelpText.Length >= PluginDAO.HelpTextMaxLength)
         {
-            ShowError("Plugin help text is invalid.");
+            ShowError(string.Format("Plugin help text is invalid. Please enter a help text less than {0} characters long.", PluginDAO.HelpTextMaxLength));
             helpTextBox.Focus();
             return;
         }
         else if (plugin.VersionNum == null || plugin.VersionNum.Length >= PluginDAO.VersionNumberMaxLength)
         {
-            ShowError("Plugin version is invalid.");
+            ShowError(string.Format("Plugin version is invalid. Please enter a version that is less than {0} characters long.", PluginDAO.VersionNumberMaxLength);
             versionBox.Focus();
             return;
         }
         else
         {
+            // All systems go
             IDBController controller = new SqlController();
             try
             {
+                // Can we create our plugin?
                 if (controller.CreatePlugin(plugin))
                 {
                     // Create a blank file
