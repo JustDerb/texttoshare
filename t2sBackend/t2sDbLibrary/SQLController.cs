@@ -2011,7 +2011,7 @@ namespace t2sDbLibrary
         /// <exception cref="ArgumentNullException">If the verification is null or empty, or the userDAO or UserDAO.UserID are null.</exception>
         public bool SetVerificationCodeForUser(string verificationCode, UserDAO user)
         {
-            if (string.IsNullOrWhiteSpace(verificationCode) || null == user || null == user.UserID) throw new ArgumentNullException();
+            if (verificationCode.Trim().Equals(string.Empty) || null == user || null == user.UserID) throw new ArgumentNullException();
 
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
