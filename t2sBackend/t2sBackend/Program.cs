@@ -25,7 +25,7 @@ namespace t2sBackend
                 Console.WriteLine("ADDING PRIVATE INFO: " + ex.Message);
             }
             AWatcherService gmailServ = new GMailWatcherService(
-                PrivateInfo.Email.UserName,
+                database.GetPairEntryValue("t2sAccountEmail"),
                 PrivateInfo.Email.Password,
                 true,
                 "imap.gmail.com",
