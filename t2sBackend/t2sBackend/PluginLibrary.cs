@@ -118,6 +118,9 @@ namespace t2sBackend
                         message.ContentMessage = STOP_MESSAGE;
                         idbController.DeleteUser(message.Sender);
                         break;
+                    case ParsedMessage.ContentMessageType.REGISTER:
+                        doMessage = true;
+                        plugin = new RegisterPlugin();
                     case ParsedMessage.ContentMessageType.VALID:
                         break;
                 }
@@ -237,7 +240,7 @@ namespace t2sBackend
             {"TEXTGROUP".ToUpperInvariant(), new TextGroupPlugin()}, {"LISTPLUGINS".ToUpperInvariant(), new ListEnabledPlugins()},
             {"REMOVEUSER".ToUpperInvariant(), new RemoveUserPlugin()}, {"TEXTMODS".ToUpperInvariant(), new TextModsPlugin()},
             {"SUPPRESS".ToUpperInvariant(), new SuppressPlugin()}, {"STOP".ToUpperInvariant(), new StopPlugin()},
-            {"HELP".ToUpperInvariant(), new HelpPlugin()}
+            {"HELP".ToUpperInvariant(), new HelpPlugin()}, {"REGISTER", new RegisterPlugin()}
         });
 
         // Maximum amount of times we will let a plugin throw an exception before disabling it until it has been reviewed
