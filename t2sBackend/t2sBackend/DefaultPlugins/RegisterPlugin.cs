@@ -21,18 +21,21 @@ namespace t2sBackend
         {
             Message msg = new Message();
             StringBuilder fullMsg = new StringBuilder();
-            if (message.Arguments.Count <= 0)
-            {
-                fullMsg.Append("Please remember to add your verification code after your command.");
-            }
-            else
+
+            // Only reply to the user if it is valid.  Else, they can abuse the system
+            if (message.Arguments.Count > 0)
             {
                 try
                 {
                     UserDAO user = controller.GetUserByVerificationCode(message.Arguments[0]);
                     if (user != null)
                     {
+                        // Set their wanted phone email
                         user.PhoneEmail = message.Sender.PhoneEmail;
+                        // Update our user
+                        controller.UpdateUser(user);
+                        // Reset verification to nothing
+                        controller.SetVerificationCodeForUser(null, user);
                         fullMsg.Append("You have successfully register with Text2Share. Thank you!");
                     }
                 }
