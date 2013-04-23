@@ -60,6 +60,17 @@
                 </div>
             </div>
             <% } %>
+            <% if (showSuccessMessage)
+               { %>
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="alert alert-success">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Success!</strong> <asp:Literal ID="successMessage" runat="server"></asp:Literal>
+                    </div>
+                </div>
+            </div>
+            <% } %>
             <div class="row-fluid">
                 <div class="span6">
                     <h3 style="position:relative">Groups <a href="AddGroup.aspx" class="btn btn-primary" style="bottom:0;right:0;position:absolute">Create Group</a></h3>

@@ -12,6 +12,7 @@ public partial class Index : BasePage
     private UserDAO _currentUser;
 
     public bool showErrorMessage = false;
+    public bool showSuccessMessage = false;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -30,7 +31,13 @@ public partial class Index : BasePage
             showErrorMessage = true;
             errorMessage.Text = errorMessageHTML;
         }
-        
+
+        string successMessageHTML = Request.QueryString["success"];
+        if (successMessageHTML != null)
+        {
+            showSuccessMessage = true;
+            successMessage.Text = successMessageHTML;
+        }
     }
 
     /// <summary>
