@@ -93,13 +93,13 @@
                     <div class="control-group">
                         <div class="controls">
                             <label for="userNameBox">Username</label>
-                            <asp:TextBox ID="userNameBox" name="userNameBox" placeholder="Username" runat="server" CssClass="uneditable-input"></asp:TextBox>
+                            <asp:TextBox ID="userNameBox" name="userNameBox" placeholder="Username" runat="server" CssClass="uneditable-input" disabled="disabled"></asp:TextBox>
                         </div>
                     </div>
                     <div class="control-group">
                         <div class="controls">
                             <label for="phoneNumberBox">Phone Number</label>
-                            <asp:TextBox ID="phoneNumberBox" name="phoneNumberBox" placeholder="Phone Number" runat="server" CssClass="uneditable-input"></asp:TextBox>
+                            <asp:TextBox ID="phoneNumberBox" name="phoneNumberBox" placeholder="Phone Number" runat="server" CssClass="uneditable-input" disabled="disabled"></asp:TextBox>
                         </div>
                     </div>
                     <!--
