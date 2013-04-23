@@ -34,17 +34,25 @@ public partial class _Default : BasePage
         SqlController controller = new SqlController();
 
         String phoneNumber = Request["phoneNumberBox"].Replace("-", String.Empty);
-        UserDAO user = new UserDAO()
+        UserDAO user = null;
+        try
         {
-            FirstName = Request["firstNameBox"],
-            LastName = Request["lastNameBox"],
-            UserName = Request["userNameBox"],
-            PhoneNumber = phoneNumber,
-            Carrier = (PhoneCarrier)(Request["carrierDropdown"]),
-            PhoneEmail = phoneNumber + ((PhoneCarrier)(Request["carrierDropdown"])).GetEmail(),
-            IsBanned = false,
-            IsSuppressed = false
-        };
+             user = new UserDAO()
+            {
+                FirstName = Request["firstNameBox"],
+                LastName = Request["lastNameBox"],
+                UserName = Request["userNameBox"],
+                PhoneNumber = phoneNumber,
+                Carrier = (PhoneCarrier)(Request["carrierDropdown"]),
+                PhoneEmail = phoneNumber + ((PhoneCarrier)(Request["carrierDropdown"])).GetEmail(),
+                IsBanned = false,
+                IsSuppressed = false
+            };
+        }
+        catch (InvalidCastException)
+        {
+            Response.Write("Could not find phone carrier! Please try again!");
+        }
 
         //check to see is needs to be hashed before
         try
@@ -107,9 +115,10 @@ public partial class _Default : BasePage
             ListItem item = new ListItem(dic.ElementAt(i).Value.GetName());
             list[i] = item;
         }
-        Control con = FindControl("carrierDropdown");
-        DropDownList Plugins = (DropDownList)con;
-        Plugins.Items.AddRange(list);
+        //Control con = FindControl("carrierDropdown");
+       // DropDownList Plugins = (DropDownList)con;
+        carrierDropdown.Items.AddRange(list);
+        //Plugins.Items.AddRange(list);
     }
 
 
