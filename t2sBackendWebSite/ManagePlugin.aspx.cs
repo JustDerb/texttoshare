@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.IO;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -106,6 +107,17 @@ public partial class ManagePlugin : BasePage
                 IDBController database = new SqlController();
                 if (database.DeletePlugin(_currentPlugin))
                 {
+                    // Delete the file
+                    // Create a blank file
+                    string path = LUADefinitions.getLuaScriptLocation(_currentPlugin.Name);
+                    try
+                    {
+                        File.Delete(path);
+                    }
+                    catch (Exception)
+                    {
+                    }
+
                     Response.Redirect(string.Format(@"Index.aspx?success={0}", HttpUtility.UrlEncode(@"The plugin has been deleted.")));
                 }
                 else
