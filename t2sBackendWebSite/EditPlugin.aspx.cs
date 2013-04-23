@@ -82,6 +82,12 @@ public partial class EditPlugin : BasePage
                     try
                     {
                         File.WriteAllText(luacodeFileLoc, luacode, Encoding.UTF8);
+                        controller.ResetPluginFailedAttemptCount(plugin.PluginID);
+                        if (controller.GetPluginFailedAttemptCount(plugin.PluginID) == 0)
+                        {
+                            // Reenable the plugin
+                            controller.EnableGlobalPlugin(plugin.PluginID);
+                        }
                         pluginFeedback.InnerText = "Plugin has been updated.";
                     }
                     catch (Exception)
