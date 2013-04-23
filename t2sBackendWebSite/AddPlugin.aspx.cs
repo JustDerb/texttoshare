@@ -89,8 +89,8 @@ public partial class AddPlugin : BasePage
         {
             Response.Write("SQL Exception: Error adding plugin");
         }*/
-       
 
+        Response.Redirect(string.Format("ManagePlugin.aspx?pluginname={0}", plugin.Name));
     }
 
 

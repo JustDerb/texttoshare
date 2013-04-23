@@ -105,7 +105,7 @@ public partial class Index : BasePage
         {
             foreach (PluginDAO plugin in plugins)
             {
-                pluginBuilder.Append(string.Format(@"<li><a href=""ManagePlugin.aspx?pluginid={1}"">{0}</li>", plugin.Name, plugin.PluginID));
+                pluginBuilder.Append(string.Format(@"<li><a href=""ManagePlugin.aspx?pluginname={0}"">{0}</li>", plugin.Name));
             }
         }
 
