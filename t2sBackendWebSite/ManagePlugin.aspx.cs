@@ -20,7 +20,7 @@ public partial class ManagePlugin : BasePage
         PageTitle.Text = "Text2Share - Manage Plugin";
 
         GetPagePlugin();
-        editPluginButton.Text = string.Format(@"<a href=""EditPlugin.aspx?pluginname={0}"" id=""editPluginButton"" class=""btn pull-right"">Edit Plugin Code</a>", HttpUtility.UrlEncode(_currentPlugin.Name));
+        editPluginButton.Text = string.Format(@"<a href=""EditPlugin.aspx?pluginname={0}"" id=""editPluginButton"" class=""btn pull-right"">Edit Plugin Code</a>", HttpUtility.HtmlEncode(HttpUtility.UrlEncode(_currentPlugin.Name)));
 
         popluateList(sender, e);
     }
@@ -36,7 +36,7 @@ public partial class ManagePlugin : BasePage
         try
         {
             IDBController controller = new SqlController();
-            _currentPlugin = controller.RetrievePlugin(HttpUtility.UrlDecode(Request["pluginname"]));
+            _currentPlugin = controller.RetrievePlugin(Request["pluginname"]);
         }
         catch (ArgumentNullException)
         {

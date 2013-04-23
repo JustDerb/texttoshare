@@ -80,7 +80,10 @@ public partial class Index : BasePage
         {
             foreach (GroupDAO group in groups)
             {
-                groupBuilder.Append(string.Format(@"<li><a href=""ManageGroup.aspx?grouptag={1}"">{0} ({1})</a></li>", group.Name, group.GroupTag));
+                groupBuilder.Append(string.Format(@"<li><a href=""ManageGroup.aspx?grouptag={2}"">{0} ({1})</a></li>", 
+                    HttpUtility.HtmlEncode(group.Name), 
+                    HttpUtility.HtmlEncode(group.GroupTag), 
+                    HttpUtility.HtmlEncode(HttpUtility.UrlEncode(group.GroupTag))));
             }
         }
 
@@ -116,7 +119,9 @@ public partial class Index : BasePage
             foreach (PluginDAO plugin in plugins)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append(string.Format(@"<li><a href=""ManagePlugin.aspx?pluginname={0}"">{0} ", plugin.Name));
+                sb.Append(string.Format(@"<li><a href=""ManagePlugin.aspx?pluginname={1}"">{0} ", 
+                    HttpUtility.HtmlEncode(plugin.Name),
+                    HttpUtility.HtmlEncode(HttpUtility.UrlEncode(plugin.Name))));
                 if (plugin.IsDisabled)
                 {
                     sb.Append(string.Format(@"<span class=""label label-important pull-right"">Disabled</span>"));
@@ -128,7 +133,7 @@ public partial class Index : BasePage
                         IDBController controller = new SqlController();
                         int errorCount = controller.GetPluginFailedAttemptCount(plugin.PluginID);
                         if (errorCount > 0)
-                            sb.Append(string.Format(@"<span class=""badge badge-important pull-right"">{0}</span>", errorCount));
+                            sb.Append(string.Format(@"<span class=""badge badge-important pull-right"">{0}</span>", HttpUtility.HtmlEncode(errorCount)));
                     }
                     catch (Exception)
                     {

@@ -98,7 +98,7 @@ public partial class ManageGroup : BasePage
             else
             {
                 // Tell the user they can't use the group tag
-                invalidEntries.Text = string.Format(@"A group with grouptag ""{0}"" already exists.", groupTagBox.Text);
+                invalidEntries.Text = string.Format(@"A group with grouptag ""{0}"" already exists.", HttpUtility.HtmlEncode(groupTagBox.Text));
                 return;
             }
         }
