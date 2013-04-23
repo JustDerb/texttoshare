@@ -58,7 +58,7 @@ public partial class manageUser : BasePage
         String phoneNumber = Request["phoneNumberBox"];
         String carrier = Request["carrierBox"];
 
-        user = (UserDAO)HttpContext.Current.Session["userDAO"];
+        user = Session["userDAO"] as UserDAO;
         user.UserName = userName;
         user.PhoneNumber = phoneNumber;
         user.FirstName = firstName;
