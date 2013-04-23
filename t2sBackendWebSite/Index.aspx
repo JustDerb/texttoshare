@@ -1,7 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Index.aspx.cs" Inherits="Index" %>
-<%@ Import Namespace="System.Data.SqlClient" %>
-
-<% IDBController controller = new SqlController(); %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -51,7 +48,7 @@
             </div>
         </div>
 
-        <div class="container-fluid">
+        <div class="container">
             <% if (showErrorMessage)
                { %>
             <div class="row-fluid">
@@ -65,7 +62,7 @@
             <% } %>
             <div class="row-fluid">
                 <div class="span6">
-                    <h2>Groups</h2>
+                    <h3 style="position:relative">Groups <a href="AddGroup.aspx" class="btn btn-primary" style="bottom:0;right:0;position:absolute">Create Group</a></h3>
                     <div class="well" style="padding: 8px 0;">
                         <ul class="nav nav-list">
                             <li class="nav-header">Groups I Own</li>
@@ -80,17 +77,17 @@
                             <asp:Literal id="groupsUserIsIn" runat="server"></asp:Literal>
                         </ul>
                     </div>
-                    <asp:Hyperlink href="AddGroup.aspx" id="createGroup" class="btn btn-primary pull-right" runat="server">Create Group</asp:Hyperlink>
+                    
                 </div>
                 <div class="span6">
-                    <h2>Plugins</h2>
+                    <h3 style="position:relative">Plugins <a href="AddPlugin.aspx" class="btn btn-primary" style="bottom:0;right:0;position:absolute">Create Plugin</a></h3>
                     <div class="well" style="padding: 8px 0;">
                         <ul class="nav nav-list">
                             <li class="nav-header">Plugins I Own</li>
                             <asp:Literal id="pluginsUserOwns" runat="server"></asp:Literal>
                         </ul>
                     </div>
-                    <asp:Hyperlink href="AddPlugin.aspx" id="createPlugin" class="btn btn-primary pull-right" runat="server">Create Plugin</asp:Hyperlink>
+                    
                 </div>
             </div>
         </div>

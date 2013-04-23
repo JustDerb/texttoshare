@@ -115,7 +115,28 @@ public partial class Index : BasePage
         {
             foreach (PluginDAO plugin in plugins)
             {
-                pluginBuilder.Append(string.Format(@"<li><a href=""ManagePlugin.aspx?pluginname={0}"">{0}</li>", plugin.Name));
+                StringBuilder sb = new StringBuilder();
+                sb.Append(string.Format(@"<li><a href=""ManagePlugin.aspx?pluginname={0}"">{0} ", plugin.Name));
+                if (plugin.IsDisabled)
+                {
+                    sb.Append(string.Format(@"<span class=""label label-important pull-right"">Disabled</span>"));
+                }
+                else
+                {
+                    try
+                    {
+                        IDBController controller = new SqlController();
+                        int errorCount = controller.GetPluginFailedAttemptCount(plugin.PluginID);
+                        if (errorCount > 0)
+                            sb.Append(string.Format(@"<span class=""badge badge-important pull-right"">{0}</span>", errorCount));
+                    }
+                    catch (Exception)
+                    {
+                        // Shh... nothing but tears.
+                    }
+                }
+                sb.Append(string.Format(@"</a></li>"));
+                pluginBuilder.Append(sb.ToString());
             }
         }
 
