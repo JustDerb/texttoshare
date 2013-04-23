@@ -31,7 +31,7 @@ public partial class manageUser : BasePage
     /// </summary>
     private void getAndSetUserInfo()
     {
-        UserDAO user = (UserDAO) HttpContext.Current.Session["userDAO"];
+        UserDAO user = (UserDAO)HttpContext.Current.Session["userDAO"];
         firstNameBox.Text = user.FirstName;
         lastNameBox.Text = user.LastName;
         userNameBox.Text = user.UserName;
@@ -57,23 +57,23 @@ public partial class manageUser : BasePage
         String userName = Request["userNameBox"];
         String phoneNumber = Request["phoneNumberBox"];
         String carrier = Request["carrierBox"];
-       
-            user = (UserDAO) HttpContext.Current.Session["userDAO"];
-            user.UserName = userName;
-            user.PhoneNumber = phoneNumber;
-            user.FirstName = firstName;
-            try
-            {
+
+        user = (UserDAO)HttpContext.Current.Session["userDAO"];
+        user.UserName = userName;
+        user.PhoneNumber = phoneNumber;
+        user.FirstName = firstName;
+        try
+        {
             //check if user name or phone email is already being used
-             if (controller.UserExists(user.UserName, user.PhoneEmail))
-             {
-                 Response.Write("User Name or Phone Number is already taken");
-             }
-             else
-             {
+            if (controller.UserExists(user.UserName, user.PhoneEmail))
+            {
+                Response.Write("User Name or Phone Number is already taken");
+            }
+            else
+            {
                 controller.UpdateUser(user);
                 Response.Write("User information successfull updated");
-             }
+            }
         }
         catch (ArgumentNullException)
         {
