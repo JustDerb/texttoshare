@@ -7,8 +7,17 @@ using System.Web.UI.WebControls;
 using t2sDbLibrary;
 using System.Data.SqlClient;
 
+/// <summary>
+/// class which contains the code  beihind for RegisterUser.aspx
+/// </summary>
 public partial class _Default : BasePage
 {
+    /// <summary>
+    /// function which is ran on page load
+    /// sets the page title and poplulate the phone carrier dropdown menu
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
         PageTitle.Text = "Text2Share - Register";
@@ -20,11 +29,16 @@ public partial class _Default : BasePage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
+    /// <exception cref="ArgumentNullException">If the given string is null.</exception>
+    /// <exception cref="EntryAlreadyExitsException">If the user for the given username already exits.</exception>
+    /// <exception cref="SQLException">If an unknown databasae exception happends.</exception>
+    /// <exception cref="InvalidCastException">If the phonecarrier string value can not be casted to a existing phoneCarrier.</exception>
+ 
     public void Register_Click(Object sender, EventArgs e)
     {
         String password = Request["passwordBox"];
         String verifyPassword = Request["verifyPasswordBox"];
-
+        //verify password fields match
         if (!password.Equals(verifyPassword))
         {
             invalidCredentials.Text = "The passwords you entered do not match. Please try again.";
@@ -34,6 +48,7 @@ public partial class _Default : BasePage
         SqlController controller = new SqlController();
 
         String phoneNumber = Request["phoneNumberBox"].Replace("-", String.Empty);
+        //create a new userDAO and set it fields
         UserDAO user = null;
         try
         {
@@ -85,27 +100,10 @@ public partial class _Default : BasePage
         Response.Redirect("Index.aspx");
     }
 
-   /* /// <summary>
-    /// returns the query user
+   
+    /// <summary>
+    /// gets a readonly dictionary of all the PhoneCarriers and populates the PhoneCarrierDropdown with their names.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public void getUser_Click(Object sender, EventArgs e)
-    {
-        SqlController controller = new SqlController();
-        UserDAO user = new UserDAO();
-
-        //grab input from textboxs
-        String firstName = Request["rfirstNameBox"];
-        String lastName = Request["rlastNameBox"];
-        String phoneNumber = Request["rPhoneNumberBox"];
-        //String phoneCarrier = Request["rCarrierBox"];
-        String phoneCarrier = Request["carrierDropdown"];
-        Response.Write(phoneCarrier);
-        String password = Request["rPasswordBox"];
-        String userName = Request["rUserNameBox"];
-    }*/
-
     public void getPhoneCarrierDropDown(){
         Dictionary<string, PhoneCarrier> dic = t2sDbLibrary.PhoneCarrier.getNameInstanceDictionary();
         String[] names = new String[dic.Count];
@@ -115,10 +113,7 @@ public partial class _Default : BasePage
             ListItem item = new ListItem(dic.ElementAt(i).Value.GetName());
             list[i] = item;
         }
-        //Control con = FindControl("carrierDropdown");
-       // DropDownList Plugins = (DropDownList)con;
         carrierDropdown.Items.AddRange(list);
-        //Plugins.Items.AddRange(list);
     }
 
 
