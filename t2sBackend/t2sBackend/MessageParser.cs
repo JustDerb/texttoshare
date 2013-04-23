@@ -55,6 +55,11 @@ namespace t2sBackend
             }
             else if (parsed.Command.Equals("register", StringComparison.OrdinalIgnoreCase))
             {
+                // Since they are not in the database, 
+                // we need to make a temp UserDAO as the sender
+                // and populate their phone email for the Register plugin
+                parsed.Sender = new UserDAO();
+                parsed.Sender.PhoneEmail = message.Sender;
                 parsed.Type = ParsedMessage.ContentMessageType.REGISTER;
             }
             else if (parsed.Sender != null &&
