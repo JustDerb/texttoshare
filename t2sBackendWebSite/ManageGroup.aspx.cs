@@ -7,12 +7,21 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using t2sDbLibrary;
 
-
+/// <summary>
+/// class which contains the codebehind for ManageGroup.aspx
+/// </summary>
 public partial class ManageGroup : BasePage
 {
     private GroupDAO _currentGroup;
     private IDBController controller = new SqlController();
 
+    /// <summary>
+    /// functions which are run on page load.
+    /// It checks that the user is login and sets the page title as
+    /// well as filling in the group information for the group being managed
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
@@ -25,6 +34,9 @@ public partial class ManageGroup : BasePage
     /// Uses the grouptag GET parameter and retrieves the group metadata.
     /// Populates the "Group Information" section as well.
     /// </summary>
+    /// <exception cref="ArgumentNullException">If the given string is null.</exception>
+    /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
+    /// <exception cref="SQL exception">For an unknown SQL error.</exception>
     private void GetGroupAndSetData()
     {
         try
@@ -108,6 +120,14 @@ public partial class ManageGroup : BasePage
 
     }
 
+    /// <summary>
+    /// updates the group information
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /// <exception cref="ArgumentNullException">If the given string is null.</exception>
+    /// <exception cref="CouldNotFindException">If the user for the given username could not be found.</exception>
+    /// <exception cref="SQLException">If an unknown databasae exception happends.</exception>
     public void updateGroup_Click(Object sender, EventArgs e)
     {
         SqlController controller = new SqlController();
@@ -148,143 +168,10 @@ public partial class ManageGroup : BasePage
 
 
 
-    /// <summary>
-    /// called onload
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public void popluateGroupList(Object sender, EventArgs e)
-    {
-        try
-        {
-            SqlController controller = new SqlController();
-            List<PluginDAO> plugins = controller.RetrieveEnabledPlugins();
-            String[] names = new String[plugins.Count];
-            ListItem[] list = new ListItem[plugins.Count];
-            for (int i = 0; i < plugins.Count; i++)
-            {
-                ListItem item = new ListItem(plugins.ElementAt(i).Name);
-                list[i] = item;
-            }
-            DropDownList groupPlugin = ((DropDownList)((DropDownList)sender).Parent.FindControl("groupPlugin"));
-            groupPlugin.Items.AddRange(list);
-        }
-        catch (SqlException error)
-        {
-            // Logger.LogMessage("SQL exception with Retrieve Enabled plugin");
-        }
-    }
-
-    /// <summary>
-    /// called onload
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public void retrieveEnabledGroupPlugins(Object sender, EventArgs e)
-    {
-        try
-        {
-
-
-            //TODO
-            //need to get groupid from session
-            SqlController controller = new SqlController();
-
-            GroupDAO group = controller.RetrieveGroup(Request["grouptag"].ToString());
-            // GroupDAO group = controller.RetrieveGroup(Request["groupTagBox"]);
-            List<PluginDAO> plugins = controller.GetAllEnabledGroupPlugins(group.GroupID);
-            String[] names = new String[plugins.Count];
-            ListItem[] list = new ListItem[plugins.Count];
-            for (int i = 0; i < plugins.Count; i++)
-            {
-                ListItem item = new ListItem(plugins.ElementAt(i).Name);
-                list[i] = item;
-            }
-            DropDownList enabledPlugins = ((DropDownList)((DropDownList)sender).Parent.FindControl("enabledPlugins"));
-            enabledPlugins.Items.AddRange(list);
-        }
-        catch (SqlException error)
-        {
-            // Logger.LogMessage("SQL exception with Retrieve Enabled plugin");
-        }
-    }
-
-
-
-    public void unEnablePlugin_Click(Object sender, EventArgs e)
-    {
-        //TODO
-        //remove from dropdown
-        SqlController control = new SqlController();
-        DropDownList unEnable = ((DropDownList)((DropDownList)sender).Parent.FindControl("unEnable"));
-        ListItem plugin = unEnable.SelectedItem;
-        String pluginName = plugin.Text;
-        try
-        {
-            PluginDAO toUnEnable = control.RetrievePlugin(pluginName);
-            try
-            {
-                GroupDAO group = control.RetrieveGroup(Request["groupTagBox"]);
-                control.DisablePluginForGroup(group.GroupID, toUnEnable.PluginID);
-            }
-            catch (ArgumentNullException)
-            {
-
-            }
-            catch (CouldNotFindException)
-            {
-
-            }
-
-        }
-        catch (ArgumentNullException error)
-        {
-
-        }
-        catch (CouldNotFindException error)
-        {
-
-        }
-    }
 
 
 
 
-    public void enablePlugin(Object sender, EventArgs e)
-    {
-        //TOOD
-        //add to other dropdown list
-        SqlController control = new SqlController();
-        DropDownList enabledPlugins = ((DropDownList)((DropDownList)sender).Parent.FindControl("enabledPlugins"));
-        ListItem plugin = enabledPlugins.SelectedItem;
-        String pluginName = plugin.Text;
-        try
-        {
-            PluginDAO toEnable = control.RetrievePlugin(pluginName);
-            try
-            {
-                GroupDAO group = control.RetrieveGroup(Request["groupTagBox"]);
-                control.EnablePluginForGroup(group.GroupID, toEnable.PluginID);
-            }
-            catch (ArgumentNullException)
-            {
-
-            }
-            catch (CouldNotFindException)
-            {
-
-            }
-
-        }
-        catch (ArgumentNullException error)
-        {
-
-        }
-        catch (CouldNotFindException error)
-        {
-
-        }
-
-    }
+    
 
 }

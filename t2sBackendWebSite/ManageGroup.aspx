@@ -84,25 +84,6 @@
             </div>
         </div>
 
-<%
-         //<!--             <div class="control-group">
-         //       <div class="controls">
-         //           <asp:DropDownList id="groupPlugin" runat="server" onload="popluateGroupList" >
-         //               <asp:ListItem Text="<Select Plugin>" Value="0" />
-         //           </asp:DropDownList>
-         //           <asp:Button ID="pluginEnable" runat="server" text="Enable Plugin" onclick= "enablePlugin" />
-         //       </div>
-         //   </div>
-         //   <div class="control-group">
-         //       <div class="controls">
-         //           <asp:DropDownList id="enabledPlugins" runat="server" onload="retrieveEnabledGroupPlugins" >
-         //               <asp:ListItem Text="<Currently Enabled Plugins>" Value="0" />
-         //           </asp:DropDownList>
-         //           <asp:button id="unEnable" text="UnEnable Plugin" Onclick="unEnablePlugin_Click" runat="server"></asp:button>
-         //       </div>
-         //   </div> -->   
-    
-%>
 
 
     </body>
