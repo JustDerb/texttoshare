@@ -33,11 +33,14 @@ public partial class ManageGroup : BasePage
         }
         catch (ArgumentNullException)
         {
-
+            Response.Write("Grouptag field is null!");
+        }catch(CouldNotFindException){
+            Response.Write("Group could not be found!");
         }
-        catch (SqlException)
+        catch (SqlException err)
         {
-
+            Response.Write("An unknown error has happened");
+            Logger.LogMessage("ManageGroup.aspx " + err.Message, LoggerLevel.SEVERE);       
         }
 
         groupNameBox.Text = _currentGroup.Name;
@@ -91,6 +94,11 @@ public partial class ManageGroup : BasePage
         {
             // Shouldn't happen
         }
+        catch (CouldNotFindException)
+        {
+            //Shouldn't happen
+            Response.Write("Could find group!");
+        }
         catch (SqlException)
         {
             invalidEntries.Text = "An error occurred connecting to the server. Please try again soon.";
@@ -113,25 +121,32 @@ public partial class ManageGroup : BasePage
             group.Name = groupName;
             group.GroupTag = groupTag;
             group.Description = groupDescription;
-            //update the group
-            try
-            {
-                controller.UpdateGroup(group);
-            }
-            catch (ArgumentNullException error)
-            {
-
-            }
-        }
-        catch (ArgumentNullException error)
-        {
+            //update the group  
+            controller.UpdateGroup(group);
 
         }
-        catch (CouldNotFindException error)
+        catch (ArgumentNullException)
         {
-
+            Response.Write("Argument is null!");
+        }
+        catch (CouldNotFindException)
+        {
+            Response.Write("Could not find Group");
+        }
+        catch (SqlException err)
+        {
+            Response.Write("An unknown error has happened");
+            Logger.LogMessage("ManageGroup.aspx " + err.Message, LoggerLevel.SEVERE);
         }
     }
+
+
+
+
+
+
+
+
 
     /// <summary>
     /// called onload

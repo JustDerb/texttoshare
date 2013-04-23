@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data.SqlClient;
 using t2sDbLibrary;
 
 public partial class GetUser : BasePage
@@ -34,6 +35,11 @@ public partial class GetUser : BasePage
         {
             Response.Write("Could not find the username in database! ");
         }
+        catch (SqlException err)
+        {
+            Response.Write("An unknown error has happened");
+            Logger.LogMessage("AddGroup.aspx " + err.Message, LoggerLevel.SEVERE);
+        }
 
         if (owner != null)
         {
@@ -54,6 +60,10 @@ public partial class GetUser : BasePage
         catch (EntryAlreadyExistsException)
         {
             Response.Write("This group already exists! ");
+        }
+        catch(SqlException error){
+            Response.Write("An unknown error has happened");
+            Logger.LogMessage("AddGroup.aspx "+  error.Message, LoggerLevel.SEVERE);
         }
 
         if (added)
