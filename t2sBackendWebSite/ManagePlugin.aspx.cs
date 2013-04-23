@@ -29,7 +29,7 @@ public partial class ManagePlugin : BasePage
     {
         if (null == Request["pluginname"])
         {
-            invalidPlugin.Text = "An error occurred retrieving the plugin information. Please go back to the home page";
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An error occurred retrieving the plugin information")));
             return;
         }
 
@@ -44,13 +44,13 @@ public partial class ManagePlugin : BasePage
         }
         catch (CouldNotFindException)
         {
-            ShowError("An unknown error occurred loading plugin data. Please try again soon.");
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred loading plugin data. Please try again soon.")));
             return;
         }
         catch (SqlException ex)
         {
             Logger.LogMessage("ManagePlugin: " + ex.Message, LoggerLevel.SEVERE);
-            ShowError("An unknown error occurred loading plugin data. Please try again soon.");
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred loading plugin data. Please try again soon.")));
             return;
         }
     }
