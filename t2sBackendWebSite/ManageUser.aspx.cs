@@ -12,6 +12,9 @@ using t2sDbLibrary;
 /// </summary>
 public partial class manageUser : BasePage
 {
+    public bool showErrorMessage = false;
+    public bool showSuccessMessage = false;
+
     /// <summary>
     /// function which is ran on page load
     /// checks that the user is logged in and set the page title
@@ -36,7 +39,7 @@ public partial class manageUser : BasePage
         lastNameBox.Text = user.LastName;
         userNameBox.Text = user.UserName;
         phoneNumberBox.Text = user.PhoneNumber;
-        carrierBox.Text = user.Carrier.GetName();
+        getPhoneCarrierDropDown(user.Carrier);
     }
 
 
@@ -59,39 +62,85 @@ public partial class manageUser : BasePage
         String carrier = Request["carrierBox"];
 
         user = Session["userDAO"] as UserDAO;
-        user.UserName = userName;
-        user.PhoneNumber = phoneNumber;
+        //user.UserName = userName;
+        //user.PhoneNumber = phoneNumber;
         user.FirstName = firstName;
+        user.LastName = lastName;
         try
         {
             //check if user name or phone email is already being used
-            if (controller.UserExists(user.UserName, user.PhoneEmail))
-            {
-                Response.Write("User Name or Phone Number is already taken");
-            }
-            else
+            //if (controller.UserExists(user.UserName, user.PhoneEmail))
+            //{
+            //    ShowError("User Name or Phone Number is already taken", false);
+            //}
+            //else
             {
                 controller.UpdateUser(user);
-                Response.Write("User information successfull updated");
+                ShowError("User information successfully updated.", true);
             }
         }
         catch (ArgumentNullException)
         {
-            Response.Write("Argument is Null");
+            ShowError("An unknown error occured. Please try again later.", true);
         }
         catch (CouldNotFindException)
         {
-            Response.Write("Could not find user");
+            ShowError("An unknown error occured. Please try again later.", true);
         }
         catch (SqlException err)
         {
-            Logger.Equals("ManageUser.aspx " + err.Message, LoggerLevel.SEVERE);
-            Response.Write("Unknown error happend!");
+            Logger.LogMessage("ManageUser.aspx: " + err.Message, LoggerLevel.SEVERE);
+            ShowError("An unknown error occured. Please try again later.", true);
         }
-
-
     }
 
+    private void ShowError(string message, bool redirect)
+    {
+        if (!redirect)
+        {
+            showErrorMessage = true;
+            errorMessage.Text = message;
+        }
+        else
+        {
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(message)));
+        }
+    }
 
+    private void ShowSuccess(string message, bool redirect)
+    {
+        if (!redirect)
+        {
+            showSuccessMessage = true;
+            successMessage.Text = message;
+        }
+        else
+        {
+            Response.Redirect(string.Format(@"Index.aspx?success={0}", HttpUtility.UrlEncode(message)));
+        }
+    }
 
+    /// <summary>
+    /// gets a readonly dictionary of all the PhoneCarriers and populates the PhoneCarrierDropdown with their names.
+    /// </summary>
+    public void getPhoneCarrierDropDown(PhoneCarrier selected)
+    {
+        Dictionary<string, PhoneCarrier> dic = t2sDbLibrary.PhoneCarrier.getNameInstanceDictionary();
+        ListItem selectedItem = null;
+        for (int i = 0; i < dic.Count; i++)
+        {
+            PhoneCarrier carrier = dic.ElementAt(i).Value;
+            ListItem item = new ListItem(carrier.GetName());
+            carrierDropdown.Items.Add(item);
+            
+
+            if (selected != null && selected.Equals(carrier))
+            {
+                selectedItem = item;
+            }
+        }
+
+        if (selectedItem != null)
+            carrierDropdown.SelectedIndex = carrierDropdown.Items.IndexOf(selectedItem);
+    }
 }
