@@ -11,6 +11,8 @@ using t2sDbLibrary;
 /// </summary>
 public partial class GetUser : BasePage
 {
+    public bool showErrorMessage = false;
+
     /// <summary>
     /// functions which are excueted on page load
     /// checks to make sure user is login and sets the page title
@@ -36,62 +38,62 @@ public partial class GetUser : BasePage
     {
 
         SqlController controller = new SqlController();
-        GroupDAO group = null;
-        UserDAO owner = new UserDAO();
-        String ownerUsername = Request["groupOwner"];
-        try
-        {
-            owner = controller.RetrieveUserByUserName(ownerUsername);
-        }
-        catch (ArgumentNullException)
-        {
-            Response.Write("Owner username is null! ");
-        }
-        catch (CouldNotFindException)
-        {
-            Response.Write("Could not find the username in database! ");
-        }
-        catch (SqlException err)
-        {
-            Response.Write("An unknown error has happened");
-            Logger.LogMessage("AddGroup.aspx " + err.Message, LoggerLevel.SEVERE);
-        }
+        
+        UserDAO owner = Session["userDAO"] as UserDAO;
 
-        if (owner != null)
-        {
-            group = new GroupDAO(owner);
-            group.Name = Request["groupNameBox"];
-            group.GroupTag = Request["groupTagBox"];
-            group.Description = Request["groupDescriptionBox"];
-        }
-        bool added = false;
-        try
-        {
-            added = controller.CreateGroup(group);
-        }
-        catch (ArgumentNullException)
-        {
-            Response.Write("The group being inserted is NULL ");
-        }
-        catch (EntryAlreadyExistsException)
-        {
-            Response.Write("This group already exists! ");
-        }
-        catch(SqlException error){
-            Response.Write("An unknown error has happened");
-            Logger.LogMessage("AddGroup.aspx "+  error.Message, LoggerLevel.SEVERE);
-        }
+        GroupDAO group = new GroupDAO(owner);
+        group.Name = Request["groupNameBox"];
+        group.GroupTag = Request["groupTagBox"];
+        group.Description = Request["groupDescriptionBox"];
 
-        if (added)
+        if (string.IsNullOrWhiteSpace(group.Name) || group.Name.Length >= GroupDAO.NameMaxLength)
         {
-            Response.Write("Your group was created successfully! ");
+            ShowError(string.Format("Invalid group name. Please enter a name under {0} characters.", GroupDAO.NameMaxLength));
+            groupNameBox.Focus();
+        }
+        else if (string.IsNullOrWhiteSpace(group.GroupTag) || group.GroupTag.Length > GroupDAO.GroupTagMaxLength || group.GroupTag.Length < 4)
+        {
+            ShowError(string.Format("Invalid group tag. Please enter a tag between {0} and {1} characters.", 4, GroupDAO.GroupTagMaxLength));
+            groupTagBox.Focus();
+        }
+        else if (string.IsNullOrWhiteSpace(group.Description) || group.Description.Length >= GroupDAO.DescriptionMaxLength)
+        {
+            ShowError(string.Format("Invalid group description. Please enter a name under {0} characters.", GroupDAO.DescriptionMaxLength));
+            groupDescriptionBox.Focus();
         }
         else
         {
-            Response.Write("Your group was not created successfully. Please try again!");
+            try
+            {
+                if (controller.CreateGroup(group))
+                {
+                    // Redirect to the manage page
+                    Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}", HttpUtility.UrlEncode(group.GroupTag)));
+                }
+                else
+                {
+                    ShowError("Your group was not created successfully. Please try again!");
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                ShowError("An unknown error has happened. Please try again later.");
+            }
+            catch (EntryAlreadyExistsException)
+            {
+                ShowError("This group already exists!");
+            }
+            catch (SqlException error)
+            {
+                ShowError("An unknown error has happened. Please try again later.");
+                Logger.LogMessage("AddGroup.aspx: " + error.Message, LoggerLevel.SEVERE);
+            }
         }
-
-
     }
 
+    public void ShowError(string message)
+    {
+        showErrorMessage = true;
+        errorMessage.Text = message;
+    }
 }
