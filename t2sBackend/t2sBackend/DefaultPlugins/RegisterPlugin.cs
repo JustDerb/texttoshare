@@ -38,7 +38,7 @@ namespace t2sBackend
                         controller.UpdateUser(user);
                         // Reset verification to nothing
                         controller.SetVerificationCodeForUser(null, user);
-                        fullMsg.Append("You have successfully register with Text2Share. Thank you!");
+                        fullMsg.Append("You have successfully registered with Text2Share. Thank you!");
                     }
                 }
                 catch
