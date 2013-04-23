@@ -97,7 +97,7 @@ public partial class _Default : BasePage
         //set the session the same as user login
         HttpContext.Current.Session["userDAO"] = user;
 
-        Response.Redirect("Index.aspx");
+        Response.Redirect("Verification.aspx");
     }
 
    

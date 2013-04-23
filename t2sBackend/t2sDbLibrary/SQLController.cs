@@ -2064,6 +2064,40 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Gets the current verification code for the given user. Useful for determining if a user
+        /// has been verified in the system completely.
+        /// </summary>
+        /// <param name="user">The user to check in the database.</param>
+        /// <returns>the database string with either "-1" (new user), a 6-character verification code (registering), or NULL (verified).</returns>
+        public string GetCurrentVerificationValueForUser(UserDAO user)
+        {
+            if (null == user || null == user.UserID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT verification_code ");
+                queryBuilder.Append("FROM users ");
+                queryBuilder.Append("WHERE id = @userid ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@userid", user.UserID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                // If there are no records returned from the select statement, the DataReader will be empty
+                if (reader.Read())
+                {
+                    if (DBNull.Value.Equals(reader["verification_code"])) return null;
+                    else return reader["verification_code"] as string;
+                }
+                else throw new CouldNotFindException("Could not find user with userid: " + user.UserID);
+            }
+        }
+
         #endregion
     }
 }

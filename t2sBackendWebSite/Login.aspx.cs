@@ -40,8 +40,24 @@ public partial class Login : BasePage
 
             HttpContext.Current.Session["userDAO"] = user;
 
-            //session information was set no problem, redirect user to home page
-            Response.Redirect("Index.aspx");
+            // Check if the user's phone-email is already verified in the system
+            try
+            {
+                if (!base.isVerified(user))
+                {
+                    Response.Redirect("Verification.aspx");
+                }
+                else
+                {
+                    Response.Redirect("Index.aspx");
+                }
+            }
+            catch (SqlException ex)
+            {
+                Logger.LogMessage("Verification.aspx: " + ex.Message, LoggerLevel.SEVERE);
+                invalidCredentials.Text = "An unknown error occured. Please try again later.";
+            }
+
             return;
         }
 

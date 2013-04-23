@@ -498,6 +498,14 @@ namespace t2sDbLibrary
         /// <exception cref="CouldNotFindException">If no user could be found for the given code.</exception>
         UserDAO GetUserByVerificationCode(string verificationCode);
 
+        /// <summary>
+        /// Gets the current verification code for the given user. Useful for determining if a user
+        /// has been verified in the system completely.
+        /// </summary>
+        /// <param name="user">The user to check in the database.</param>
+        /// <returns>the database string with either "-1" (new user), a 6-character verification code (registering), or NULL (verified).</returns>
+        string GetCurrentVerificationValueForUser(UserDAO user);
+
         #endregion
     }
 
