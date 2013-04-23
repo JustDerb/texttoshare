@@ -2011,18 +2011,21 @@ namespace t2sDbLibrary
         /// <exception cref="ArgumentNullException">If the verification is null or empty, or the userDAO or UserDAO.UserID are null.</exception>
         public bool SetVerificationCodeForUser(string verificationCode, UserDAO user)
         {
-            if (verificationCode.Trim().Equals(string.Empty) || null == user || null == user.UserID) throw new ArgumentNullException();
+            if ((null != verificationCode && verificationCode.Trim().Equals(string.Empty)) || null == user || null == user.UserID) throw new ArgumentNullException();
 
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("INSERT INTO users ");
+                queryBuilder.Append("UPDATE users ");
                 queryBuilder.Append("SET verification_code = @verificationCode ");
                 queryBuilder.Append("WHERE id = @userid ");
 
                 query.CommandText = queryBuilder.ToString();
-                query.Parameters.AddWithValue("@verificationcode", verificationCode);
+                if (null == verificationCode)
+                    query.Parameters.AddWithValue("@verificationCode", DBNull.Value);
+                else
+                    query.Parameters.AddWithValue("@verificationCode", verificationCode);
                 query.Parameters.AddWithValue("@userid", user.UserID);
 
                 conn.Open();

@@ -21,6 +21,7 @@
 
             body {
                 padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+                padding-bottom: 40px;
             }
         </style>
         <script src="Scripts/jquery-1.7.1.min.js" type="text/javascript" charset="utf-8"></script>

@@ -41,7 +41,7 @@ namespace t2sBackend
                         fullMsg.Append("You have successfully registered with Text2Share. Thank you!");
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     return;
                 }

@@ -18,8 +18,15 @@ public partial class Verification : BasePage
 
         base.ClearCache();
 
-        PageTitle.Text = "Text2Share - Register";
-        GetNumberToSendVerificationTo();
+        PageTitle.Text = "Text2Share - Verification";
+        if (null != Request.QueryString["generateNew"])
+        {
+            GetNumberToSendVerificationTo();
+        }
+        else
+        {
+            GetCurrentVerificationCodeForUser();
+        }
     }
 
     /// <summary>
@@ -31,8 +38,13 @@ public partial class Verification : BasePage
         try
         {
             IDBController controller = new SqlController();
-            verificationCode.Text = controller.GetCurrentVerificationValueForUser(_currentUser);
+            //verificationCode.Text = controller.GetCurrentVerificationValueForUser(_currentUser);
+            string code = VerificationGenerator.GenerateString(6);
+
+            verificationCode.Text = code;
+            verificationCodeText.Text = "Register " + code;
             t2sAccountEmail.Text = controller.GetPairEntryValue("t2sEmailAccount");
+            controller.SetVerificationCodeForUser(code, _currentUser);
         }
         catch (ArgumentNullException)
         {
@@ -41,13 +53,53 @@ public partial class Verification : BasePage
         catch (CouldNotFindException ex)
         {
             Logger.LogMessage("Verification.aspx: " + ex.Message, LoggerLevel.SEVERE);
-            errorMessage.Text = "An unknown error occured. Please try again later.";
+            errorMessage.Text = "An unknown error occured. Please try again later.1";
             return;
         }
         catch (SqlException ex)
         {
             Logger.LogMessage("Verification.aspx: " + ex.Message, LoggerLevel.SEVERE);
-            errorMessage.Text = "An unknown error occured. Please try again later.";
+            errorMessage.Text = "An unknown error occured. Please try again later.2";
+            return;
+        }
+    }
+
+    protected void GetNewVerificationCode_Click(object sender, EventArgs e)
+    {
+        GetNumberToSendVerificationTo();
+    }
+
+    protected void GetCurrentVerificationCodeForUser()
+    {
+        try
+        {
+            IDBController controller = new SqlController();
+            string code = controller.GetCurrentVerificationValueForUser(_currentUser);
+            if ("-1".Equals(code))
+            {
+                GetNumberToSendVerificationTo();
+            }
+            else
+            {
+                t2sAccountEmail.Text = controller.GetPairEntryValue("t2sEmailAccount");
+                verificationCode.Text = code;
+                verificationCodeText.Text = "Register " + code;
+            }
+        }
+        catch (ArgumentNullException)
+        {
+            // Shouldn't happen
+        }
+        catch (CouldNotFindException ex)
+        {
+            Logger.LogMessage("Verification.aspx: " + ex.Message, LoggerLevel.SEVERE);
+            errorMessage.Text = "An unknown error occured. Please try again later.3";
+            return;
+        }
+        catch (SqlException ex)
+        {
+            Logger.LogMessage("Verification.aspx: " + ex.Message, LoggerLevel.SEVERE);
+            errorMessage.Text = "An unknown error occured. Please try again later.4";
             return;
         }
     }
@@ -56,7 +108,14 @@ public partial class Verification : BasePage
     {
         try
         {
-
+            if (!base.isVerified(_currentUser))
+            {
+                Response.Redirect("Verification.aspx");
+            }
+            else
+            {
+                Response.Redirect("Index.aspx");
+            }
         }
         catch (ArgumentNullException)
         {

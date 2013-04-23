@@ -9,7 +9,7 @@ namespace t2sDbLibrary
     /// <summary>
     /// Random String Verification String Generator
     /// </summary>
-    class VerificationGenerator
+    public class VerificationGenerator
     {
         /// <summary>
         /// Default bag for random string generation
