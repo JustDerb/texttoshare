@@ -2,17 +2,62 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using t2sDbLibrary;
 
 public partial class ManagePlugin : BasePage
 {
+    private UserDAO _currentUser;
+    private PluginDAO _currentPlugin;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         base.CheckLoginSession();
+        _currentUser = Session["userDAO"] as UserDAO;
+
         PageTitle.Text = "Text2Share - Manage Plugin";
+
+        GetPagePlugin();
+        editPluginButton.Text = string.Format(@"<a href=""EditPlugin.aspx?pluginname={0}"" id=""editPluginButton"" class=""btn pull-right"">Edit Plugin Code</a>", HttpUtility.UrlEncode(_currentPlugin.Name));
+
         popluateList(sender, e);
+    }
+
+    private void GetPagePlugin()
+    {
+        if (null == Request["pluginname"])
+        {
+            invalidPlugin.Text = "An error occurred retrieving the plugin information. Please go back to the home page";
+            return;
+        }
+
+        try
+        {
+            IDBController controller = new SqlController();
+            _currentPlugin = controller.RetrievePlugin(HttpUtility.UrlDecode(Request["pluginname"]));
+        }
+        catch (ArgumentNullException)
+        {
+            // Shouldn't happen
+        }
+        catch (CouldNotFindException)
+        {
+            ShowError("An unknown error occurred loading plugin data. Please try again soon.");
+            return;
+        }
+        catch (SqlException ex)
+        {
+            Logger.LogMessage("ManagePlugin: " + ex.Message, LoggerLevel.SEVERE);
+            ShowError("An unknown error occurred loading plugin data. Please try again soon.");
+            return;
+        }
+    }
+
+    private void ShowError(string error)
+    {
+        invalidPlugin.Text = error;
     }
 
     public void popluateList(Object sender, EventArgs e)
@@ -44,15 +89,15 @@ public partial class ManagePlugin : BasePage
             // menu.Items.AddRange(list);
 
         }
-        catch (SqlException error)
+        catch (SqlException)
         {
             // Logger.LogMessage("SQL exception with Retrieve Enabled plugin");
         }
-        catch (ArgumentNullException error)
+        catch (ArgumentNullException)
         {
 
         }
-        catch (CouldNotFindException error)
+        catch (CouldNotFindException)
         {
 
         }
@@ -62,38 +107,58 @@ public partial class ManagePlugin : BasePage
     public void updatePlugin_Click(Object sender, EventArgs e)
     {
         String pluginName = Request["pluginNameBox"];
-        String pluginOwner = Request["pluginOwner"];
-        String helptext = Request["helpTextBox"];
-        String plugDescrip = Request["pluginDescripationBox"];
-        String version = Request["versionBox"];
-        SqlController control = new SqlController();
+        String pluginDescription = Request["pluginDescripationBox"];
+        String pluginHelpText = Request["helpTextBox"];
+        String pluginVersion = Request["versionBox"];
+
         try
         {
             //TODO
             //check session user id to make sure they are the owner of plugin
-            PluginDAO plugin = control.RetrievePlugin(pluginName);
-            if (!plugin.Description.Equals(""))
+            if (string.IsNullOrWhiteSpace(pluginName) || pluginName.Length >= PluginDAO.NameMaxLength)
             {
-                plugin.Description = plugDescrip;
+                ShowError("Plugin name cannot be empty or all spaces, and must be less than 64 characters.");
+                return;
             }
-            if (!plugin.VersionNum.Equals(""))
+            if (string.IsNullOrWhiteSpace(pluginDescription) || pluginDescription.Length >= PluginDAO.DescriptionMaxLength)
             {
-                plugin.VersionNum = version;
-            } if (plugin.HelpText.Equals(""))
-            {
-                plugin.HelpText = helptext;
+                ShowError("Plugin description cannot be empty or all spaces.");
+                return;
             }
-            //plugin.OwnerID = control.RetrieveUserByUserName(pluginOwner).UserID;
-            control.UpdatePluginOwner(plugin, control.RetrieveUserByUserName(pluginOwner));
-            control.UpdatePlugin(plugin);
-        }
-        catch (CouldNotFindException error)
-        {
+            if (string.IsNullOrWhiteSpace(pluginHelpText) || pluginHelpText.Length >= PluginDAO.HelpTextMaxLength)
+            {
+                ShowError("Plugin help text cannot be empty or all spaces, and must be less than 160 characters.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(pluginVersion) || pluginVersion.Length >= PluginDAO.VersionNumberMaxLength)
+            {
+                ShowError("Plugin version number cannot be empty or all spaces, and must be less than 32 characters.");
+                return;
+            }
 
-        }
-        catch (ArgumentNullException error)
-        {
+            // Everything checks out--set the current plugin information
+            _currentPlugin.Name = pluginName;
+            _currentPlugin.Description = pluginDescription;
+            _currentPlugin.HelpText = pluginHelpText;
+            _currentPlugin.VersionNum = pluginVersion;
 
+            IDBController controller = new SqlController();
+            //controller.UpdatePluginOwner(_currentPlugin, _currentUser);
+            controller.UpdatePlugin(_currentPlugin);
+        }
+        catch (CouldNotFindException)
+        {
+            // Shouldn't happen
+        }
+        catch (ArgumentNullException)
+        {
+            // Shouldn't happen
+        }
+        catch (SqlException ex)
+        {
+            Logger.LogMessage("ManagePlugin: " + ex.Message, LoggerLevel.SEVERE);
+            ShowError("An unknown error occurred loading plugin data. Please try again soon.");
+            return;
         }
 
     }

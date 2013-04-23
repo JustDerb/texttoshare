@@ -1,7 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManagePlugin.aspx.cs" Inherits="ManagePlugin" %>
-<% 
-    pluginOwner.Text = Session["username"].ToString();
-%>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -51,37 +48,40 @@
             </div>
         </div>
 
-        <form id="managePlugin" runat="server">
-            <p>
-                <asp:DropDownList ID="Plugins" runat="server">
-                    <asp:ListItem Text="<Select Plugin>" Value="0" />
-                </asp:DropDownList>
-            </p>
-            <p>
-                <label for="pluginNameBox">Plugin Name</label>
-                <asp:TextBox ID="pluginNameBox" name="pluginNameBox" placeholder="Plugin Name" runat="server"></asp:TextBox>
-            </p>
-            <p>
-                <label for="pluginOwner">Plugin Owner</label>
-                <asp:TextBox ID="pluginOwner" name="pluginOwner" runat="server"></asp:TextBox>
-            </p>
-            <p>
-                <label for="helpTextBox">Help Text</label>
-                <asp:TextBox ID="helpTextBox" name="helpTextBox" placeholder="Help Text" runat="server"></asp:TextBox>
-            </p>
-            <p>
-                <label for="pluginDescriptionBox">Plugin Description</label>
-                <asp:TextBox ID="pluginDescripationBox" name="pluginDescripationBox" placeholder="Descripation of Plugin" runat="server"></asp:TextBox>
-            </p>
-            <p>
-                <label for="versionBox">Plugin Version</label>
-                <asp:TextBox ID="versionBox" name="versionBox" placeholder="Version Number" runat="server"></asp:TextBox>
-            </p>
-            <p>
-                <asp:Button ID="updatePluginButton" name="updatePluginButton" Text="Update Plugin" OnClick="updatePlugin_Click" runat="server"></asp:Button>
-            </p>
-
-            <div>
+        <form id="managePlugin" class="tts-form" runat="server">
+            <h2 class="tts-form-heading">Login</h2>
+            <div class="control-group">
+                <label class="control-label" for="pluginNameBox">Plugin Name</label>
+                <div class="controls">
+                    <asp:TextBox ID="pluginNameBox" class="input-block-level" name="pluginNameBox" placeholder="Plugin Name" runat="server"></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="helpTextBox">Help Text</label>
+                    <div class="controls">                
+                    <asp:TextBox ID="helpTextBox" class="input-block-level" name="helpTextBox" placeholder="Help Text" runat="server"></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="pluginDescriptionBox">Plugin Description</label>
+                    <div class="controls">                
+                    <asp:TextBox ID="pluginDescriptionBox" class="input-block-level" name="pluginDescriptionBox" placeholder="Description of Plugin" runat="server"></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="versionBox">Plugin Version</label>
+                    <div class="controls">                
+                    <asp:TextBox ID="versionBox" class="input-block-level" name="versionBox" placeholder="(1.0.0, etc)" runat="server"></asp:TextBox>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <asp:Button ID="updatePluginButton" class="btn btn-primary" name="updatePluginButton" Text="Update Plugin" OnClick="updatePlugin_Click" runat="server"></asp:Button>
+                    <asp:Literal ID="editPluginButton" runat="server"></asp:Literal>
+                </div>
+            </div>
+            <div class="control-group">
+                <asp:Label id="invalidPlugin" class="control-label text-error" runat="server"></asp:Label>
             </div>
         </form>
     </body>
