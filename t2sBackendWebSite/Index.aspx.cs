@@ -9,10 +9,15 @@ using t2sDbLibrary;
 
 public partial class Index : BasePage
 {
+    private UserDAO _currentUser;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         base.ClearCache();
+        
         base.CheckLoginSession();
+        _currentUser = HttpContext.Current.Session["userDAO"] as UserDAO;
+
         PageTitle.Text = "Text2Share - Home";
         retrieveGroups();
     }
@@ -22,7 +27,7 @@ public partial class Index : BasePage
     /// </summary>
     private void retrieveGroups()
     {
-        if (null != HttpContext.Current.Session["userid"])
+        if (null != _currentUser)
         {
             List<GroupDAO> ownedGroups = new List<GroupDAO>();
             List<GroupDAO> moderatedGroups = new List<GroupDAO>();
@@ -31,9 +36,9 @@ public partial class Index : BasePage
             try
             {
                 IDBController controller = new SqlController();
-                ownedGroups = controller.GetGroupsUserIsOwnerOf(Session["userid"] as int?);
-                moderatedGroups = controller.GetGroupsUserIsModeratorOf(Session["userid"] as int?);
-                userIsInGroups = controller.GetGroupsUserIsMemberOf(Session["userid"] as int?);
+                ownedGroups = controller.GetGroupsUserIsOwnerOf(_currentUser.UserID);
+                moderatedGroups = controller.GetGroupsUserIsModeratorOf(_currentUser.UserID);
+                userIsInGroups = controller.GetGroupsUserIsMemberOf(_currentUser.UserID);
             }
             catch (SqlException)
             {
@@ -73,34 +78,36 @@ public partial class Index : BasePage
 
     public void retrievePlugins(Object sender, EventArgs e)
     {
-        SqlController control = new SqlController();
+        List<PluginDAO> plugins = new List<PluginDAO>();
+
         try
         {
-            //String response = HttpContext.Current.Session["username"].ToString();
-            // Response.Write(response);
-
-            UserDAO user = control.RetrieveUserByUserName(Session["username"].ToString());
-            List<PluginDAO> plugins = control.GetPluginsOwnedByUser(user);
-            String[] names = new String[plugins.Count];
-            ListItem[] list = new ListItem[plugins.Count];
-            for (int i = 0; i < plugins.Count; i++)
-            {
-                ListItem item = new ListItem(plugins.ElementAt(i).Name);
-                list[i] = item;
-            }
-            DropDownList PluginsOwned = ((DropDownList)((DropDownList)sender).Parent.FindControl("PluginsOwned"));
-            PluginsOwned.Items.AddRange(list);
-
+            IDBController controller = new SqlController();
+            plugins = controller.GetPluginsOwnedByUser(_currentUser);
         }
         catch (ArgumentNullException)
         {
-
+            // Should not happen
         }
-        catch (CouldNotFindException)
-        {
 
-        }
+        printPluginsToPage(plugins, pluginsUserOwns, "<li>You do not own any plugins. Press the \"+\" button to create a new one.</li>");
     }
 
+    public void printPluginsToPage(List<PluginDAO> plugins, Literal pageLiteral, string zeroPluginCountMessage)
+    {
+        StringBuilder pluginBuilder = new StringBuilder();
+        if (0 == plugins.Count)
+        {
+            pluginBuilder.Append(zeroPluginCountMessage);
+        }
+        else
+        {
+            foreach (PluginDAO plugin in plugins)
+            {
+                pluginBuilder.Append(string.Format(@"<li><a href=""ManagePlugin.aspx?pluginid={1}"">{0}</li>", plugin.Name, plugin.PluginID));
+            }
+        }
 
+        pageLiteral.Text = pluginBuilder.ToString();
+    }
 }

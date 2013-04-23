@@ -72,6 +72,12 @@
                 </div>
                 <div class="span6">
                     <h2>Plugins</h2>
+                    <div class="well" style="padding: 8px 0;">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Plugins I Own</li>
+                            <asp:Literal id="pluginsUserOwns" runat="server"></asp:Literal>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
