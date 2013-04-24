@@ -69,10 +69,55 @@ namespace t2sBackend
         {
             if (!_Running)
             {
+                TryRegisterSystem();
+
                 _Running = true;
                 this.libraryThread = new BackgroundWorker();
                 this.libraryThread.DoWork += libraryThread_DoWork;
                 this.libraryThread.RunWorkerAsync();
+            }
+        }
+
+        private void TryRegisterSystem()
+        {
+            // Try and register all of our plugins
+            // But, first it has to be associated to a user
+            // So lets try and make one first
+            UserDAO systemUser = new UserDAO()
+            {
+                UserLevel = UserLevel.SuperUser,
+                FirstName = "System",
+                LastName = "Account",
+                UserName = "SYSTEM",
+                IsBanned = false,
+                IsSuppressed = false,
+                PhoneNumber = "1112223333",
+                PhoneEmail = "1112223333@example.com",
+                Carrier = PhoneCarrier.Verizon
+            };
+            try
+            {
+                this.idbController.CreateUser(systemUser, VerificationGenerator.GenerateString(120));
+                this.idbController.SetVerificationCodeForUser(null, systemUser);
+            }
+            catch 
+            {
+                // Already defined
+                systemUser = this.idbController.RetrieveUserByUserName(systemUser.UserName);
+            }
+            // Now lets add our plugins
+            foreach (KeyValuePair<string, IPlugin> pluginPair in defaultPlugins)
+            {
+                try
+                {
+                    PluginDAO plugin = pluginPair.Value.PluginDAO;
+                    plugin.Name = pluginPair.Key;
+                    plugin.OwnerID = systemUser.UserID;
+
+                    this.idbController.CreatePlugin(plugin);
+                }
+                catch
+                { }
             }
         }
 

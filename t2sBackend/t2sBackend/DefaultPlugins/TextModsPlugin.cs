@@ -38,10 +38,18 @@ namespace t2sBackend
         /// <summary>
         /// Stores metadata related to this plugin
         /// </summary>
+        private PluginDAO _PluginDAO = new PluginDAO()
+        {
+            Access = PluginAccess.STANDARD,
+            Description = "Plugin for texting moderators",
+            HelpText = "",
+            VersionNum = "1.0"
+        };
+
         public PluginDAO PluginDAO
         {
-            get;
-            set;
+            get { return _PluginDAO; }
+            set { _PluginDAO = value; }
         }
     }
 }
