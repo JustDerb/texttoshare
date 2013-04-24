@@ -400,6 +400,13 @@ namespace t2sDbLibrary
         List<PluginDAO> RetrieveEnabledPlugins();
 
         /// <summary>
+        /// Gets a list of all the names of plugins that are system plugins
+        /// </summary>
+        /// <returns>A list containing all plugins.</returns>
+        /// <exception cref="SqlException">If a SQL-related exception is thrown.</exception>s>
+        List<PluginDAO> RetrieveSystemPlugins();
+
+        /// <summary>
         /// Updates the given plugin's owner with the given user. On completion, updates
         /// the given PluginDAO's owner id with the given user.
         /// </summary>

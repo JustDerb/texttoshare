@@ -1692,7 +1692,49 @@ namespace t2sDbLibrary
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("SELECT id, name, description, disabled, version_num, owner_id, plugin_access, help_text FROM plugins WHERE disabled = 0");
+                queryBuilder.Append("SELECT id, name, description, disabled, version_num, owner_id, plugin_access, help_text ");
+                queryBuilder.Append("FROM plugins ");
+                queryBuilder.Append("WHERE disabled = 0 ");
+
+                query.CommandText = queryBuilder.ToString();
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<PluginDAO> pluginList = new List<PluginDAO>();
+                while (reader.Read())
+                {
+                    pluginList.Add(new PluginDAO()
+                    {
+                        PluginID = (int?)reader["id"],
+                        Name = (string)reader["name"],
+                        Description = (string)reader["description"],
+                        IsDisabled = (bool)reader["disabled"],
+                        VersionNum = (string)reader["version_num"],
+                        OwnerID = (int?)reader["owner_id"],
+                        Access = (PluginAccess)reader["plugin_access"],
+                        HelpText = (string)reader["help_text"]
+                    });
+                }
+
+                return pluginList;
+            }
+        }
+
+        /// <summary>
+        /// Gets a list of all the names of plugins that are system plugins
+        /// </summary>
+        /// <returns>A list containing all plugins.</returns>
+        /// <exception cref="SqlException">If a SQL-related exception is thrown.</exception>s>
+        public List<PluginDAO> RetrieveSystemPlugins()
+        {
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT id, name, description, disabled, version_num, owner_id, plugin_access, help_text ");
+                queryBuilder.Append("FROM plugins ");
+                queryBuilder.Append("WHERE system = 1 ");
 
                 query.CommandText = queryBuilder.ToString();
 
