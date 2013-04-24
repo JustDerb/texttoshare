@@ -15,15 +15,15 @@ namespace t2sBackend
         {
             IDBController database = new SqlController();
             Logger.LogMessage("Established connection to SQL server", LoggerLevel.DEBUG);
-            try
-            {
-                // Try and add data, if it errors we probably already have it in the DB
-                PrivateInfo.addTestData(database);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("ADDING PRIVATE INFO: " + ex.Message);
-            }
+            //try
+            //{
+            //    // Try and add data, if it errors we probably already have it in the DB
+            //    PrivateInfo.addTestData(database);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("ADDING PRIVATE INFO: " + ex.Message);
+            //}
             AWatcherService gmailServ = new GMailWatcherService(
                 database.GetPairEntryValue("t2sEmailAccount"),
                 PrivateInfo.Email.Password,
