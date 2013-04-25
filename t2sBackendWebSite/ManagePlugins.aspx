@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head id="Head1" runat="server">
         <title><asp:Literal ID="PageTitle" runat="server"></asp:Literal></title>
-        <link href="Content/themes/redmond/jquery-ui-1.10.2.custom.min.css" rel="stylesheet" type="text/css">
+        <link href="Content/themes/redmond/jquery-ui-1.10.2.custom.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
         <style type="text/css">
