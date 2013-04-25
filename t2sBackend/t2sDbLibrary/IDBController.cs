@@ -299,6 +299,13 @@ namespace t2sDbLibrary
         /// <returns>A list of PluginDAOs.</returns>
         List<PluginDAO> GetAllEnabledGroupPlugins(int? groupID);
 
+        /// <summary>
+        /// Gets a list of all disabled plugins for a group.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <returns>A list of PluginDAOs.</returns>
+        List<PluginDAO> GetAllDisabledGroupPlugins(int? groupID);
+
         #endregion
 
         #region PluginDAO Actions

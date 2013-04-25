@@ -1304,6 +1304,50 @@ namespace t2sDbLibrary
         }
 
         /// <summary>
+        /// Gets a list of all disabled plugins for a group.
+        /// </summary>
+        /// <param name="groupID">The ID of the group.</param>
+        /// <returns>A list of PluginDAOs.</returns>
+        public List<PluginDAO> GetAllDisabledGroupPlugins(int? groupID)
+        {
+            List<int?> pluginIDList = GetAllEnabledGroupPluginIDs(groupID);
+            List<PluginDAO> pluginList = new List<PluginDAO>();
+            foreach (int? id in pluginIDList) pluginList.Add(RetrievePlugin(id));
+
+            return pluginList;
+        }
+
+        private List<int?> GetAllDisabledGroupPluginIDs(int? groupID)
+        {
+            if (null == groupID) throw new ArgumentNullException();
+
+            using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
+            using (SqlCommand query = conn.CreateCommand())
+            {
+                StringBuilder queryBuilder = new StringBuilder();
+                queryBuilder.Append("SELECT plugin_id FROM groupplugins gp ");
+                queryBuilder.Append("INNER JOIN plugins p ON gp.plugin_id = p.id ");
+                queryBuilder.Append("WHERE group_id = @group_id ");
+                queryBuilder.Append("AND gp.disabled = 1 ");
+                queryBuilder.Append("AND p.system = 0 ");
+
+                query.CommandText = queryBuilder.ToString();
+                query.Parameters.AddWithValue("@group_id", groupID);
+
+                conn.Open();
+                SqlDataReader reader = query.ExecuteReader();
+
+                List<int?> pluginList = new List<int?>();
+                while (reader.Read())
+                {
+                    pluginList.Add((int?)reader["plugin_id"]);
+                }
+
+                return pluginList;
+            }
+        }
+
+        /// <summary>
         /// Updates the given group's owner with the given user. On completion, updates
         /// the given GroupDAO's owner object with the given user.
         /// </summary>
