@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using t2sDbLibrary;
 
 namespace t2sBackend
@@ -169,7 +170,7 @@ namespace t2sBackend
         /// <code>LUAPlugin.getLuaScriptLocation(plugin.Name)</code>
         /// </summary>
         /// <param name="plugin">Plugin object to construct this object against</param>
-        public LUAPlugin(PluginDAO plugin) 
+        public LUAPlugin(PluginDAO plugin)
             : this(plugin, plugin.Name)
         {
             // Pass to more defined constructor
@@ -195,9 +196,9 @@ namespace t2sBackend
             {
                 throw new ArgumentException("Cannot find file " + this.ScriptFileLoc);
             }
-            
-            this.PluginDAO      = plugin;
-            
+
+            this.PluginDAO = plugin;
+
             // Store sandbox code in a variable so we only call it once
             this.SandboxLuaCode = GetSandBoxCode();
         }
@@ -222,9 +223,9 @@ namespace t2sBackend
                 this.LuaEngine.Close();
                 this.LuaEngine.Dispose();
             }
-            this.LuaEngine                = new Lua();
+            this.LuaEngine = new Lua();
             this.LuaEngine.HookException += LuaEngine_HookException;
-            this.LuaEngine.DebugHook     += LuaEngine_DebugHook;
+            this.LuaEngine.DebugHook += LuaEngine_DebugHook;
             // Sandbox us so we can't do anything lethal
             this.LuaEngine.DoString(this.SandboxLuaCode);
         }
@@ -234,10 +235,38 @@ namespace t2sBackend
             engine.DoFile(location);
         }
 
+        private void registerFailedRun(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller, Exception ex)
+        {
+            // Increment the error counter
+            controller.IncrementPluginFailedAttemptCount(this.PluginDAO.PluginID);
+
+            // Disable if above threshold
+            int count = controller.GetPluginFailedAttemptCount(this.PluginDAO.PluginID);
+            if (count > LUADefinitions.DisablePluginAboveErrorCount)
+                controller.DisableGlobalPlugin(this.PluginDAO.PluginID);
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("LUAPlugin.cs: ");
+            sb.Append(this.PluginDAO.Name);
+            sb.Append(" failed (count=");
+            sb.Append(count);
+            sb.Append("/");
+            sb.Append(LUADefinitions.DisablePluginAboveErrorCount);
+            sb.Append("): ");
+            sb.Append(ex.Message);
+            Logger.LogMessage(sb.ToString(), LoggerLevel.WARNING);
+
+            // Message the user saying it failed
+            Message failedMsg = new Message(new string[1] { message.Sender.PhoneEmail }, "");
+            failedMsg.FullMessage = "Plugin " + this.PluginDAO.Name + " has failed to run. Please try again later.";
+            service.SendMessage(failedMsg);
+        }
+
         public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
             String engineHash = null;
 
+            Task LuaCodeTask = null;
             try
             {
                 // Get to a clean state
@@ -246,50 +275,40 @@ namespace t2sBackend
                 // Register our plugin so we can call C# methods
                 engineHash = LuaScriptingEngine.registerPlugin(this, message, service, controller, this.LuaEngine);
 
+                Thread LuacodeThread = null;
                 // Run the script
-                Thread luaCodeThread = new Thread(() => RunLuaCode(this.LuaEngine, this.ScriptFileLoc));
-                luaCodeThread.Start();
+                LuaCodeTask = new Task(() =>
+                {
+                    LuacodeThread = Thread.CurrentThread;
+                    RunLuaCode(this.LuaEngine, this.ScriptFileLoc);
+                });
+                LuaCodeTask.Start();
 
                 bool finished = true;
+
                 try
                 {
-                    if (!luaCodeThread.Join(LUADefinitions.MaxRunTime))
+                    if (!LuaCodeTask.Wait(LUADefinitions.MaxRunTime))
                     {
                         finished = false;
+
                         // Sorry Lua Code, gotta die now
-                        luaCodeThread.Abort();
+                        LuacodeThread.Abort();
                     }
                 }
-                catch { }
+                catch (AggregateException ex)
+                {
+                    if (ex.InnerExceptions.Count > 0)
+                        throw ex.InnerExceptions[0];
+                }
 
                 if (!finished)
-                    throw new LuaException("Lua script ran too long. Max runtime is: " + LUADefinitions.MaxRunTime.ToString("{g}"));
+                    registerFailedRun(message, service, controller, 
+                        new LuaException("Lua script ran too long. Max runtime is: " + LUADefinitions.MaxRunTime.ToString()));
             }
             catch (LuaException ex)
             {
-                // Increment the error counter
-                controller.IncrementPluginFailedAttemptCount(this.PluginDAO.PluginID);
-
-                // Disable if above threshold
-                int count = controller.GetPluginFailedAttemptCount(this.PluginDAO.PluginID);
-                if (count > LUADefinitions.DisablePluginAboveErrorCount)
-                    controller.DisableGlobalPlugin(this.PluginDAO.PluginID);
-
-                StringBuilder sb = new StringBuilder();
-                sb.Append("LUAPlugin.cs: ");
-                sb.Append(this.PluginDAO.Name);
-                sb.Append(" failed (count=");
-                sb.Append(count);
-                sb.Append("/");
-                sb.Append(LUADefinitions.DisablePluginAboveErrorCount);
-                sb.Append("): ");
-                sb.Append(ex.Message);
-                Logger.LogMessage(sb.ToString(), LoggerLevel.WARNING);
-
-                // Message the user saying it failed
-                Message failedMsg = new Message(new string[1] { message.Sender.PhoneEmail }, "");
-                failedMsg.FullMessage = "Plugin " + this.PluginDAO.Name + " has failed to run. Please try again later.";
-                service.SendMessage(failedMsg);
+                registerFailedRun(message, service, controller, ex);
             }
             finally
             {
