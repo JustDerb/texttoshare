@@ -45,12 +45,20 @@ public partial class EditPlugin : BasePage
         }
 
         PageTitle.Text = title.ToString();
+
+        String successMsg = Request.QueryString["success"];
+        if (!String.IsNullOrEmpty(successMsg))
+        {
+            pluginFeedback.InnerText = successMsg;
+        }
     }
 
     private bool doPOST()
     {
         UserDAO user = (UserDAO)Session["userDAO"];
         String pluginName = Request.Form["pluginName"];
+
+        String successMessage = "";
 
         if (pluginName == null)
         {
@@ -88,7 +96,7 @@ public partial class EditPlugin : BasePage
                             // Reenable the plugin
                             controller.EnableGlobalPlugin(plugin.PluginID);
                         }
-                        pluginFeedback.InnerText = "Plugin has been updated.";
+                        successMessage = "Plugin has been updated.";
                     }
                     catch (Exception)
                     {
@@ -111,7 +119,7 @@ public partial class EditPlugin : BasePage
 
         
         // Always redirect on POST
-        Response.Redirect("EditPlugin.aspx?pluginname=" + HttpUtility.UrlEncode(pluginName));
+        Response.Redirect(string.Format("EditPlugin.aspx?pluginname={0}&success={1}", HttpUtility.UrlEncode(pluginName), HttpUtility.UrlEncode(successMessage)));
 
         return false;
     }
@@ -131,7 +139,7 @@ public partial class EditPlugin : BasePage
         try
         {
             plugin = controller.RetrievePlugin(pluginName);
-            PluginDescriptionEditor.InnerText = HttpUtility.HtmlEncode(plugin.Description);
+            PluginDescriptionEditor.InnerText = plugin.Description;
 
             if (!plugin.OwnerID.Equals(user.UserID))
             {
