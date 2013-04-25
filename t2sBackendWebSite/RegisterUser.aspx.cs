@@ -59,7 +59,7 @@ public partial class _Default : BasePage
                 UserName = Request["userNameBox"],
                 PhoneNumber = phoneNumber,
                 Carrier = (PhoneCarrier)(Request["carrierDropdown"]),
-                PhoneEmail = phoneNumber + ((PhoneCarrier)(Request["carrierDropdown"])).GetEmail(),
+                PhoneEmail = phoneNumber + "@" + ((PhoneCarrier)(Request["carrierDropdown"])).GetEmail(),
                 IsBanned = false,
                 IsSuppressed = false
             };
