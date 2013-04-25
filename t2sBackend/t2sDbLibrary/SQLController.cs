@@ -231,7 +231,6 @@ namespace t2sDbLibrary
                 queryBuilder.Append("banned = @banned, ");
                 queryBuilder.Append("suppressed = @suppressed ");
                 queryBuilder.Append("WHERE id = @userid ");
-                queryBuilder.Append("AND email_phone = @email_phone2");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@username", user.UserName);
@@ -244,7 +243,6 @@ namespace t2sDbLibrary
                 query.Parameters.AddWithValue("@banned", user.IsBanned ? 1 : 0);
                 query.Parameters.AddWithValue("@suppressed", user.IsSuppressed ? 1 : 0);
                 query.Parameters.AddWithValue("@userid", user.UserID);
-                query.Parameters.AddWithValue("@email_phone2", user.PhoneEmail);
 
                 conn.Open();
                 int effectedRows = query.ExecuteNonQuery();
