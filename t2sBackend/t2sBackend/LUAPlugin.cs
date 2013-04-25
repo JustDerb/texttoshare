@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using t2sDbLibrary;
 
 namespace t2sBackend
@@ -228,6 +229,11 @@ namespace t2sBackend
             this.LuaEngine.DoString(this.SandboxLuaCode);
         }
 
+        private void RunLuaCode(Lua engine, String location)
+        {
+            engine.DoFile(location);
+        }
+
         public void Run(ParsedMessage message, AWatcherService service, t2sDbLibrary.IDBController controller)
         {
             String engineHash = null;
@@ -241,7 +247,23 @@ namespace t2sBackend
                 engineHash = LuaScriptingEngine.registerPlugin(this, message, service, controller, this.LuaEngine);
 
                 // Run the script
-                this.LuaEngine.DoFile(this.ScriptFileLoc);
+                Thread luaCodeThread = new Thread(() => RunLuaCode(this.LuaEngine, this.ScriptFileLoc));
+                luaCodeThread.Start();
+
+                bool finished = true;
+                try
+                {
+                    if (!luaCodeThread.Join(LUADefinitions.MaxRunTime))
+                    {
+                        finished = false;
+                        // Sorry Lua Code, gotta die now
+                        luaCodeThread.Abort();
+                    }
+                }
+                catch { }
+
+                if (!finished)
+                    throw new LuaException("Lua script ran too long. Max runtime is: " + LUADefinitions.MaxRunTime.ToString("{g}"));
             }
             catch (LuaException ex)
             {

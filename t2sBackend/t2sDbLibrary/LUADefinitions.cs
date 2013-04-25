@@ -21,6 +21,8 @@ namespace t2sDbLibrary
 
         public static readonly int DisablePluginAboveErrorCount = 10;
 
+        public static readonly TimeSpan MaxRunTime = new TimeSpan(0, 0, 30);
+
         /// <summary>
         /// Location within the filesystem that holds all our Lua Scripts
         /// </summary>
