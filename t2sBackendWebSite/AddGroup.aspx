@@ -84,7 +84,7 @@
                     <div class="control-group">
                         <div class="controls">
                             <asp:Button ID="addGroupButton" class="btn btn-large btn-primary" Text="Add Group" OnClick="addGroup_Click" runat="server"></asp:Button>
-                            <a class="btn btn-large pull-right" href="ManageGroup.aspx">Cancel</a>
+                            <a class="btn btn-large pull-right" href="Index.aspx">Cancel</a>
                         </div>
                     </div>
                 </form>
