@@ -1278,7 +1278,7 @@ namespace t2sDbLibrary
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT plugin_id FROM groupplugins ");
                 queryBuilder.Append("WHERE group_id = @group_id ");
-                queryBuilder.Append("AND disabled = 0 ");
+                queryBuilder.Append("AND disabled = 0 AND system = 0 ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@group_id", groupID);
