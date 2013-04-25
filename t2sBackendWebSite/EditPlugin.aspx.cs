@@ -89,7 +89,7 @@ public partial class EditPlugin : BasePage
                     String luacode = Request.Form["editorText"];
                     try
                     {
-                        File.WriteAllText(luacodeFileLoc, luacode, Encoding.UTF8);
+                        File.WriteAllText(luacodeFileLoc, luacode);
                         controller.ResetPluginFailedAttemptCount(plugin.PluginID);
                         if (controller.GetPluginFailedAttemptCount(plugin.PluginID) == 0)
                         {
@@ -156,7 +156,7 @@ public partial class EditPlugin : BasePage
                 String luacode = "";
                 try
                 {
-                    luacode = File.ReadAllText(luacodeFileLoc, Encoding.UTF8);
+                    luacode = File.ReadAllText(luacodeFileLoc);
                 }
                 catch (Exception)
                 {
