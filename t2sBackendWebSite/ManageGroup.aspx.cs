@@ -19,6 +19,8 @@ public partial class ManageGroup : BasePage
     public bool showErrorMessage = false;
     public bool showSuccessMessage = false;
 
+    private List<string> usersNotFound = new List<string>();
+
     /// <summary>
     /// functions which are run on page load.
     /// It checks that the user is login and sets the page title as
@@ -30,39 +32,6 @@ public partial class ManageGroup : BasePage
     {
         base.CheckLoginSession();
         _currentUser = Session["userDAO"] as UserDAO;
-
-
-
-
-        if (null == Request.QueryString["grouptag"])
-        {
-            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred loading group data. Please try again soon.")));
-            return;
-        }
-        else
-        {
-            bool isMod=false;
-            bool isOwn = false;
-            string groupTag = Request.QueryString["grouptag"];
-            SqlController controller = new SqlController();
-           GroupDAO group = controller.RetrieveGroup(groupTag);
-            List<GroupDAO> groupList = controller.GetGroupsUserIsModeratorOf(_currentUser.UserID);
-            foreach(GroupDAO x in groupList){
-                if (x.GroupID == group.GroupID)
-                {
-                    isMod = true;
-                }
-            }
-            if (_currentUser.UserID == group.Owner.UserID)
-            {
-                isOwn = true;
-            }
-            if (!isOwn && !isMod)
-            {
-               Response.Redirect("Index.aspx");
-            }
-        }
-
 
         PageTitle.Text = "Text2Share - Manage Group";
 
@@ -81,12 +50,12 @@ public partial class ManageGroup : BasePage
         }
 
         GetGroupData();
-        RetrieveUsers();
-        RetrievePlugins();
 
         if (!Page.IsPostBack)
         {
             SetGroupData();
+            RetrieveUsers();
+            RetrievePlugins();
         }
     }
 
@@ -103,13 +72,13 @@ public partial class ManageGroup : BasePage
         }
         catch (CouldNotFindException)
         {
-            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred loading group data. Please try again soon.")));
+            Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred. Please try again soon.")));
             return;
         }
-        catch (SqlException err)
+        catch (SqlException ex)
         {
-            Response.Write("An unknown error has occured.");
-            Logger.LogMessage("ManageGroup.aspx " + err.Message, LoggerLevel.SEVERE);
+            Logger.LogMessage("ManageGroup.aspx.cs: " + ex.Message, LoggerLevel.SEVERE);
+            Response.Redirect(string.Format("ManageGroup.aspx?error={0}", HttpUtility.UrlEncode("An unknown error occurred. Please try again soon.")));
             return;
         }
     }
@@ -166,6 +135,14 @@ public partial class ManageGroup : BasePage
             groupDescriptionBox.Focus();
             return;
         }
+        else if (string.IsNullOrWhiteSpace(groupOwner.Text))
+        {
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("Cannot update group owner to be empty or whitespace.")));
+            groupOwner.Focus();
+            return;
+        }
 
         try
         {
@@ -177,7 +154,13 @@ public partial class ManageGroup : BasePage
                 _currentGroup.Name = groupNameBox.Text;
                 _currentGroup.GroupTag = groupTagBox.Text;
                 _currentGroup.Description = groupDescriptionBox.Text;
+
                 controller.UpdateGroupMetadata(_currentGroup);
+
+                _currentGroup.Moderators = ParseUsersFromTextArea(groupModerators);
+                _currentGroup.Users = ParseUsersFromTextArea(groupUsers);
+
+                controller.UpdateGroup(_currentGroup);
             }
             else
             {
@@ -204,6 +187,69 @@ public partial class ManageGroup : BasePage
                 HttpUtility.UrlEncode("An error occurred connecting to the server. Please try again soon.")));
             return;
         }
+
+        if (usersNotFound.Count > 0)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (string user in usersNotFound)
+            {
+                builder.Append(user + " ");
+            }
+
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("The following users were not found in the database and were not added to the group: " + builder.ToString())));
+        }
+    }
+
+    /// <summary>
+    /// Splits up the user names in the given TextBox input, finds them in the database and adds them to a HashSet.
+    /// </summary>
+    /// <param name="textarea"></param>
+    /// <returns></returns>
+    private HashSet<UserDAO> ParseUsersFromTextArea(TextBox textarea)
+    {
+        string[] usernames;
+        if (textarea.Text.IndexOf(',') < 0)
+        {
+            usernames = new string[] { textarea.Text.Trim() };
+        }
+        else
+        {
+            usernames = textarea.Text.Split(',');
+        }
+
+        HashSet<UserDAO> users = new HashSet<UserDAO>();
+
+        try
+        {
+            IDBController controller = new SqlController();
+            foreach (string username in usernames)
+            {
+                try
+                {
+                    users.Add(controller.RetrieveUserByUserName(username));
+                }
+                catch (CouldNotFindException)
+                {
+                    usersNotFound.Add(username);
+                }
+            }
+        }
+        catch (ArgumentNullException)
+        {
+            // Shouldn't happen
+        }
+        catch (SqlException ex)
+        {
+            Logger.LogMessage("ManageGroup.aspx: " + ex.Message, LoggerLevel.SEVERE);
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("An error occurred connecting to the server. Please try again soon.")));
+            return null;            
+        }
+
+        return users;
     }
 
     /// Retrieves groups from the database associated with the current user in session.
@@ -212,9 +258,9 @@ public partial class ManageGroup : BasePage
     {
         if (null != _currentGroup)
         {
-            PrintUsersToPage(_currentGroup.Users, groupUserList, @"<li>The group currently has no members.</li>");
-            PrintUsersToPage(_currentGroup.Moderators, groupModeratorList, "<li>This group currently has no moderators.</li>");
-            PrintUsersToPage(new HashSet<UserDAO> { _currentGroup.Owner }, groupOwnerList, "<li>The owner could not be found. Please try again soon.</li>");
+            PrintUsersToPage(_currentGroup.Users, groupUsers);
+            PrintUsersToPage(_currentGroup.Moderators, groupModerators);
+            PrintUsersToPage(new HashSet<UserDAO> { _currentGroup.Owner }, groupOwner);
         }
     }
 
@@ -224,24 +270,20 @@ public partial class ManageGroup : BasePage
     /// <param name="groups"></param>
     /// <param name="pageLiteral"></param>
     /// <param name="zeroGroupCountMessage"></param>
-    private void PrintUsersToPage(HashSet<UserDAO> users, Literal pageLiteral, string zeroGroupCountMessage)
+    private void PrintUsersToPage(HashSet<UserDAO> users, Control control)
     {
         StringBuilder userBuilder = new StringBuilder();
-        if (0 == users.Count)
-        {
-            userBuilder.Append(zeroGroupCountMessage);
-        }
-        else
+
+        if (users.Count > 0)
         {
             foreach (UserDAO user in users)
             {
-                userBuilder.Append(string.Format(@"<li>{0} ({1})</a></li>",
-                    user.FirstName + " " + user.LastName,
-                    user.UserName));
+                userBuilder.Append(string.Format(@"{0}, ", user.UserName));
             }
+            userBuilder.Remove(userBuilder.Length - 2, 2);
         }
 
-        pageLiteral.Text = userBuilder.ToString();
+        ((TextBox) control).Text = userBuilder.ToString();
     }
 
     public void RetrievePlugins()

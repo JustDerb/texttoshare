@@ -94,12 +94,6 @@
                                 <asp:TextBox id="groupDescriptionBox" name="groupDescriptionBox" class="input-block-level" placeholder="Description of Group" runat="server" required></asp:TextBox>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <asp:Button id="updateGroupButton" name="updateGroupButton" class="btn btn-primary" text="Update Group Information" Onclick="UpdateGroupMetadata_Click" runat="server" />
-                                <asp:Button ID="deleteGroupButton" name="deleteGroupButton" class="btn btn-danger pull-right" Text="Delete Group" OnClick="deleteGroupButton_Click" runat="server" />
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -107,17 +101,19 @@
                     <div class="span6">
                         <div class="well" style="padding: 8px 0;">
                             <ul class="nav nav-list">
-                                <li class="nav-header">Owner</li>
-                                <asp:Literal ID="groupOwnerList" runat="server"></asp:Literal>
+                                <li class="nav-header">Owner</li>                
                             </ul>
+                            <asp:TextBox id="groupOwner" TextMode="MultiLine" class="input-block-level" runat="server"></asp:TextBox>
+
                             <ul class="nav nav-list">
                                 <li class="nav-header">Moderators</li>
-                                <asp:Literal ID="groupModeratorList" runat="server"></asp:Literal>
                             </ul>
+                            <asp:TextBox id="groupModerators" TextMode="MultiLine" class="input-block-level" runat="server"></asp:TextBox>
+
                             <ul class="nav nav-list">
                                 <li class="nav-header">Users</li>
-                                <asp:Literal ID="groupUserList" runat="server"></asp:Literal>
                             </ul>
+                            <asp:TextBox id="groupUsers" TextMode="MultiLine" class="input-block-level" runat="server"></asp:TextBox>
 
                         </div>
                     </div>
@@ -127,6 +123,19 @@
                                 <li class="nav-header">Plugins</li>
                                 <asp:Literal ID="groupPluginList" runat="server"></asp:Literal>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="control-group">
+                            <div class="controls">
+                                <asp:Button id="updateGroupButton" name="updateGroupButton" class="btn btn-primary pull-right" text="Update Group Information" Onclick="UpdateGroupMetadata_Click" runat="server" />
+                                <br />
+                                <hr />
+                                <asp:Button ID="deleteGroupButton" name="deleteGroupButton" class="btn btn-danger pull-right" Text="Delete Group" OnClick="deleteGroupButton_Click" runat="server" />
+                            </div>
                         </div>
                     </div>
                 </div>
