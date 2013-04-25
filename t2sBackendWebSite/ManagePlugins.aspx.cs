@@ -192,7 +192,7 @@ public partial class ManagePlugins : BasePage
             {
                 try
                 {
-                    plugins.Add(controller.RetrievePlugin(plug));
+                    plugins.Add(controller.RetrievePlugin(plug.Trim()));
                 }
                 catch (CouldNotFindException)
                 {
