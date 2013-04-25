@@ -111,16 +111,16 @@
 
     <script type="text/javascript">
         $(function () {
-            $('#groupOwner').textareainputsupport({
+            $('#enabledPlugins').textareainputsupport({
                 source: function (request, response) {
                     $.ajax({
-                        url: "Users.json.aspx",
+                        url: "Plugins.json.aspx",
                         dataType: "json",
                         data: {
                             search: request.term
                         },
                         success: function (data) {
-                            response($.each(data.Users, function (item) {
+                            response($.each(data.Plugins, function (item) {
                                 return {
                                     label: item,
                                     value: item
