@@ -31,8 +31,11 @@ namespace t2sBackend
             UserDAO receiver = controller.RetrieveUserByUserName(message.Arguments[0]);
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
 
+            List<UserDAO> listPeeps = new List<UserDAO>();
+            listPeeps.AddRange(message.Group.Users);
+            listPeeps.AddRange(message.Group.Moderators);
 
-            if (!message.Group.Users.Contains(receiver) || receiver == null || receiver.IsBanned)
+            if (!listPeeps.Contains(receiver) || receiver == null || receiver.IsBanned)
             {
                 msgSender.FullMessage = "Not a valid user. Please check their username and retry.";
                 service.SendMessage(msgSender);
