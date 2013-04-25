@@ -879,7 +879,7 @@ namespace t2sDbLibrary
             }
         }
 
-        private bool UpdateGroupMembers(GroupDAO group)
+        public bool UpdateGroupMembers(GroupDAO group)
         {
             CheckForUserListModifications(group.GroupID, group.Users, GroupLevel.User);
             CheckForUserListModifications(group.GroupID, group.Moderators, GroupLevel.Moderator);
@@ -907,7 +907,7 @@ namespace t2sDbLibrary
                     RemoveMemberFromGroup(groupID, id);
         }
 
-        private bool UpdateGroupPlugins(GroupDAO group)
+        public bool UpdateGroupPlugins(GroupDAO group)
         {
             CheckForPluginListModifications(group.GroupID, group.EnabledPlugins);
 
