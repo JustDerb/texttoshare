@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title><asp:Literal ID="PageTitle" runat="server"></asp:Literal></title>
+        <link href="Content/themes/redmond/jquery-ui-1.10.2.custom.min.css" rel="stylesheet" type="text/css">
         <link href="Content/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
         <style type="text/css">
@@ -144,5 +145,94 @@
     </body>
 
     <script src="Scripts/jquery-1.7.1.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script src="Scripts/rangyinputs_jquery.min.js"></script>
+    <script src="Scripts/textinputs_jquery_src.js"></script>
+    <script src="Scripts/jquery.textarea-input-support.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#groupOwner').textareainputsupport({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "Users.json.aspx",
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function (data) {
+                            response($.each(data.Users, function (item) {
+                                return {
+                                    label: item,
+                                    value: item
+                                }
+                            }));
+                        }
+                    });
+                },
+                minLength: 2,
+                open: function () {
+                    $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                },
+                close: function () {
+                    $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                }
+            });
+
+            $('#groupModerators').textareainputsupport({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "Users.json.aspx",
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function (data) {
+                            response($.each(data.Users, function (item) {
+                                return {
+                                    label: item,
+                                    value: item
+                                }
+                            }));
+                        }
+                    });
+                },
+                minLength: 2,
+                open: function () {
+                    $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                },
+                close: function () {
+                    $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                }
+            });
+
+            $('#groupUsers').textareainputsupport({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "Users.json.aspx",
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function (data) {
+                            response($.each(data.Users, function (item) {
+                                return {
+                                    label: item,
+                                    value: item
+                                }
+                            }));
+                        }
+                    });
+                },
+                minLength: 2,
+                open: function () {
+                    $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+                },
+                close: function () {
+                    $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                }
+            });
+
+        });
+  </script>
 </html>
