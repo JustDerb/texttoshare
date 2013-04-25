@@ -1308,7 +1308,7 @@ namespace t2sDbLibrary
         /// <returns>A list of PluginDAOs.</returns>
         public List<PluginDAO> GetAllDisabledGroupPlugins(int? groupID)
         {
-            List<int?> pluginIDList = GetAllEnabledGroupPluginIDs(groupID);
+            List<int?> pluginIDList = GetAllDisabledGroupPluginIDs(groupID);
             List<PluginDAO> pluginList = new List<PluginDAO>();
             foreach (int? id in pluginIDList) pluginList.Add(RetrievePlugin(id));
 
