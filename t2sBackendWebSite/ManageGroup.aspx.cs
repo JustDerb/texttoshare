@@ -213,6 +213,10 @@ public partial class ManageGroup : BasePage
                 HttpUtility.UrlEncode(_currentGroup.GroupTag),
                 HttpUtility.UrlEncode("The following users were not found in the database and were not added to the group: " + builder.ToString())));
         }
+
+        Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&success={1}",
+            HttpUtility.UrlEncode(_currentGroup.GroupTag),
+            HttpUtility.UrlEncode("The group information was updated successfully!")));
     }
 
     /// <summary>
