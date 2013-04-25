@@ -245,7 +245,7 @@ public partial class ManageGroup : BasePage
             {
                 try
                 {
-                    users.Add(controller.RetrieveUserByUserName(username));
+                    users.Add(controller.RetrieveUserByUserName(username.Trim()));
                 }
                 catch (CouldNotFindException)
                 {
