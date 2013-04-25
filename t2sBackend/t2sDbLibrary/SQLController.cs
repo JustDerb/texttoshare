@@ -369,8 +369,8 @@ namespace t2sDbLibrary
                     {
                         UserID = (int?)reader["id"],
                         UserName = (string)reader["username"],
-                        FirstName = (string)reader["firstname"],
-                        LastName = (string)reader["lastname"],
+                        FirstName = (string)reader["first_name"],
+                        LastName = (string)reader["last_name"],
                         PhoneNumber = (string)reader["phone"],
                         PhoneEmail = (string)reader["email_phone"],
                         Carrier = (PhoneCarrier)reader["carrier"],
