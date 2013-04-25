@@ -345,6 +345,10 @@ namespace t2sDbLibrary
             }
         }
 
+        /// <summary>
+        /// Returns a list of all users in the database.
+        /// </summary>
+        /// <returns></returns>
         public List<UserDAO> GetAllUsers()
         {
             using (SqlConnection conn = new SqlConnection(CONNECTION_STRING))
@@ -352,6 +356,7 @@ namespace t2sDbLibrary
             {
                 StringBuilder queryBuilder = new StringBuilder();
                 queryBuilder.Append("SELECT id, username, first_name, last_name, phone, email_phone, carrier, user_level, banned, suppressed FROM users ");
+                query.CommandText = queryBuilder.ToString();
 
                 conn.Open();
                 SqlDataReader reader = query.ExecuteReader();
