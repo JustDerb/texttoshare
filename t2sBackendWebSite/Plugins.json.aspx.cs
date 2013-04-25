@@ -26,11 +26,20 @@ public partial class Plugins_json : System.Web.UI.Page
             {
                 SqlController controller = new SqlController();
                 List<PluginDAO> plugins = controller.RetrieveEnabledPlugins();
+
+                bool first = true;
                 foreach (PluginDAO plugin in plugins)
                 {
-                    userJson.Append(@"""");
-                    userJson.Append(plugin.Name);
-                    userJson.Append(@"""");
+                    if (plugin.Name.IndexOf(searchFor, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        if (!first)
+                            userJson.Append(@", ");
+                        userJson.Append(@"""");
+                        userJson.Append(plugin.Name);
+                        userJson.Append(@"""");
+
+                        first = false;
+                    }
                 }
             }
         }

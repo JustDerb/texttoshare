@@ -26,14 +26,20 @@ public partial class Users_json : System.Web.UI.Page
             {
                 SqlController controller = new SqlController();
                 List<UserDAO> users = controller.GetAllUsers();
+
+                bool first = true;
                 foreach (UserDAO user in users)
                 {
                     if (!user.UserName.Equals("SYSTEM", StringComparison.OrdinalIgnoreCase) 
                         && user.UserName.IndexOf(searchFor, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
+                        if (!first)
+                            userJson.Append(@", ");
                         userJson.Append(@"""");
                         userJson.Append(user.UserName);
                         userJson.Append(@"""");
+
+                        first = false;
                     }
                 }
             }
