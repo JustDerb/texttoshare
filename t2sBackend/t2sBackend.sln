@@ -13,6 +13,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "t2sBackendWebSite", "http:/
 	ProjectSection(WebsiteProperties) = preProject
 		UseIISExpress = "true"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{c3a85cef-08b5-4fe9-8bf7-cbe675010fc2}|t2sDbLibrary.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost"
 		Debug.AspNetCompiler.PhysicalPath = "..\t2sBackendWebSite\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost\"
