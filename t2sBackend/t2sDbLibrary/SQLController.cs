@@ -564,8 +564,15 @@ namespace t2sDbLibrary
             if (GroupExists(group.Name))
                 throw new EntryAlreadyExistsException("Group with name: " + group.Name + " already exists.");
 
-            return (InsertGroupMetadata(group) &&
-                InsertGroupMember(group.GroupID, group.Owner.UserID, GroupLevel.Owner) &&
+            InsertGroupMetadata(group);
+
+            // Add the system plugin references to the group
+            foreach (PluginDAO plugin in RetrieveSystemPlugins())
+            {
+                InsertGroupPlugin(group.GroupID, plugin.PluginID, false);
+            }
+
+            return (InsertGroupMember(group.GroupID, group.Owner.UserID, GroupLevel.Owner) &&
                 InsertGroupMembers(group.GroupID, group.Moderators, GroupLevel.Moderator) &&
                 InsertGroupMembers(group.GroupID, group.Users, GroupLevel.User) &&
                 InsertGroupPlugins(group.GroupID, group.EnabledPlugins));
