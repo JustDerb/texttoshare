@@ -28,7 +28,8 @@ public partial class Users_json : System.Web.UI.Page
                 List<UserDAO> users = controller.GetAllUsers();
                 foreach (UserDAO user in users)
                 {
-                    if (user.UserName.IndexOf(searchFor, StringComparison.OrdinalIgnoreCase) >= 0)
+                    if (!user.UserName.Equals("SYSTEM", StringComparison.OrdinalIgnoreCase) 
+                        && user.UserName.IndexOf(searchFor, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         userJson.Append(@"""");
                         userJson.Append(user.UserName);
