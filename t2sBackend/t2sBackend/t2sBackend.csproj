@@ -106,11 +106,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MainDatabase.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="MainDatabase_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>MainDatabase.mdf</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="StoredProcedures\sp_upsertPairEntry.sql" />
     <Content Include="StoredProcedures\sp_deleteGroup.sql" />
