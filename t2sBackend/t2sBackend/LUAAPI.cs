@@ -169,7 +169,7 @@ namespace t2sBackend
 
             if (toUser != null)
             {
-                Message msg = new Message(new string[1] { toUser.PhoneEmail }, message.Substring(0, LUAAPI.MAX_TEXT_SIZE_8BIT));
+                Message msg = new Message(new string[1] { toUser.PhoneEmail }, message.Substring(0, Math.Min(message.Length, LUAAPI.MAX_TEXT_SIZE_8BIT)));
                 container.service.SendMessage(msg);
             }
         }
