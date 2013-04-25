@@ -104,7 +104,7 @@
                             <ul class="nav nav-list">
                                 <li class="nav-header">Owner</li>                
                             </ul>
-                            <asp:TextBox id="groupOwner" TextMode="MultiLine" class="input-block-level" runat="server"></asp:TextBox>
+                            <asp:TextBox id="groupOwner" TextMode="MultiLine" class="input-block-level" runat="server" ReadOnly="true"></asp:TextBox>
 
                             <ul class="nav nav-list">
                                 <li class="nav-header">Moderators</li>
