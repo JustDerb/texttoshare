@@ -123,8 +123,8 @@
                             <ul class="nav nav-list">
                                 <li class="nav-header">Plugins</li>
                                 <asp:Literal ID="groupPluginList" runat="server"></asp:Literal>
+                                <li><a href="ManagePlugins.aspx?grouptag=<%= HttpUtility.HtmlEncode(_currentGroup.GroupTag) %>">Manage Plugins</a></li>
                             </ul>
-                            <a href="ManagePlugins.aspx?grouptag=<%= HttpUtility.HtmlEncode(_currentGroup.GroupTag) %>">Manage Plugins</a>
                         </div>
                     </div>
                 </div>
