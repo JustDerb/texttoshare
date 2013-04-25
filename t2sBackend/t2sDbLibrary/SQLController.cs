@@ -1281,9 +1281,11 @@ namespace t2sDbLibrary
             using (SqlCommand query = conn.CreateCommand())
             {
                 StringBuilder queryBuilder = new StringBuilder();
-                queryBuilder.Append("SELECT plugin_id FROM groupplugins ");
+                queryBuilder.Append("SELECT plugin_id FROM groupplugins gp ");
+                queryBuilder.Append("INNER JOIN plugins p ON gp.plugin_id = p.id ");
                 queryBuilder.Append("WHERE group_id = @group_id ");
-                queryBuilder.Append("AND disabled = 0 AND system = 0 ");
+                queryBuilder.Append("AND gp.disabled = 0 ");
+                queryBuilder.Append("AND p.system = 0 ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@group_id", groupID);

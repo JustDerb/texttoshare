@@ -104,21 +104,18 @@ public partial class ManageGroup : BasePage
     /// <param name="e"></param>
     protected void UpdateGroupMetadata_Click(object sender, EventArgs e)
     {
-
-
-             
-            bool isMod=false;
-            string groupTag = Request.QueryString["grouptag"];
-            SqlController control = new SqlController();
-            GroupDAO group = control.RetrieveGroup(groupTag);
-            List<GroupDAO> groupList = control.GetGroupsUserIsModeratorOf(_currentUser.UserID);
-            foreach (GroupDAO x in groupList)
+        bool isMod = false;
+        string groupTag = Request.QueryString["grouptag"];
+        SqlController control = new SqlController();
+        GroupDAO group = control.RetrieveGroup(groupTag);
+        List<GroupDAO> groupList = control.GetGroupsUserIsModeratorOf(_currentUser.UserID);
+        foreach (GroupDAO x in groupList)
+        {
+            if (x.GroupID == group.GroupID)
             {
-                if (x.GroupID == group.GroupID)
-                {
-                    isMod = true;
-                }
+                isMod = true;
             }
+        }
 
         if (_currentGroup.Owner.UserID != _currentUser.UserID && !isMod)
         {
@@ -198,7 +195,7 @@ public partial class ManageGroup : BasePage
         catch (SqlException ex)
         {
             Logger.LogMessage("ManageGroup.aspx: " + ex.Message, LoggerLevel.SEVERE);
-            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}", 
+            Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
                 HttpUtility.UrlEncode(_currentGroup.GroupTag),
                 HttpUtility.UrlEncode("An error occurred connecting to the server. Please try again soon.")));
             return;
@@ -262,7 +259,7 @@ public partial class ManageGroup : BasePage
             Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&error={1}",
                 HttpUtility.UrlEncode(_currentGroup.GroupTag),
                 HttpUtility.UrlEncode("An error occurred connecting to the server. Please try again soon.")));
-            return null;            
+            return null;
         }
 
         return users;
@@ -299,7 +296,7 @@ public partial class ManageGroup : BasePage
             userBuilder.Remove(userBuilder.Length - 2, 2);
         }
 
-        ((TextBox) control).Text = userBuilder.ToString();
+        ((TextBox)control).Text = userBuilder.ToString();
     }
 
     public void RetrievePlugins()
