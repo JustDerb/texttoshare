@@ -13,7 +13,7 @@ using t2sDbLibrary;
 /// </summary>
 public partial class ManageGroup : BasePage
 {
-    private GroupDAO _currentGroup;
+    public GroupDAO _currentGroup;
     private UserDAO _currentUser;
 
     public bool showErrorMessage = false;

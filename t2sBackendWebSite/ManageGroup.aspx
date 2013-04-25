@@ -124,6 +124,7 @@
                                 <li class="nav-header">Plugins</li>
                                 <asp:Literal ID="groupPluginList" runat="server"></asp:Literal>
                             </ul>
+                            <a href="ManagePlugins.aspx?grouptag=<%= HttpUtility.HtmlEncode(_currentGroup.GroupTag) %>">Manage Plugins</a>
                         </div>
                     </div>
                 </div>
