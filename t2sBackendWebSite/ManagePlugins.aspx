@@ -73,10 +73,14 @@
             </div>
             <% } %>
 
+            <div class="row-fluid">
+                <div class="span12">
+                    <h3>Manage Plugins</h3>
+                </div>
+            </div>
             <form id="updateform" class="form-horizontal" runat="server">
                 <div class="row-fluid">
                     <div class="span6">
-                        <h2 class="tts-form-heading">Disabled</h2>
                         <div class="control-group">
                             <label class="control-label" for="groupNameBox">Disabled Plugins</label>
                             <div class="controls">
@@ -85,7 +89,6 @@
                         </div>
                     </div>
                     <div class="span6">
-                        <h2 class="tts-form-heading">Enabled</h2>
                         <div class="control-group">
                             <label class="control-label" for="groupNameBox">Enabled Plugins</label>
                             <div class="controls">
@@ -96,7 +99,7 @@
                 </div>
                 <div class="row-fluid">
                     <div class="span12">
-                        <asp:Button ID="submitButton" class="btn btn-primary pull-right" Text="Delete Group" OnClick="submitPluginsButton_Click" runat="server" />
+                        <asp:Button ID="submitButton" class="btn btn-primary pull-right" Text="Update Plugins" OnClick="submitPluginsButton_Click" runat="server" />
                     </div>
                 </div>
              </form>
