@@ -19,6 +19,8 @@ namespace t2sDbLibrary
             LuaScriptLocation = getLuaDirectory();
         }
 
+        public static readonly int DisablePluginAboveErrorCount = 10;
+
         /// <summary>
         /// Location within the filesystem that holds all our Lua Scripts
         /// </summary>

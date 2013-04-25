@@ -245,8 +245,29 @@ namespace t2sBackend
             }
             catch (LuaException ex)
             {
-                Console.WriteLine(ex.ToString());
-                
+                // Increment the error counter
+                controller.IncrementPluginFailedAttemptCount(this.PluginDAO.PluginID);
+
+                // Disable if above threshold
+                int count = controller.GetPluginFailedAttemptCount(this.PluginDAO.PluginID);
+                if (count > LUADefinitions.DisablePluginAboveErrorCount)
+                    controller.DisableGlobalPlugin(this.PluginDAO.PluginID);
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append("LUAPlugin.cs: ");
+                sb.Append(this.PluginDAO.Name);
+                sb.Append(" failed (count=");
+                sb.Append(count);
+                sb.Append("/");
+                sb.Append(LUADefinitions.DisablePluginAboveErrorCount);
+                sb.Append("): ");
+                sb.Append(ex.Message);
+                Logger.LogMessage(sb.ToString(), LoggerLevel.WARNING);
+
+                // Message the user saying it failed
+                Message failedMsg = new Message(new string[1] { message.Sender.PhoneEmail }, "");
+                failedMsg.FullMessage = "Plugin " + this.PluginDAO.Name + " has failed to run. Please try again later.";
+                service.SendMessage(failedMsg);
             }
             finally
             {
