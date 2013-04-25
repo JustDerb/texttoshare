@@ -160,6 +160,10 @@ public partial class ManagePlugins : BasePage
                 HttpUtility.UrlEncode("An error occurred connecting to the server. Please try again soon.")));
             return;
         }
+
+        Response.Redirect(string.Format("ManageGroup.aspx?grouptag={0}&success={1}",
+                HttpUtility.UrlEncode(_currentGroup.GroupTag),
+                HttpUtility.UrlEncode("Plugins successfully updated!")));
     }
 
     /// <summary>
