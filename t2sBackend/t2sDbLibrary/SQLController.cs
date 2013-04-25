@@ -373,7 +373,7 @@ namespace t2sDbLibrary
                         LastName = (string)reader["last_name"],
                         PhoneNumber = (string)reader["phone"],
                         PhoneEmail = (string)reader["email_phone"],
-                        Carrier = (PhoneCarrier)reader["carrier"],
+                        Carrier = (PhoneCarrier)(int)reader["carrier"],
                         UserLevel = (UserLevel)reader["user_level"],
                         IsBanned = (bool)reader["banned"],
                         IsSuppressed = (bool)reader["suppressed"]
