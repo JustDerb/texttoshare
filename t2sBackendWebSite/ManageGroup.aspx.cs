@@ -31,11 +31,38 @@ public partial class ManageGroup : BasePage
         base.CheckLoginSession();
         _currentUser = Session["userDAO"] as UserDAO;
 
+
+
+
         if (null == Request.QueryString["grouptag"])
         {
             Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"An unknown error occurred loading group data. Please try again soon.")));
             return;
         }
+        else
+        {
+            bool isMod=false;
+            bool isOwn = false;
+            string groupTag = Request.QueryString["grouptag"];
+            SqlController controller = new SqlController();
+           GroupDAO group = controller.RetrieveGroup(groupTag);
+            List<GroupDAO> groupList = controller.GetGroupsUserIsModeratorOf(_currentUser.UserID);
+            foreach(GroupDAO x in groupList){
+                if (x.GroupID == group.GroupID)
+                {
+                    isMod = true;
+                }
+            }
+            if (_currentUser.UserID == group.Owner.UserID)
+            {
+                isOwn = true;
+            }
+            if (!isOwn && !isMod)
+            {
+               Response.Redirect("Index.aspx");
+            }
+        }
+
 
         PageTitle.Text = "Text2Share - Manage Group";
 
