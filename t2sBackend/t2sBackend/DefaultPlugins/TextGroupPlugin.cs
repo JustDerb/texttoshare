@@ -19,7 +19,7 @@ namespace t2sBackend
         public void Run(ParsedMessage message, AWatcherService service, IDBController controller)
         {
             Message msg = new Message();
-            msg.FullMessage = message.ContentMessage;
+            msg.FullMessage = message.Group.GroupTag + ": " + message.ContentMessage;
             Message msgSender = new Message();
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
             List<UserDAO> listPeeps = new List<UserDAO>();
