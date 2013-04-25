@@ -104,7 +104,23 @@ public partial class ManageGroup : BasePage
     /// <param name="e"></param>
     protected void UpdateGroupMetadata_Click(object sender, EventArgs e)
     {
-        if (_currentGroup.Owner.UserID != _currentUser.UserID)
+
+
+             
+            bool isMod=false;
+            string groupTag = Request.QueryString["grouptag"];
+            SqlController control = new SqlController();
+            GroupDAO group = control.RetrieveGroup(groupTag);
+            List<GroupDAO> groupList = control.GetGroupsUserIsModeratorOf(_currentUser.UserID);
+            foreach (GroupDAO x in groupList)
+            {
+                if (x.GroupID == group.GroupID)
+                {
+                    isMod = true;
+                }
+            }
+
+        if (_currentGroup.Owner.UserID != _currentUser.UserID && !isMod)
         {
             Response.Redirect(string.Format(@"Index.aspx?error={0}", HttpUtility.UrlEncode(@"You cannot edit groups you do not own.")));
             return;
