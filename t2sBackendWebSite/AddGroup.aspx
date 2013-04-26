@@ -68,17 +68,17 @@
                         <h2 class="tts-form-heading">Add Group</h2>
                         <div class="control-group">
                             <div class="controls">
-                                <asp:TextBox ID="groupNameBox" class="input-block-level" name="groupNameBox" placeholder="Group Name" runat="server" required></asp:TextBox>
+                                <asp:TextBox ID="groupNameBox" class="input-block-level" name="groupNameBox" placeholder="Group Name" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"  required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="controls">
-                                <asp:TextBox ID="groupTagBox" class="input-block-level" name="groupTagBox" placeholder="Group Tag" runat="server" required></asp:TextBox>
+                                <asp:TextBox ID="groupTagBox" class="input-block-level" name="groupTagBox" placeholder="Group Tag" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="controls">
-                                <asp:TextBox ID="groupDescriptionBox" class="input-block-level" name="groupDescriptionBox" placeholder="Description of Group" runat="server" required></asp:TextBox>
+                                <asp:TextBox ID="groupDescriptionBox" class="input-block-level" name="groupDescriptionBox" placeholder="Description of Group" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">

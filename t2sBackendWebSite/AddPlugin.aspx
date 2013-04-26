@@ -53,22 +53,22 @@
             <h2 class="tts-form-heading">Add Plugin</h2>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox ID="pluginNameBox" class="input-block-level" name="pluginNameBox" placeholder="Plugin Name" runat="server" required></asp:TextBox>
+                    <asp:TextBox ID="pluginNameBox" class="input-block-level" name="pluginNameBox" placeholder="Plugin Name" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox ID="pluginDescriptionBox" class="input-block-level" name="pluginDescription" placeholder="Description of Plugin" runat="server" required></asp:TextBox>
+                    <asp:TextBox ID="pluginDescriptionBox" class="input-block-level" name="pluginDescription" placeholder="Description of Plugin" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox ID="helpTextBox" class="input-block-level" name="helpTextBox" placeholder="Help Text" runat="server" title="Tells the user what this plugin does when they text 'HELP plugin'." required></asp:TextBox>
+                    <asp:TextBox ID="helpTextBox" class="input-block-level" name="helpTextBox" placeholder="Help Text" runat="server" title="Tells the user what this plugin does when they text 'HELP plugin'." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox ID="versionBox" class="input-block-level" name="versionBox" placeholder="Version Number (1.0.0, etc)" runat="server" required></asp:TextBox>
+                    <asp:TextBox ID="versionBox" class="input-block-level" name="versionBox" placeholder="Version Number (1.0.0, etc)" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">

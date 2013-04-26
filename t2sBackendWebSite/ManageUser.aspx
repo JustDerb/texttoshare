@@ -85,7 +85,7 @@
                         <div class="control-group">
                             <div class="controls">
                                 <label for="lastNameBox">Last Name</label>
-                                <asp:TextBox ID="lastNameBox" name="lastNameBox" placeholder="Last Name" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="lastNameBox" name="lastNameBox" placeholder="Last Name" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
@@ -110,7 +110,7 @@
                         -->
                         <div class="control-group">
                             <div class="controls">
-                                <asp:Button ID="register" placeholder="Update User" OnClick="update_Click" runat="server" Text="Update" CssClass="btn btn-primary"></asp:Button>
+                                <asp:Button ID="register" placeholder="Update User" OnClick="update_Click" runat="server" Text="Update" class="btn btn-primary"></asp:Button>
                             </div>
                         </div>
                     </form>

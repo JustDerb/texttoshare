@@ -22,22 +22,22 @@
             <h2 class="tts-form-heading">Register</h2>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="firstNameBox" class="input-block-level" name="firstNameBox" placeholder="First Name" runat="server" required></asp:TextBox>
+                    <asp:TextBox id="firstNameBox" class="input-block-level" name="firstNameBox" placeholder="First Name" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="lastNameBox" class="input-block-level" name="lastNameBox" placeholder="Last Name" runat="server" required></asp:TextBox>
+                    <asp:TextBox id="lastNameBox" class="input-block-level" name="lastNameBox" placeholder="Last Name" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="userNameBox" class="input-block-level" name="userNameBox" placeholder="Username" runat="server" required></asp:TextBox>
+                    <asp:TextBox id="userNameBox" class="input-block-level" name="userNameBox" placeholder="Username" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox type="tel" pattern="\d{3}[\-]\d{3}[\-]\d{4}" id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (555-555-5555)" runat="server" required></asp:TextBox>
+                    <asp:TextBox type="tel" pattern="\d{3}[\-]\d{3}[\-]\d{4}" id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (555-555-5555)" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
 
@@ -49,23 +49,22 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <asp:DropDownList id="carrierDropdown" class="input-block-level" name="carrierDropdown"  runat="server" required></asp:DropDownList>
-               
+                    <asp:DropDownList id="carrierDropdown" class="input-block-level" name="carrierDropdown"  runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:DropDownList>
                </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="passwordBox" class="input-block-level" name="passwordBox" TextMode="Password" placeholder="Password" runat="server" required></asp:TextBox>
+                    <asp:TextBox id="passwordBox" class="input-block-level" name="passwordBox" TextMode="Password" placeholder="Password" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="verifyPasswordBox" class="input-block-level" name="verifyPasswordBox" TextMode="Password" placeholder="Verify Password" runat="server" required></asp:TextBox>
+                    <asp:TextBox id="verifyPasswordBox" class="input-block-level" name="verifyPasswordBox" TextMode="Password" placeholder="Verify Password" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:Button id="register" class="btn btn-large btn-primary" placeholder="Register User" OnClick="Register_Click" runat="server" Text="Register" required></asp:Button>
+                    <asp:Button id="register" class="btn btn-large btn-primary" placeholder="Register User" OnClick="Register_Click" runat="server" Text="Register"></asp:Button>
                     <a class="btn btn-large pull-right" href="Login.aspx">Login</a>
                 </div>
             </div>

@@ -67,25 +67,25 @@
                         <div class="control-group">
                             <label class="control-label" for="pluginNameBox">Plugin Name</label>
                             <div class="controls">
-                                <asp:TextBox ID="pluginNameBox" class="input-block-level uneditable-input" name="pluginNameBox" placeholder="Plugin Name" runat="server" disabled="disabled"></asp:TextBox>
+                                <asp:TextBox ID="pluginNameBox" class="input-block-level uneditable-input" name="pluginNameBox" placeholder="Plugin Name" runat="server" disabled="disabled" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" ></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="helpTextBox">Help Text</label>
                             <div class="controls">
-                                <asp:TextBox ID="helpTextBox" class="input-block-level" name="helpTextBox" placeholder="Help Text" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="helpTextBox" class="input-block-level" name="helpTextBox" placeholder="Help Text" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="pluginDescriptionBox">Plugin Description</label>
                             <div class="controls">
-                                <asp:TextBox ID="pluginDescriptionBox" class="input-block-level" name="pluginDescriptionBox" placeholder="Description of Plugin" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="pluginDescriptionBox" class="input-block-level" name="pluginDescriptionBox" placeholder="Description of Plugin" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="versionBox">Plugin Version</label>
                             <div class="controls">
-                                <asp:TextBox ID="versionBox" class="input-block-level" name="versionBox" placeholder="(1.0.0, etc)" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="versionBox" class="input-block-level" name="versionBox" placeholder="(1.0.0, etc)" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">

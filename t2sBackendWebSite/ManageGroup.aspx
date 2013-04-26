@@ -81,19 +81,19 @@
                         <div class="control-group">
                             <label class="control-label" for="groupNameBox">Group Name</label>
                             <div class="controls">
-                                <asp:TextBox id="groupNameBox" name="groupNameBox" class="input-block-level" placeholder="Group Name" runat="server" required></asp:TextBox>
+                                <asp:TextBox id="groupNameBox" name="groupNameBox" class="input-block-level" placeholder="Group Name" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="groupTagBox">Group Tag</label>
                             <div class="controls">
-                                <asp:TextBox id="groupTagBox" class="input-block-level" runat="server" required></asp:TextBox>
+                                <asp:TextBox id="groupTagBox" class="input-block-level" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label" for="groupDescriptionBox">Group Description</label>
                             <div class="controls">
-                                <asp:TextBox id="groupDescriptionBox" name="groupDescriptionBox" class="input-block-level" placeholder="Description of Group" runat="server" required></asp:TextBox>
+                                <asp:TextBox id="groupDescriptionBox" name="groupDescriptionBox" class="input-block-level" placeholder="Description of Group" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                             </div>
                         </div>
                     </div>

@@ -21,12 +21,12 @@
             <h2 class="tts-form-heading">Login</h2>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="userNameBox" class="input-block-level" name="userNameBox" placeholder="Username" runat="server" required></asp:TextBox>
+                    <asp:TextBox id="userNameBox" class="input-block-level" name="userNameBox" placeholder="Username" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox id="passwordBox" class="input-block-level" name="passwordBox" TextMode="Password" placeholder="Password" runat="server" required></asp:TextBox>
+                    <asp:TextBox id="passwordBox" class="input-block-level" name="passwordBox" TextMode="Password" placeholder="Password" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
                 </div>
             </div>
             <div class="control-group">
