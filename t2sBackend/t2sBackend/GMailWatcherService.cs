@@ -137,6 +137,9 @@ namespace t2sBackend
 
                 this.reconnectTimer.Start();
 
+                // Start 'er up
+                startUpConnection();
+
                 this.Running = true;
             }
         }
@@ -152,6 +155,8 @@ namespace t2sBackend
             {
                 stopConnection();
             }
+
+            Logger.LogMessage("Logging into GMail service...", LoggerLevel.INFO);
 
             this.ImapConnection = new ImapClient(
                     this.IMAPServer,
@@ -174,6 +179,8 @@ namespace t2sBackend
 
         private void stopConnection()
         {
+            Logger.LogMessage("Logging out of GMail service...", LoggerLevel.INFO);
+
             this.ImapConnection.NewMessage -= ImapConnection_NewMessage;
 
             this.ImapConnection.Dispose();
