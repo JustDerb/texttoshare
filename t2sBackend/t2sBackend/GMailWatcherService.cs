@@ -7,6 +7,7 @@ using S22.Imap;
 using t2sDbLibrary;
 using System.Net;
 using System.IO;
+using System.Timers;
 
 namespace t2sBackend
 {
@@ -82,6 +83,10 @@ namespace t2sBackend
 
         protected ImapClient ImapConnection;
 
+        private Timer reconnectTimer;
+
+        private static readonly double timeTillReconnect = 10 * 60 * 1000;
+
         /// <summary>
         /// 
         /// </summary>
@@ -117,22 +122,62 @@ namespace t2sBackend
         /// <exception cref="Exception">Any errors when the IMAP service tries to connect</exception>
         public override void Start()
         {
+            if (!IsRunning())
+            {
+                if (this.reconnectTimer != null)
+                {
+                    this.reconnectTimer.Stop();
+                    this.reconnectTimer.Close();
+
+                    this.reconnectTimer = null;
+                }
+
+                this.reconnectTimer = new Timer(timeTillReconnect);
+                this.reconnectTimer.Elapsed += reconnectTimer_Elapsed;
+
+                this.reconnectTimer.Start();
+
+                this.Running = true;
+            }
+        }
+
+        void reconnectTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            startUpConnection();
+        }
+
+        private void startUpConnection()
+        {
+            if (this.IsRunning())
+            {
+                stopConnection();
+            }
+
             this.ImapConnection = new ImapClient(
-                this.IMAPServer, 
-                this.IMAPPort,
-                this.UserName, 
-                this.Password, 
-                AuthMethod.Auto, 
-                this.UseSSL,
-                null);
+                    this.IMAPServer,
+                    this.IMAPPort,
+                    this.UserName,
+                    this.Password,
+                    AuthMethod.Auto,
+                    this.UseSSL,
+                    null);
 
             this.ImapConnection.NewMessage += ImapConnection_NewMessage;
 
             // Check for messages that are unread (IDLE only tells you for NEWLY recieve mail)
             uint[] msgs = this.ImapConnection.Search(SearchCondition.Unseen());
-            foreach (uint msg in msgs) {
+            foreach (uint msg in msgs)
+            {
                 this.recievedMessage(msg);
             }
+        }
+
+        private void stopConnection()
+        {
+            this.ImapConnection.NewMessage -= ImapConnection_NewMessage;
+
+            this.ImapConnection.Dispose();
+            this.ImapConnection = null;
         }
 
         void ImapConnection_NewMessage(object sender, IdleMessageEventArgs e)
@@ -191,10 +236,17 @@ namespace t2sBackend
 
         public override void Stop()
         {
-            this.ImapConnection.NewMessage -= ImapConnection_NewMessage;
+            this.Running = false;
 
-            this.ImapConnection.Dispose();
-            this.ImapConnection = null;
+            this.reconnectTimer.Stop();
+
+            if (this.reconnectTimer != null)
+            {
+                this.reconnectTimer.Stop();
+                this.reconnectTimer.Close();
+
+                this.reconnectTimer = null;
+            }
         }
 
         public override bool SendMessage(Message message, bool async)
