@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head runat="server">
         <title><asp:Literal ID="PageTitle" runat="server"></asp:Literal></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="Content/themes/redmond/jquery-ui-1.10.2.custom.min.css" rel="stylesheet" type="text/css">
         <link href="Content/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="Content/style.css" rel="stylesheet" type="text/css" />
