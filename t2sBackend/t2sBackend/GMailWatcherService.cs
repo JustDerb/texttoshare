@@ -271,6 +271,8 @@ namespace t2sBackend
 
                 this.reconnectTimer = null;
             }
+
+            stopConnection();
         }
 
         public override bool SendMessage(Message message, bool async)
