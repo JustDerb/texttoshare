@@ -158,22 +158,30 @@ namespace t2sBackend
 
             Logger.LogMessage("Logging into GMail service...", LoggerLevel.INFO);
 
-            this.ImapConnection = new ImapClient(
-                    this.IMAPServer,
-                    this.IMAPPort,
-                    this.UserName,
-                    this.Password,
-                    AuthMethod.Auto,
-                    this.UseSSL,
-                    null);
-
-            this.ImapConnection.NewMessage += ImapConnection_NewMessage;
-
-            // Check for messages that are unread (IDLE only tells you for NEWLY recieve mail)
-            uint[] msgs = this.ImapConnection.Search(SearchCondition.Unseen());
-            foreach (uint msg in msgs)
+            try
             {
-                this.recievedMessage(msg);
+                this.ImapConnection = new ImapClient(
+                        this.IMAPServer,
+                        this.IMAPPort,
+                        this.UserName,
+                        this.Password,
+                        AuthMethod.Auto,
+                        this.UseSSL,
+                        null);
+
+                this.ImapConnection.NewMessage += ImapConnection_NewMessage;
+
+                // Check for messages that are unread (IDLE only tells you for NEWLY recieve mail)
+                uint[] msgs = this.ImapConnection.Search(SearchCondition.Unseen());
+                foreach (uint msg in msgs)
+                {
+                    this.recievedMessage(msg);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogMessage("Error with Gmail: " + ex.Message, LoggerLevel.SEVERE);
+                Logger.LogMessage("Error with Gmail: Waiting until timer starts it back up..." + ex.Message, LoggerLevel.SEVERE);
             }
         }
 
@@ -181,10 +189,19 @@ namespace t2sBackend
         {
             Logger.LogMessage("Logging out of GMail service...", LoggerLevel.INFO);
 
-            this.ImapConnection.NewMessage -= ImapConnection_NewMessage;
+            try
+            {
+                if (this.ImapConnection != null)
+                {
+                    this.ImapConnection.NewMessage -= ImapConnection_NewMessage;
 
-            this.ImapConnection.Dispose();
-            this.ImapConnection = null;
+                    this.ImapConnection.Dispose();
+                    this.ImapConnection = null;
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         void ImapConnection_NewMessage(object sender, IdleMessageEventArgs e)
