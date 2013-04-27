@@ -34,7 +34,7 @@ namespace t2sBackend
 
         void Watcher_RecievedMessage(object sender, AWatcherService.WatcherServiceEventArgs e)
         {
-            Logger.LogMessage(@"Received from " + e.MessageObj.Sender + @": """ + e.MessageObj.FullMessage + @"""", LoggerLevel.DEBUG);
+            Logger.LogMessage(@"Received from " + e.MessageObj.Sender + ": \n" + e.MessageObj.FullMessage, LoggerLevel.DEBUG);
             this.putNextMessage(MessageParser.Parse(e.MessageObj, this.controller));
         }
 
