@@ -27,7 +27,14 @@ namespace t2sDbLibrary
         public static bool LogMessage(string message, LoggerLevel level)
         {
             Console.WriteLine(DateTime.Now.ToString("HH:mm:ss tt") + " > " + System.Enum.GetName(level.GetType(), level) + ": " + message);
-            return controller.LogMessage(message, level);
+            try
+            {
+                return controller.LogMessage(message, level);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
