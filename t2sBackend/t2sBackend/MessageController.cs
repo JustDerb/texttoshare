@@ -28,12 +28,13 @@ namespace t2sBackend
             this.queue = new BlockingQueue<ParsedMessage>();
             this.watcher = Watcher;
             this.controller = Controller;
-            // DOESN'T WORK - Yet......
+            
             this.watcher.RecievedMessage += Watcher_RecievedMessage;
         }
 
         void Watcher_RecievedMessage(object sender, AWatcherService.WatcherServiceEventArgs e)
         {
+            Logger.LogMessage(@"Received from " + e.MessageObj.Sender + @": """ + e.MessageObj.FullMessage + @"""", LoggerLevel.DEBUG);
             this.putNextMessage(MessageParser.Parse(e.MessageObj, this.controller));
         }
 

@@ -146,7 +146,16 @@ namespace t2sBackend
                         break;
                     // Not a valid group ID
                     case ParsedMessage.ContentMessageType.NO_GROUP:
-                        message.ContentMessage = INVALID_GROUP_MESSAGE;
+                        if (message.Command.Equals("noop", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Built in test to make sure the backend is working at least
+                            Logger.LogMessage(@"Got noop...sending boop.", LoggerLevel.DEBUG);
+                            message.ContentMessage = "boop";
+                        }
+                        else
+                        {
+                            message.ContentMessage = INVALID_GROUP_MESSAGE;
+                        }
                         break;
                     // User is banned
                     case ParsedMessage.ContentMessageType.BAN:
@@ -248,6 +257,8 @@ namespace t2sBackend
             PluginState parameters = (PluginState)e;
             IPlugin plugin = (IPlugin)parameters.plug;
             ParsedMessage message = (ParsedMessage)parameters.mess;
+
+            Logger.LogMessage(@"Running plugin """ + plugin.PluginDAO.Name + @""" for " + message.Sender.UserName, LoggerLevel.DEBUG);
 
             // Do plugin work
             try

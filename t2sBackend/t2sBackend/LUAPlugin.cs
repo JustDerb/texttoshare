@@ -242,8 +242,12 @@ namespace t2sBackend
 
             // Disable if above threshold
             int count = controller.GetPluginFailedAttemptCount(this.PluginDAO.PluginID);
+            Logger.LogMessage(this.PluginDAO.Name + @": " + ex.Message, LoggerLevel.WARNING);
             if (count > LUADefinitions.DisablePluginAboveErrorCount)
+            {
                 controller.DisableGlobalPlugin(this.PluginDAO.PluginID);
+                Logger.LogMessage(this.PluginDAO.Name + @": Plugin has been disabled", LoggerLevel.WARNING);
+            }
 
             StringBuilder sb = new StringBuilder();
             sb.Append("LUAPlugin.cs: ");
