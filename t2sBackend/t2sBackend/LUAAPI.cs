@@ -13,7 +13,7 @@ namespace t2sBackend
 {
     public class LUAAPI
     {
-        public class APIException : Exception, ISerializable
+        public class APIException : LuaException, ISerializable
         {
             public APIException() : base()
             {
