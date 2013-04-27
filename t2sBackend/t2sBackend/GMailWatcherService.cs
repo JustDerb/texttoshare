@@ -238,8 +238,6 @@ namespace t2sBackend
                 }
             }
 
-            Console.WriteLine(msg.Body);
-
             // Alert the watchers!
             WatcherServiceEventArgs args = new WatcherServiceEventArgs();
             Message msgObj = new Message();
