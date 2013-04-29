@@ -27,13 +27,23 @@ namespace t2sBackend
             msgReceiver.FullMessage = msgToSend;
 
             Message msgSender = new Message();
-
-            UserDAO receiver = controller.RetrieveUserByUserName(message.Arguments[0]);
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
+
+            UserDAO receiver = null;
+            try
+            {
+                receiver = controller.RetrieveUserByUserName(message.Arguments[0]);
+            }
+            catch (CouldNotFindException)
+            {
+                msgSender.FullMessage = "Not a valid user. Please check their username and retry.";
+                service.SendMessage(msgSender);
+            }
 
             List<UserDAO> listPeeps = new List<UserDAO>();
             listPeeps.AddRange(message.Group.Users);
             listPeeps.AddRange(message.Group.Moderators);
+            listPeeps.Add(message.Group.Owner);
 
             if (!listPeeps.Contains(receiver) || receiver == null || receiver.IsBanned)
             {
