@@ -24,6 +24,7 @@ namespace t2sBackend
             msgSender.Reciever.Add(message.Sender.PhoneEmail);
             List<UserDAO> listPeeps = new List<UserDAO>();
 
+            listPeeps.Add(message.Group.Owner);
             listPeeps.AddRange(message.Group.Users);
             listPeeps.AddRange(message.Group.Moderators);
 
