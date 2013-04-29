@@ -118,6 +118,8 @@
                             <dd>Get whether the user is banned (will not recieve messages)</dd>
                             <dt><code>GetUserCarrier(userID) : String</code></dt>
                             <dd>Get the users phone carrier</dd>
+                            <dt><code>FindIdByUsername(userName) : String</code></dt>
+                            <dd>Tries to find the User ID within the group.  Returns <code>nil</code> if not found.</dd>
                         </dl>
                         <h5>Plugins</h5>
                         <dl>

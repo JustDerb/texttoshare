@@ -122,7 +122,8 @@ namespace t2sBackend
             {"GetGroupName", typeof(LUAAPI).GetMethod("__GetGroupName")},
             {"GetGroupTag", typeof(LUAAPI).GetMethod("__GetGroupTag")},
             {"MessageHasGroup", typeof(LUAAPI).GetMethod("__MessageHasGroup")},
-            {"HTTPDownloadText", typeof(LUAAPI).GetMethod("__HTTPDownloadText")}
+            {"HTTPDownloadText", typeof(LUAAPI).GetMethod("__HTTPDownloadText")},
+            {"FindIdByUsername", typeof(LUAAPI).GetMethod("__FindIdByUsername")}
         };
 
         #endregion
@@ -155,6 +156,34 @@ namespace t2sBackend
         {
             LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
             return ToLuaTable(container.message.Arguments, container.plugin.LuaEngine);
+        }
+
+        public static string __FindIdByUsername(String hash, String username)
+        {
+            if (String.IsNullOrEmpty(username))
+                return null;
+
+            LuaScriptingEngine.LUAPluginContainer container = LuaScriptingEngine.getPluginContainerByHash(hash);
+            GroupDAO group = container.message.Group;
+            if (group.Owner.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
+            {
+                return container.userToHash[group.Owner];
+            }
+            foreach (UserDAO user in group.Moderators)
+            {
+                if (user.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
+                {
+                    return container.userToHash[user];
+                }
+            }
+            foreach (UserDAO user in group.Users)
+            {
+                if (user.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))
+                {
+                    return container.userToHash[user];
+                }
+            }
+            return null;
         }
 
         public static void __SendMessage(String hash, String toHash, String message)
