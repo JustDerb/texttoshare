@@ -27,16 +27,24 @@ namespace t2sBackend
             }
             else
             {
-                PluginDAO plugin = controller.RetrievePlugin(message.Arguments[0]);
-                if ((controller.GetAllEnabledGroupPlugins(message.Group.GroupID)).Contains(plugin))
+                try
                 {
-                    fullMsg.Append(plugin.Name);
-                    fullMsg.Append(": ");
-                    fullMsg.Append(plugin.Description);
+                    PluginDAO plugin = controller.RetrievePlugin(message.Arguments[0]);
+                    if ((controller.GetAllEnabledGroupPlugins(message.Group.GroupID)).Contains(plugin))
+                    {
+                        fullMsg.Append(plugin.Name);
+                        fullMsg.Append(": ");
+                        fullMsg.Append(plugin.Description);
+                    }
+                    else
+                    {
+                        fullMsg.Append("This plugin is not enabled for this group.");
+                    }
                 }
-                else
+                catch (CouldNotFindException)
                 {
-                    fullMsg.Append("This plugin is not enabled for this group.");
+                    fullMsg.Append("Can not find plugin ");
+                    fullMsg.Append(message.Arguments[0]);
                 }
             }
 
