@@ -85,7 +85,7 @@ namespace t2sBackend
 
         private Timer reconnectTimer;
 
-        private static readonly double timeTillReconnect = 10 * 60 * 1000;
+        private static readonly double timeTillReconnect = 9 * 60 * 1000;
 
         /// <summary>
         /// 
