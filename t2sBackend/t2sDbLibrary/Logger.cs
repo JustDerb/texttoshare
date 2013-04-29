@@ -33,6 +33,7 @@ namespace t2sDbLibrary
             }
             catch (Exception)
             {
+                Console.WriteLine(DateTime.Now.ToString("HH:mm:ss tt") + " > " + System.Enum.GetName(level.GetType(), level) + ": " + message);
                 return false;
             }
         }
