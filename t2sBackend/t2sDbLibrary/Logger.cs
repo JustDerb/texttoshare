@@ -31,9 +31,9 @@ namespace t2sDbLibrary
             {
                 return controller.LogMessage(message, level);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine(DateTime.Now.ToString("HH:mm:ss tt") + " > " + System.Enum.GetName(level.GetType(), level) + ": " + message);
+                Console.WriteLine(DateTime.Now.ToString("HH:mm:ss tt") + " > " + System.Enum.GetName(level.GetType(), level) + ": " + ex.Message);
                 return false;
             }
         }
