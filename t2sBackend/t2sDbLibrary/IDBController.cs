@@ -439,7 +439,7 @@ namespace t2sDbLibrary
         /// <param name="plugin"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        void UpdatePluginKeyValue(PluginDAO plugin, String key, String value, UserDAO forUser = null);
+        void UpdatePluginKeyValue(PluginDAO plugin, String key, String value, GroupDAO forGroup = null, UserDAO forUser = null);
 
         /// <summary>
         /// 
@@ -447,7 +447,7 @@ namespace t2sDbLibrary
         /// <param name="plugin"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        string RetrievePluginValue(PluginDAO plugin, String key, UserDAO forUser = null);
+        string RetrievePluginValue(PluginDAO plugin, String key, GroupDAO forGroup = null, UserDAO forUser = null);
 
         #endregion
 

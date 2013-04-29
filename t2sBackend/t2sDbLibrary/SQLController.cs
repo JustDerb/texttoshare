@@ -1893,7 +1893,7 @@ namespace t2sDbLibrary
         /// <param name="plugin"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void UpdatePluginKeyValue(PluginDAO plugin, String key, String value, UserDAO forUser = null)
+        public void UpdatePluginKeyValue(PluginDAO plugin, String key, String value, GroupDAO forGroup = null, UserDAO forUser = null)
         {
             if (null == plugin
                 || null == key) 
@@ -1911,15 +1911,15 @@ namespace t2sDbLibrary
                 //queryBuilder.Append(" value_object = @valueobj ");
 
                 queryBuilder.Append("begin tran \n");
-                queryBuilder.Append("if exists (select * from pluginkeyvalue with (updlock,serializable) where key_string = @keystring and plugin_id = @pluginid) \n");
+                queryBuilder.Append("if exists (select * from pluginkeyvalue with (updlock,serializable) where key_string = @keystring and plugin_id = @pluginid and group_id = @groupid) \n");
                 queryBuilder.Append("   begin \n");
                 queryBuilder.Append("   update pluginkeyvalue set value_object = @valueobj \n");
-                queryBuilder.Append("   where key_string = @keystring and plugin_id = @pluginid \n");
+                queryBuilder.Append("   where key_string = @keystring and plugin_id = @pluginid and group_id = @groupid\n");
                 queryBuilder.Append("end \n");
                 queryBuilder.Append("else \n");
                 queryBuilder.Append("begin \n");
-                queryBuilder.Append("   insert pluginkeyvalue (plugin_id, user_id, key_string, value_object) \n");
-                queryBuilder.Append("   values (@pluginid, @userid, @keystring, @valueobj) \n");
+                queryBuilder.Append("   insert pluginkeyvalue (plugin_id, user_id, key_string, value_object, group_id) \n");
+                queryBuilder.Append("   values (@pluginid, @userid, @keystring, @valueobj, @groupid) \n");
                 queryBuilder.Append("end \n");
                 queryBuilder.Append("commit tran \n");
 
@@ -1929,6 +1929,10 @@ namespace t2sDbLibrary
                     query.Parameters.AddWithValue("@userid", null);
                 else
                     query.Parameters.AddWithValue("@userid", forUser.UserID.Value);
+                if (forGroup == null)
+                    query.Parameters.AddWithValue("@groupid", null);
+                else
+                    query.Parameters.AddWithValue("@groupid", forGroup.GroupID.Value);
                 query.Parameters.AddWithValue("@keystring", key);
                 query.Parameters.AddWithValue("@valueobj", value);
 
@@ -1943,7 +1947,7 @@ namespace t2sDbLibrary
         /// <param name="plugin"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public string RetrievePluginValue(PluginDAO plugin, String key, UserDAO forUser = null)
+        public string RetrievePluginValue(PluginDAO plugin, String key, GroupDAO forGroup = null, UserDAO forUser = null)
         {
             if (null == plugin
                 || null == key)
@@ -1957,6 +1961,7 @@ namespace t2sDbLibrary
                 queryBuilder.Append("FROM pluginkeyvalue ");
                 queryBuilder.Append("WHERE plugin_id = @pluginid ");
                 queryBuilder.Append(" AND user_id = @userid ");
+                queryBuilder.Append(" AND group_id = @groupid ");
                 queryBuilder.Append(" AND key_string = @keystring ");
 
                 query.CommandText = queryBuilder.ToString();
@@ -1965,6 +1970,10 @@ namespace t2sDbLibrary
                     query.Parameters.AddWithValue("@userid", null);
                 else
                     query.Parameters.AddWithValue("@userid", forUser.UserID.Value);
+                if (forGroup == null)
+                    query.Parameters.AddWithValue("@groupid", null);
+                else
+                    query.Parameters.AddWithValue("@groupid", forGroup.GroupID.Value);
                 query.Parameters.AddWithValue("@keystring", key);
 
                 conn.Open();

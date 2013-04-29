@@ -386,7 +386,7 @@ namespace t2sBackend
             UserDAO user = null;
             if (userhash != null)
                 user = container.hashToUser[userhash];
-            container.controller.UpdatePluginKeyValue(container.plugin.PluginDAO, key, value, user);
+            container.controller.UpdatePluginKeyValue(container.plugin.PluginDAO, key, value, container.message.Group, user);
         }
 
         public static string __GetValue(String hash, String key, String userhash)
@@ -398,7 +398,7 @@ namespace t2sBackend
             UserDAO user = null;
             if (userhash != null)
                 user = container.hashToUser[userhash];
-            return container.controller.RetrievePluginValue(container.plugin.PluginDAO, key, user);
+            return container.controller.RetrievePluginValue(container.plugin.PluginDAO, key, container.message.Group, user);
         }
 
         public static string __HTTPDownloadText(String hash, String URL)
