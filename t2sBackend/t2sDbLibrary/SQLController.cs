@@ -1926,11 +1926,11 @@ namespace t2sDbLibrary
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@pluginid", plugin.PluginID.Value);
                 if (forUser == null)
-                    query.Parameters.AddWithValue("@userid", null);
+                    query.Parameters.AddWithValue("@userid", DBNull.Value);
                 else
                     query.Parameters.AddWithValue("@userid", forUser.UserID.Value);
                 if (forGroup == null)
-                    query.Parameters.AddWithValue("@groupid", null);
+                    query.Parameters.AddWithValue("@groupid", DBNull.Value);
                 else
                     query.Parameters.AddWithValue("@groupid", forGroup.GroupID.Value);
                 query.Parameters.AddWithValue("@keystring", key);
@@ -1960,20 +1960,27 @@ namespace t2sDbLibrary
                 queryBuilder.Append("SELECT value_object ");
                 queryBuilder.Append("FROM pluginkeyvalue ");
                 queryBuilder.Append("WHERE plugin_id = @pluginid ");
-                queryBuilder.Append(" AND user_id = @userid ");
-                queryBuilder.Append(" AND group_id = @groupid ");
+                if (forUser == null)
+                    queryBuilder.Append(" AND user_id IS NULL ");
+                else
+                    queryBuilder.Append(" AND user_id = @userid ");
+
+                if (forGroup == null)
+                    queryBuilder.Append(" AND group_id IS NULL ");
+                else
+                    queryBuilder.Append(" AND group_id = @groupid ");
+
                 queryBuilder.Append(" AND key_string = @keystring ");
 
                 query.CommandText = queryBuilder.ToString();
                 query.Parameters.AddWithValue("@pluginid", plugin.PluginID.Value);
-                if (forUser == null)
-                    query.Parameters.AddWithValue("@userid", null);
-                else
+
+                if (forUser != null)
                     query.Parameters.AddWithValue("@userid", forUser.UserID.Value);
-                if (forGroup == null)
-                    query.Parameters.AddWithValue("@groupid", null);
-                else
+
+                if (forGroup != null)
                     query.Parameters.AddWithValue("@groupid", forGroup.GroupID.Value);
+
                 query.Parameters.AddWithValue("@keystring", key);
 
                 conn.Open();

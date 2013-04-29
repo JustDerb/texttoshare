@@ -208,7 +208,7 @@ namespace t2sBackend
             if (this.LuaEngine != null)
             {
                 this.LuaEngine.Close();
-                this.LuaEngine.Dispose();
+                //this.LuaEngine.Dispose();
             }
         }
 
