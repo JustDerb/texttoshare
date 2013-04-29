@@ -118,4 +118,7 @@
             </div>
         </div>
     </body>
+
+    <script src="Scripts/jquery-1.7.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
 </html>
