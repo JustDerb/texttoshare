@@ -206,10 +206,10 @@
         blur: function( event, ui ) {
           // don't set the value of the text field if it's already correct
           // this prevents moving the cursor unnecessarily
-          if ( self.menu.element.is(":visible") &&
-               ( self.element.val() !== self.term ) ) {
-                 self.element.val( self.term );
-               }
+          // if ( self.menu.element.is(":visible") &&
+          //      ( self.element.val() !== self.term ) ) {
+          //        self.element.val( self.term );
+          //      }
         }
       };
     }

@@ -21,6 +21,11 @@
                     padding-right: 5px;
                 }
             }
+
+            .ui-autocomplete {
+                width: 25%;
+                list-style-type: none;
+            }
         </style>
         <link href="Content/bootstrap/bootstrap-responsive.min.css" rel="stylesheet" type="text/css" />
     </head>
@@ -139,6 +144,28 @@
                 },
                 close: function () {
                     $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+                },
+                select: function (event, item) {
+                    sList = $('#enabledPlugins').val().split(",");
+                    var prevNum = sList.length;
+                    sList.splice((sList.length - 1), 1);
+                    required = sList.join(',');
+                    if (prevNum > 1)
+                        $('#enabledPlugins').val(required + ', ' + (item.item.value));
+                    else
+                        $('#enabledPlugins').val(required + (item.item.value));
+                    return false;
+                },
+                focus: function (event, item) {
+                    sList = $('#enabledPlugins').val().split(",");
+                    var prevNum = sList.length;
+                    sList.splice((sList.length - 1), 1);
+                    required = sList.join(',');
+                    if (prevNum > 1)
+                        $('#enabledPlugins').val(required + ', ' + (item.item.value));
+                    else
+                        $('#enabledPlugins').val(required + (item.item.value));
+                    return false;
                 }
             });
 
