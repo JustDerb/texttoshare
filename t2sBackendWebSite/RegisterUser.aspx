@@ -37,7 +37,7 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                    <asp:TextBox type="tel" pattern="\d{3}\d{3}\d{4}" id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (555-555-5555)" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" required></asp:TextBox>
+                    <asp:TextBox type="tel" pattern="\d{3}\d{3}\d{4}" id="phoneNumberBox" class="input-block-level" name="phoneNumberBox" placeholder="Phone Number (5555555555)" runat="server" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" title="Enter your phone number here. Do not include spaces or dashes." required></asp:TextBox>
                 </div>
             </div>
 
