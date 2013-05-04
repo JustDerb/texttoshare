@@ -321,5 +321,23 @@ namespace t2sBackend
         {
             return Running;
         }
+
+        public static string StripHTML(string htmlStr)
+        {
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc.LoadHtml(htmlStr);
+            HtmlAgilityPack.HtmlNode root = doc.DocumentNode;
+            StringBuilder s = new StringBuilder();
+            foreach (HtmlAgilityPack.HtmlNode node in root.DescendantsAndSelf())
+            {
+                if (!node.HasChildNodes)
+                {
+                    string text = node.InnerText;
+                    if (!string.IsNullOrEmpty(text))
+                        s.Append(text.Trim() + " ");
+                }
+            }
+            return s.ToString().Trim();
+        }
     }
 }
